@@ -284,6 +284,16 @@ getDomain().then((domain) => {
 // Load fonts into the  dropdowns
 const populateFonts = (element) => {
   [
+    "Merriweather",
+    "Roboto Slab",
+    "Arvo",
+    "Crimson Pro",
+    "Zilla Slab",
+    "Rubik",
+    "Public Sans",
+    "PT Sans",
+    "Atkinson Hyperlegible",
+    "Atkinson Hyperlegible Next",
     "Inter",
     "Nunito",
     "Vollkorn",
@@ -291,10 +301,7 @@ const populateFonts = (element) => {
     "Source Code Pro",
     "Fira Code",
     "Comic Neue",
-    "Merriweather",
-    "Atkinson Hyperlegible",
     "Charis SIL",
-    "Atkinson Hyperlegible Next",
     "Fantasque Sans Mono",
     "Lexend",
     // Pre-installed fonts
