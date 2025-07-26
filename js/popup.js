@@ -109,9 +109,9 @@ browser.storage.sync.get(["global"]).then((result) =>
       if ("global_fonts" in globalFonts) {
         const global_fonts = globalFonts["global_fonts"];
         // Placeholder text content
-        globalSerifPlaceholder.innerHTML = global_fonts.serif;
-        globalSansSerifPlaceholder.innerHTML = global_fonts.sans_serif;
-        globalMonospacePlaceholder.innerHTML = global_fonts.monospace;
+        globalSerifPlaceholder.textContent = global_fonts.serif;
+        globalSansSerifPlaceholder.textContent = global_fonts.sans_serif;
+        globalMonospacePlaceholder.textContent = global_fonts.monospace;
         // Placeholder value
         globalSerifPlaceholder.value =
           global_fonts.serif === "Default" ? "" : global_fonts.serif;
@@ -177,9 +177,9 @@ settingsButton.addEventListener("click", () =>
             if ("global_fonts" in globalFonts) {
               const global_fonts = globalFonts["global_fonts"];
               // Placeholder text content
-              globalSerifPlaceholder.innerHTML = global_fonts.serif;
-              globalSansSerifPlaceholder.innerHTML = global_fonts.sans_serif;
-              globalMonospacePlaceholder.innerHTML = global_fonts.monospace;
+              globalSerifPlaceholder.textContent = global_fonts.serif;
+              globalSansSerifPlaceholder.textContent = global_fonts.sans_serif;
+              globalMonospacePlaceholder.textContent = global_fonts.monospace;
               // Placeholder value
               globalSerifPlaceholder.value =
                 global_fonts.serif === "Default" ? "" : global_fonts.serif;
@@ -261,9 +261,9 @@ const monospacePlaceholder = document.querySelector("#monospace_placeholder");
 // Populating placeholder values + checkbox
 const updatePlaceholders = (innerText) => {
   // Placeholder text content
-  serifPlaceholder.innerHTML = innerText.serif;
-  sansSerifPlaceholder.innerHTML = innerText.sans_serif;
-  monospacePlaceholder.innerHTML = innerText.monospace;
+  serifPlaceholder.textContent = innerText.serif;
+  sansSerifPlaceholder.textContent = innerText.sans_serif;
+  monospacePlaceholder.textContent = innerText.monospace;
   // Placeholder value
   serifPlaceholder.value = innerText.serif === "Default" ? "" : innerText.serif;
   sansSerifPlaceholder.value =
@@ -337,14 +337,14 @@ fontSelectionForm.addEventListener("submit", (e) => {
   const sansSerifValue = sansSerifSelect.value;
   const monospaceValue = monospaceSelect.value;
   if (!serifValue.length && !sansSerifValue.length && !monospaceValue.length)
-    applyButton.innerHTML = "No Changes Made";
+    applyButton.textContent = "No Changes Made";
   else {
     applyButton.textContent = "✔ Applied";
     if (!formButtons.contains(restoreButton))
       formButtons.prepend(restoreButton);
   }
   setTimeout(() => {
-    applyButton.innerHTML = "Apply Selection";
+    applyButton.textContent = "Apply Selection";
   }, 1500);
   try {
     browser.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) =>
@@ -406,12 +406,12 @@ globalFontSelectionForm.addEventListener("submit", (e) =>
       !globalSansSerifValue.length &&
       !globaMonospaceValue.length
     )
-      applyButton.innerHTML = "No Changes Made";
+      applyButton.textContent = "No Changes Made";
     else {
       applyButton.textContent = "Global fonts modified";
     }
     setTimeout(() => {
-      applyButton.innerHTML = "🌐 Apply to all sites";
+      applyButton.textContent = "🌐 Apply to all sites";
     }, 1500);
     yield browser.storage.sync.set({
       global_fonts: {
