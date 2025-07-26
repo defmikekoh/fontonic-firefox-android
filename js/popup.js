@@ -295,6 +295,7 @@ const populateFonts = (element) => {
     "PT Sans",
     "Atkinson Hyperlegible",
     "Atkinson Hyperlegible Next",
+    "Open Sans",
     "Inter",
     "Lexend",
     "Nunito",
