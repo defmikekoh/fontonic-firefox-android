@@ -285,11 +285,12 @@ getDomain().then((domain) => {
 const populateFonts = (element) => {
   [
     "Merriweather",
+    "Literata",
     "Roboto Slab",
     "Arvo",
     "Crimson Pro",
     "Zilla Slab",
-    "Literata",
+    "Charter ITC TT",
     "Rubik",
     "Public Sans",
     "PT Sans",
