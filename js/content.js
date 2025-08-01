@@ -3,8 +3,15 @@ const changeFontFamily = (node, serif, sansSerif, monospace) => {
     const computedStyle = window.getComputedStyle(node);
     const fontFamily = computedStyle.getPropertyValue("font-family");
     if (fontFamily) {
-      if (fontFamily.includes("sans-serif") && sansSerif != "Default") {
-        node.style.fontFamily = `'${sansSerif}'`;
+      if ((fontFamily.includes("sans-serif") || fontFamily.includes("Open Sans-fallback")) && sansSerif != "Default") {
+        const match = sansSerif.match(/(.*)-(\d{3})/);
+        if (match) {
+          node.style.fontFamily = `'${match[1]}'`;
+          node.style.fontWeight = match[2];
+        } else {
+          node.style.fontFamily = `'${sansSerif}'`;
+          node.style.fontWeight = '400';
+        }
       } else if (fontFamily.includes("serif") && serif != "Default") {
         node.style.fontFamily = `'${serif}'`;
       } else if (fontFamily.includes("monospace") && monospace != "Default") {
