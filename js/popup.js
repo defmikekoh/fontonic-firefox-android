@@ -59,6 +59,12 @@ const globalSansSerifSelect =
   globalFontSelectionForm.elements["global_sans_serif"];
 const globalMonospaceSelect =
   globalFontSelectionForm.elements["global_monospace"];
+const globalSerifWeightSelect =
+  globalFontSelectionForm.elements["global_serif_weight"];
+const globalSansSerifWeightSelect =
+  globalFontSelectionForm.elements["global_sans_serif_weight"];
+const globalMonospaceWeightSelect =
+  globalFontSelectionForm.elements["global_monospace_weight"];
 const globalSerifPlaceholder = document.querySelector(
   "#global_serif_placeholder"
 );
@@ -67,6 +73,15 @@ const globalSansSerifPlaceholder = document.querySelector(
 );
 const globalMonospacePlaceholder = document.querySelector(
   "#global_monospace_placeholder"
+);
+const globalSerifWeightPlaceholder = document.querySelector(
+  "#global_serif_weight_placeholder"
+);
+const globalSansSerifWeightPlaceholder = document.querySelector(
+  "#global_sans_serif_weight_placeholder"
+);
+const globalMonospaceWeightPlaceholder = document.querySelector(
+  "#global_monospace_weight_placeholder"
 );
 tipWhenOverrideOn.remove();
 tipWhenOverrideOff.remove();
@@ -112,6 +127,12 @@ browser.storage.sync.get(["global"]).then((result) =>
         globalSerifPlaceholder.textContent = global_fonts.serif;
         globalSansSerifPlaceholder.textContent = global_fonts.sans_serif;
         globalMonospacePlaceholder.textContent = global_fonts.monospace;
+        globalSerifWeightPlaceholder.textContent =
+          global_fonts.serif_weight || "Default";
+        globalSansSerifWeightPlaceholder.textContent =
+          global_fonts.sans_serif_weight || "Default";
+        globalMonospaceWeightPlaceholder.textContent =
+          global_fonts.monospace_weight || "Default";
         // Placeholder value
         globalSerifPlaceholder.value =
           global_fonts.serif === "Default" ? "" : global_fonts.serif;
@@ -119,6 +140,20 @@ browser.storage.sync.get(["global"]).then((result) =>
           global_fonts.sans_serif === "Default" ? "" : global_fonts.sans_serif;
         globalMonospacePlaceholder.value =
           global_fonts.monospace === "Default" ? "" : global_fonts.monospace;
+        globalSerifWeightPlaceholder.value =
+          !global_fonts.serif_weight || global_fonts.serif_weight === "Default"
+            ? ""
+            : global_fonts.serif_weight;
+        globalSansSerifWeightPlaceholder.value =
+          !global_fonts.sans_serif_weight ||
+          global_fonts.sans_serif_weight === "Default"
+            ? ""
+            : global_fonts.sans_serif_weight;
+        globalMonospaceWeightPlaceholder.value =
+          !global_fonts.monospace_weight ||
+          global_fonts.monospace_weight === "Default"
+            ? ""
+            : global_fonts.monospace_weight;
       }
       browser.storage.sync.get(["override"]).then((result) => {
         const willOverride = "override" in result && result["override"];
@@ -180,6 +215,12 @@ settingsButton.addEventListener("click", () =>
               globalSerifPlaceholder.textContent = global_fonts.serif;
               globalSansSerifPlaceholder.textContent = global_fonts.sans_serif;
               globalMonospacePlaceholder.textContent = global_fonts.monospace;
+              globalSerifWeightPlaceholder.textContent =
+                global_fonts.serif_weight || "Default";
+              globalSansSerifWeightPlaceholder.textContent =
+                global_fonts.sans_serif_weight || "Default";
+              globalMonospaceWeightPlaceholder.textContent =
+                global_fonts.monospace_weight || "Default";
               // Placeholder value
               globalSerifPlaceholder.value =
                 global_fonts.serif === "Default" ? "" : global_fonts.serif;
@@ -191,6 +232,21 @@ settingsButton.addEventListener("click", () =>
                 global_fonts.monospace === "Default"
                   ? ""
                   : global_fonts.monospace;
+              globalSerifWeightPlaceholder.value =
+                !global_fonts.serif_weight ||
+                global_fonts.serif_weight === "Default"
+                  ? ""
+                  : global_fonts.serif_weight;
+              globalSansSerifWeightPlaceholder.value =
+                !global_fonts.sans_serif_weight ||
+                global_fonts.sans_serif_weight === "Default"
+                  ? ""
+                  : global_fonts.sans_serif_weight;
+              globalMonospaceWeightPlaceholder.value =
+                !global_fonts.monospace_weight ||
+                global_fonts.monospace_weight === "Default"
+                  ? ""
+                  : global_fonts.monospace_weight;
             }
           } else {
             showTip(tipText);
@@ -255,21 +311,51 @@ const fontSelectionForm = document.forms["fonts"];
 const serifSelect = fontSelectionForm.elements["serif"];
 const sansSerifSelect = fontSelectionForm.elements["sans_serif"];
 const monospaceSelect = fontSelectionForm.elements["monospace"];
+const serifWeightSelect = fontSelectionForm.elements["serif_weight"];
+const sansSerifWeightSelect = fontSelectionForm.elements["sans_serif_weight"];
+const monospaceWeightSelect = fontSelectionForm.elements["monospace_weight"];
 const serifPlaceholder = document.querySelector("#serif_placeholder");
 const sansSerifPlaceholder = document.querySelector("#sans_serif_placeholder");
 const monospacePlaceholder = document.querySelector("#monospace_placeholder");
+const serifWeightPlaceholder = document.querySelector(
+  "#serif_weight_placeholder"
+);
+const sansSerifWeightPlaceholder = document.querySelector(
+  "#sans_serif_weight_placeholder"
+);
+const monospaceWeightPlaceholder = document.querySelector(
+  "#monospace_weight_placeholder"
+);
 // Populating placeholder values + checkbox
 const updatePlaceholders = (innerText) => {
   // Placeholder text content
   serifPlaceholder.textContent = innerText.serif;
   sansSerifPlaceholder.textContent = innerText.sans_serif;
   monospacePlaceholder.textContent = innerText.monospace;
+  serifWeightPlaceholder.textContent =
+    innerText.serif_weight || "Default";
+  sansSerifWeightPlaceholder.textContent =
+    innerText.sans_serif_weight || "Default";
+  monospaceWeightPlaceholder.textContent =
+    innerText.monospace_weight || "Default";
   // Placeholder value
   serifPlaceholder.value = innerText.serif === "Default" ? "" : innerText.serif;
   sansSerifPlaceholder.value =
     innerText.sans_serif === "Default" ? "" : innerText.sans_serif;
   monospacePlaceholder.value =
     innerText.monospace === "Default" ? "" : innerText.monospace;
+  serifWeightPlaceholder.value =
+    !innerText.serif_weight || innerText.serif_weight === "Default"
+      ? ""
+      : innerText.serif_weight;
+  sansSerifWeightPlaceholder.value =
+    !innerText.sans_serif_weight || innerText.sans_serif_weight === "Default"
+      ? ""
+      : innerText.sans_serif_weight;
+  monospaceWeightPlaceholder.value =
+    !innerText.monospace_weight || innerText.monospace_weight === "Default"
+      ? ""
+      : innerText.monospace_weight;
 };
 getDomain().then((domain) => {
   browser.storage.sync.get([domain]).then((result) => {
@@ -305,7 +391,6 @@ const populateFonts = (element) => {
     "Mulish",
     "Marcellus",
     "Montserrat",
-    "Montserrat-500",
     "Nunito",
     "Vollkorn",
     "Playfair",
@@ -332,19 +417,54 @@ const populateFonts = (element) => {
     element.appendChild(option);
   });
 };
+const populateWeights = (element) => {
+  [
+    "100",
+    "200",
+    "300",
+    "400",
+    "500",
+    "600",
+    "700",
+    "800",
+    "900",
+    "1000",
+  ].forEach((weight) => {
+    const option = document.createElement("option");
+    option.value = weight;
+    option.textContent = weight;
+    element.appendChild(option);
+  });
+};
 populateFonts(serifSelect);
 populateFonts(sansSerifSelect);
 populateFonts(monospaceSelect);
+populateWeights(serifWeightSelect);
+populateWeights(sansSerifWeightSelect);
+populateWeights(monospaceWeightSelect);
 // for global fonts form
 populateFonts(globalSerifSelect);
 populateFonts(globalSansSerifSelect);
 populateFonts(globalMonospaceSelect);
+populateWeights(globalSerifWeightSelect);
+populateWeights(globalSansSerifWeightSelect);
+populateWeights(globalMonospaceWeightSelect);
 fontSelectionForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const serifValue = serifSelect.value;
   const sansSerifValue = sansSerifSelect.value;
   const monospaceValue = monospaceSelect.value;
-  if (!serifValue.length && !sansSerifValue.length && !monospaceValue.length)
+  const serifWeightValue = serifWeightSelect.value;
+  const sansSerifWeightValue = sansSerifWeightSelect.value;
+  const monospaceWeightValue = monospaceWeightSelect.value;
+  if (
+    !serifValue.length &&
+    !sansSerifValue.length &&
+    !monospaceValue.length &&
+    !serifWeightValue.length &&
+    !sansSerifWeightValue.length &&
+    !monospaceWeightValue.length
+  )
     applyButton.textContent = "No Changes Made";
   else {
     applyButton.textContent = "✔ Applied";
@@ -360,8 +480,17 @@ fontSelectionForm.addEventListener("submit", (e) => {
         // telling the service worker to apply the font
         const fontData = {
           serif: serifValue.length ? serifValue : "Default",
+          serif_weight: serifWeightValue.length
+            ? serifWeightValue
+            : "Default",
           sans_serif: sansSerifValue.length ? sansSerifValue : "Default",
+          sans_serif_weight: sansSerifWeightValue.length
+            ? sansSerifWeightValue
+            : "Default",
           monospace: monospaceValue.length ? monospaceValue : "Default",
+          monospace_weight: monospaceWeightValue.length
+            ? monospaceWeightValue
+            : "Default",
         };
         browser.tabs.connect(tabs[0].id).postMessage({
           type: "apply_font",
@@ -372,7 +501,10 @@ fontSelectionForm.addEventListener("submit", (e) => {
         if (
           serifValue.length ||
           sansSerifValue.length ||
-          monospaceValue.length
+          monospaceValue.length ||
+          serifWeightValue.length ||
+          sansSerifWeightValue.length ||
+          monospaceWeightValue.length
         ) {
           yield browser.storage.sync.set({
             [domain]: fontData,
@@ -408,11 +540,17 @@ globalFontSelectionForm.addEventListener("submit", (e) =>
     const globalSerifValue = globalSerifSelect.value;
     const globalSansSerifValue = globalSansSerifSelect.value;
     const globaMonospaceValue = globalMonospaceSelect.value;
+    const globalSerifWeightValue = globalSerifWeightSelect.value;
+    const globalSansSerifWeightValue = globalSansSerifWeightSelect.value;
+    const globalMonospaceWeightValue = globalMonospaceWeightSelect.value;
     const applyButton = document.getElementById("global-apply-btn");
     if (
       !globalSerifValue.length &&
       !globalSansSerifValue.length &&
-      !globaMonospaceValue.length
+      !globaMonospaceValue.length &&
+      !globalSerifWeightValue.length &&
+      !globalSansSerifWeightValue.length &&
+      !globalMonospaceWeightValue.length
     )
       applyButton.textContent = "No Changes Made";
     else {
@@ -424,10 +562,21 @@ globalFontSelectionForm.addEventListener("submit", (e) =>
     yield browser.storage.sync.set({
       global_fonts: {
         serif: globalSerifValue.length ? globalSerifValue : "Default",
+        serif_weight: globalSerifWeightValue.length
+          ? globalSerifWeightValue
+          : "Default",
         sans_serif: globalSansSerifValue.length
           ? globalSansSerifValue
           : "Default",
-        monospace: globaMonospaceValue.length ? globaMonospaceValue : "Default",
+        sans_serif_weight: globalSansSerifWeightValue.length
+          ? globalSansSerifWeightValue
+          : "Default",
+        monospace: globaMonospaceValue.length
+          ? globaMonospaceValue
+          : "Default",
+        monospace_weight: globalMonospaceWeightValue.length
+          ? globalMonospaceWeightValue
+          : "Default",
       },
     });
   })
@@ -457,6 +606,9 @@ restoreButton.addEventListener("click", () =>
       serif: "Default",
       sans_serif: "Default",
       monospace: "Default",
+      serif_weight: "Default",
+      sans_serif_weight: "Default",
+      monospace_weight: "Default",
     });
     document.getElementById("restore_modal").showModal();
     browser.storage.sync.remove(yield getDomain());
