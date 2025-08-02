@@ -1,27 +1,49 @@
-const changeFontFamily = (node, serif, sansSerif, monospace) => {
+const changeFontFamily = (
+  node,
+  serif,
+  sansSerif,
+  monospace,
+  serifWeight,
+  sansSerifWeight,
+  monospaceWeight
+) => {
   if (node.nodeType === 1) {
     const computedStyle = window.getComputedStyle(node);
     const fontFamily = computedStyle.getPropertyValue("font-family");
     if (fontFamily) {
-      if ((fontFamily.includes("sans-serif") || fontFamily.includes("Open Sans-fallback")) && sansSerif != "Default") {
-        const match = sansSerif.match(/(.*)-(\d{3})/);
-        if (match) {
-          node.style.fontFamily = `'${match[1]}'`;
-          node.style.fontWeight = match[2];
-        } else {
-          node.style.fontFamily = `'${sansSerif}'`;
-          node.style.fontWeight = '400';
-        }
+      if (
+        (fontFamily.includes("sans-serif") ||
+          fontFamily.includes("Open Sans-fallback")) &&
+        sansSerif != "Default"
+      ) {
+        node.style.fontFamily = `'${sansSerif}'`;
+        if (sansSerifWeight !== "Default")
+          node.style.fontWeight = sansSerifWeight;
+        else node.style.fontWeight = "";
       } else if (fontFamily.includes("serif") && serif != "Default") {
         node.style.fontFamily = `'${serif}'`;
+        if (serifWeight !== "Default")
+          node.style.fontWeight = serifWeight;
+        else node.style.fontWeight = "";
       } else if (fontFamily.includes("monospace") && monospace != "Default") {
         node.style.fontFamily = `'${monospace}'`;
+        if (monospaceWeight !== "Default")
+          node.style.fontWeight = monospaceWeight;
+        else node.style.fontWeight = "";
       }
     }
   }
   // Recursively process child nodes
   for (const childNode of node.childNodes) {
-    changeFontFamily(childNode, serif, sansSerif, monospace);
+    changeFontFamily(
+      childNode,
+      serif,
+      sansSerif,
+      monospace,
+      serifWeight,
+      sansSerifWeight,
+      monospaceWeight
+    );
   }
 };
 
@@ -36,7 +58,18 @@ browser.runtime.sendMessage(message, undefined, (response) => {
     const serif = response.data.serif;
     const sans_serif = response.data.sans_serif;
     const monospace = response.data.monospace;
-    changeFontFamily(document.body, serif, sans_serif, monospace);
+    const serif_weight = response.data.serif_weight || "Default";
+    const sans_serif_weight = response.data.sans_serif_weight || "Default";
+    const monospace_weight = response.data.monospace_weight || "Default";
+    changeFontFamily(
+      document.body,
+      serif,
+      sans_serif,
+      monospace,
+      serif_weight,
+      sans_serif_weight,
+      monospace_weight
+    );
   } else if (response.type === "none") {
     console.log("Font not set for site");
   }
@@ -50,7 +83,18 @@ browser.runtime.onConnect.addListener((port) => {
         const serif = message.data.serif;
         const sans_serif = message.data.sans_serif;
         const monospace = message.data.monospace;
-        changeFontFamily(document.body, serif, sans_serif, monospace);
+        const serif_weight = message.data.serif_weight || "Default";
+        const sans_serif_weight = message.data.sans_serif_weight || "Default";
+        const monospace_weight = message.data.monospace_weight || "Default";
+        changeFontFamily(
+          document.body,
+          serif,
+          sans_serif,
+          monospace,
+          serif_weight,
+          sans_serif_weight,
+          monospace_weight
+        );
       } else if (message.type === "restore") {
         location.reload();
       } else if (message.type === "redirect") {
