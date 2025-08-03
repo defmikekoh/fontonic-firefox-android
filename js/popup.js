@@ -385,6 +385,7 @@ const populateFonts = (element) => {
     "Montserrat",
     "Rubik",
     "Atkinson Hyperlegible Next",
+    "Source Sans Pro",
     "Merriweather Sans",
     "Public Sans",
     "PT Sans",
@@ -414,7 +415,6 @@ const populateFonts = (element) => {
     "Coming Soon",
     "Dancing Script",
     "Carrois Gothic SC",
-    "Source Sans Pro",
     "One UI Sans App VF",
   ].forEach((font) => {
     const option = document.createElement("option");
