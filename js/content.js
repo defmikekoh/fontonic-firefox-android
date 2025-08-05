@@ -1,3 +1,9 @@
+const exclusionSelectors = {
+  "www.bloomberg.com": ['[data-component="subhead"]'],
+};
+
+const currentDomain = window.location.hostname;
+
 const changeFontFamily = (
   node,
   serif,
@@ -5,8 +11,15 @@ const changeFontFamily = (
   monospace,
   serifWeight,
   sansSerifWeight,
-  monospaceWeight
+  monospaceWeight,
 ) => {
+  if (
+    node.nodeType === 1 &&
+    exclusionSelectors[currentDomain] &&
+    exclusionSelectors[currentDomain].some((selector) => node.matches(selector))
+  ) {
+    return;
+  }
   if (node.nodeType === 1) {
     const computedStyle = window.getComputedStyle(node);
     const fontFamily = computedStyle.getPropertyValue("font-family");
@@ -22,8 +35,7 @@ const changeFontFamily = (
         else node.style.fontWeight = "";
       } else if (fontFamily.includes("serif") && serif != "Default") {
         node.style.fontFamily = `'${serif}'`;
-        if (serifWeight !== "Default")
-          node.style.fontWeight = serifWeight;
+        if (serifWeight !== "Default") node.style.fontWeight = serifWeight;
         else node.style.fontWeight = "";
       } else if (fontFamily.includes("monospace") && monospace != "Default") {
         node.style.fontFamily = `'${monospace}'`;
@@ -42,14 +54,14 @@ const changeFontFamily = (
       monospace,
       serifWeight,
       sansSerifWeight,
-      monospaceWeight
+      monospaceWeight,
     );
   }
 };
 
 let message = {
   action: "on-page-load",
-  domain: window.location.hostname,
+  domain: currentDomain,
 };
 // Tries to load font when page is loaded
 browser.runtime.sendMessage(message, undefined, (response) => {
@@ -68,7 +80,7 @@ browser.runtime.sendMessage(message, undefined, (response) => {
       monospace,
       serif_weight,
       sans_serif_weight,
-      monospace_weight
+      monospace_weight,
     );
   } else if (response.type === "none") {
     console.log("Font not set for site");
@@ -93,7 +105,7 @@ browser.runtime.onConnect.addListener((port) => {
           monospace,
           serif_weight,
           sans_serif_weight,
-          monospace_weight
+          monospace_weight,
         );
       } else if (message.type === "restore") {
         location.reload();
