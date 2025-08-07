@@ -35,7 +35,8 @@ const changeFontFamily = (
         "arial",
         "helvetica",
         "open sans",
-        "open sans-fallback"
+        "open sans-fallback",
+        "verdana"
       ];
       const serifTriggers = [
         "serif",
