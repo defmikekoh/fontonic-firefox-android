@@ -11,6 +11,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&display=swap');
 /* Crimson Pro */
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+/* DM Sans */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 /* EB Garamond */
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap');
 /* Fira Code */
@@ -60,6 +62,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
 /* Marcellus */
 @import url('https://fonts.googleapis.com/css2?family=Marcellus&display=swap');
+/* Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 /* PT Sans */
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 /* Tinos */
@@ -73,3 +77,36 @@
 @import url('https://fonts.cdnfonts.com/css/charter-itc-tt');
 /* Fantasque Sans Mono */
 @import url('https://fonts.cdnfonts.com/css/fantasque-sans-mono');
+
+/* cdnfont broken imports, so state explicitly */
+/* Neue Plak Regular — normal */
+@font-face {
+  font-family: 'Neue Plak';
+  font-style: normal;
+  font-weight: 400;
+  src: url('https://fonts.cdnfonts.com/s/67517/Neue%20Plak%20Regular.woff') format('woff');
+}
+
+/* Neue Plak Italic — matched to Regular, so 400 italic */
+@font-face {
+  font-family: 'Neue Plak';
+  font-style: italic;
+  font-weight: 400;
+  src: url('https://fonts.cdnfonts.com/s/67517/Neue%20Plak%20Text%20Italic.woff') format('woff');
+}
+
+/* Neue Plak Text Regular — slightly heavier body style */
+@font-face {
+  font-family: 'Neue Plak Text';
+  font-style: normal;
+  font-weight: 400;
+  src: url('https://fonts.cdnfonts.com/s/67517/Neue%20Plak%20Text%20Regular.woff') format('woff');
+}
+
+/* Neue Plak Text Italic — same family and weight */
+@font-face {
+  font-family: 'Neue Plak Text';
+  font-style: italic;
+  font-weight: 400;
+  src: url('https://fonts.cdnfonts.com/s/67517/Neue%20Plak%20Text%20Italic.woff') format('woff');
+}

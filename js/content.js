@@ -24,24 +24,46 @@ const changeFontFamily = (
     const computedStyle = window.getComputedStyle(node);
     const fontFamily = computedStyle.getPropertyValue("font-family");
     if (fontFamily) {
-      if (
-        (fontFamily.includes("sans-serif") ||
-          fontFamily.includes("Open Sans-fallback")) &&
-        sansSerif != "Default"
-      ) {
-        node.style.fontFamily = `'${sansSerif}'`;
-        if (sansSerifWeight !== "Default")
-          node.style.fontWeight = sansSerifWeight;
-        else node.style.fontWeight = "";
-      } else if (fontFamily.includes("serif") && serif != "Default") {
-        node.style.fontFamily = `'${serif}'`;
-        if (serifWeight !== "Default") node.style.fontWeight = serifWeight;
-        else node.style.fontWeight = "";
-      } else if (fontFamily.includes("monospace") && monospace != "Default") {
-        node.style.fontFamily = `'${monospace}'`;
-        if (monospaceWeight !== "Default")
-          node.style.fontWeight = monospaceWeight;
-        else node.style.fontWeight = "";
+      // Normalize to lowercase for robust matching
+      const fontFamilyLower = fontFamily.toLowerCase();
+      // Split into array for order-sensitive matching
+      const fontList = fontFamilyLower.split(",").map(f => f.trim());
+
+      // Define triggers for each type
+      const sansSerifTriggers = [
+        "sans-serif",
+        "arial",
+        "helvetica",
+        "open sans",
+        "open sans-fallback"
+      ];
+      const serifTriggers = [
+        "serif",
+        "georgia",
+        "times",
+        "times new roman"
+      ];
+      const monospaceTriggers = [
+        "monospace",
+        "courier",
+        "courier new"
+      ];
+
+      let applied = false;
+      for (const font of fontList) {
+        if (!applied && sansSerifTriggers.includes(font) && sansSerif != "Default") {
+          node.style.fontFamily = `'${sansSerif}'`;
+          node.style.fontWeight = sansSerifWeight !== "Default" ? sansSerifWeight : "";
+          applied = true;
+        } else if (!applied && serifTriggers.includes(font) && serif != "Default") {
+          node.style.fontFamily = `'${serif}'`;
+          node.style.fontWeight = serifWeight !== "Default" ? serifWeight : "";
+          applied = true;
+        } else if (!applied && monospaceTriggers.includes(font) && monospace != "Default") {
+          node.style.fontFamily = `'${monospace}'`;
+          node.style.fontWeight = monospaceWeight !== "Default" ? monospaceWeight : "";
+          applied = true;
+        }
       }
     }
   }
