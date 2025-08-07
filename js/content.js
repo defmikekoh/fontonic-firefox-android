@@ -27,7 +27,9 @@ const changeFontFamily = (
       // Normalize to lowercase for robust matching
       const fontFamilyLower = fontFamily.toLowerCase();
       // Split into array for order-sensitive matching
-      const fontList = fontFamilyLower.split(",").map(f => f.trim());
+      const fontList = fontFamilyLower
+        .split(",")
+        .map(f => f.trim().replace(/^["']|["']$/g, "")); // Remove leading/trailing quotes
 
       // Define triggers for each type
       const sansSerifTriggers = [
