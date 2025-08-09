@@ -372,6 +372,7 @@ const populateFonts = (element) => {
   [
     // high frequency serif
     "Merriweather",
+    "Tiempos Text Web",
     "Literata",
     "Roboto Slab",
     "Source Serif 4",
@@ -390,11 +391,11 @@ const populateFonts = (element) => {
     "Atkinson Hyperlegible",
     "Manrope",
     "Neue Plak Text",
-    "Neue Plak",
     "Rubik",
     "ABC Ginto Normal Unlicensed Trial",
     "Merriweather Sans",
     "Roboto",
+    "Neue Plak",
     "PT Sans",
     "Noto Sans",
     "Source Sans Pro",
