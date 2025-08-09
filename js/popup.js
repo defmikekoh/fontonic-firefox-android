@@ -372,7 +372,8 @@ const populateFonts = (element) => {
   [
     // high frequency serif
     "Merriweather",
-    "Tiempos Text Web",
+    "TiemposText",
+    "TiemposText-Regular",
     "Literata",
     "Roboto Slab",
     "Source Serif 4",
