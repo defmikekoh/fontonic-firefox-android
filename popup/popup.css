@@ -1879,10 +1879,6 @@ html {
   width: 75%;
 }
 
-.w-32 {
-  width: 8rem;
-}
-
 .w-full {
   width: 100%;
 }
@@ -1893,10 +1889,6 @@ html {
 
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.grid-cols-3 {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .flex-col {
