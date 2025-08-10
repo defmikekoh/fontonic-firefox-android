@@ -124,7 +124,7 @@ jobs:
               --artifacts-dir ./signed \
               --api-key "$AMO_JWT_ISSUER" \
               --api-secret "$AMO_JWT_SECRET" \
-              --timeout 300000 ; then
+              --timeout 1020000 ; then
               echo "web-ext sign completed."
             else
               echo "web-ext sign exited non-zero (possible approval timeout)."
@@ -164,6 +164,7 @@ jobs:
           git push -f origin android-test-latest
 
       # Prerelease on every push for a direct .xpi link
+
       - name: Create/Update draft "latest" release (every push)
         if: github.event_name == 'push'
         uses: softprops/action-gh-release@v2
@@ -181,6 +182,29 @@ jobs:
           files: signed/*.xpi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prune old assets from android-test-latest release
+        if: github.event_name == 'push'
+        run: |
+          echo "Pruning old assets..."
+          API_URL="https://api.github.com/repos/${{ github.repository }}/releases/tags/android-test-latest"
+          RELEASE_JSON=$(curl -sSL -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$API_URL")
+          RELEASE_ID=$(echo "$RELEASE_JSON" | jq -r '.id')
+          if [ "$RELEASE_ID" = "null" ] || [ -z "$RELEASE_ID" ]; then
+            echo "No release found for tag android-test-latest."
+            exit 0
+          fi
+          # Collect asset IDs beyond the 10 most recent (keep newest first)
+          ASSET_IDS=($(echo "$RELEASE_JSON" | jq -r '.assets | sort_by(.created_at) | reverse | .[10:] | .[].id'))
+          if [ ${#ASSET_IDS[@]} -eq 0 ]; then
+            echo "No old assets to delete."
+            exit 0
+          fi
+          for AID in "${ASSET_IDS[@]}"; do
+            echo "Deleting asset ID $AID..."
+            curl -sSL -X DELETE -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ github.repository }}/releases/assets/$AID"
+          done
 
       - name: Print direct link and QR to latest .xpi
         if: github.event_name == 'push'
