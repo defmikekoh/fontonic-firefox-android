@@ -194,8 +194,8 @@ jobs:
             echo "No release found for tag android-test-latest."
             exit 0
           fi
-          # Collect asset IDs beyond the 10 most recent (keep newest first)
-          ASSET_IDS=($(echo "$RELEASE_JSON" | jq -r '.assets | sort_by(.created_at) | reverse | .[10:] | .[].id'))
+          # Collect asset IDs beyond the 5 most recent (keep newest first)
+          ASSET_IDS=($(echo "$RELEASE_JSON" | jq -r '.assets | sort_by(.created_at) | reverse | .[5:] | .[].id'))
           if [ ${#ASSET_IDS[@]} -eq 0 ]; then
             echo "No old assets to delete."
             exit 0
