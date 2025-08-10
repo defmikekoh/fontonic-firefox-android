@@ -153,12 +153,23 @@ jobs:
           name: signed-xpi-${{ steps.ver.outputs.v }}
           path: signed/*.xpi
 
+      # Move android-test-latest tag to this commit so the release has a real tag
+      - name: Move android-test-latest tag to this commit
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch --tags --force
+          git tag -f android-test-latest $GITHUB_SHA
+          git push -f origin android-test-latest
+
       # Draft release on every push for a direct .xpi link
       - name: Create/Update draft "latest" release (every push)
         if: github.event_name == 'push'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: android-test-latest
+          target_commitish: ${{ github.sha }}
           name: Android test (latest) ${{ steps.ver.outputs.v }}
           body: |
             Draft build for Android testing.
