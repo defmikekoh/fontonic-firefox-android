@@ -65,11 +65,11 @@ const globalSansSerifWeightSelect =
   globalFontSelectionForm.elements["global_sans_serif_weight"];
 const globalMonospaceWeightSelect =
   globalFontSelectionForm.elements["global_monospace_weight"];
-const globalSerifSizeInput =
+const globalSerifSizeSelect =
   globalFontSelectionForm.elements["global_serif_size"];
-const globalSansSerifSizeInput =
+const globalSansSerifSizeSelect =
   globalFontSelectionForm.elements["global_sans_serif_size"];
-const globalMonospaceSizeInput =
+const globalMonospaceSizeSelect =
   globalFontSelectionForm.elements["global_monospace_size"];
 const globalSerifPlaceholder = document.querySelector(
   "#global_serif_placeholder",
@@ -160,16 +160,16 @@ browser.storage.sync.get(["global"]).then((result) =>
           global_fonts.monospace_weight === "Default"
             ? ""
             : global_fonts.monospace_weight;
-        globalSerifSizeInput.value =
+        globalSerifSizeSelect.value =
           global_fonts.serif_size && global_fonts.serif_size !== "Default"
             ? global_fonts.serif_size
             : "";
-        globalSansSerifSizeInput.value =
+        globalSansSerifSizeSelect.value =
           global_fonts.sans_serif_size &&
           global_fonts.sans_serif_size !== "Default"
             ? global_fonts.sans_serif_size
             : "";
-        globalMonospaceSizeInput.value =
+        globalMonospaceSizeSelect.value =
           global_fonts.monospace_size &&
           global_fonts.monospace_size !== "Default"
             ? global_fonts.monospace_size
@@ -267,16 +267,16 @@ settingsButton.addEventListener("click", () =>
                 global_fonts.monospace_weight === "Default"
                   ? ""
                   : global_fonts.monospace_weight;
-              globalSerifSizeInput.value =
+              globalSerifSizeSelect.value =
                 global_fonts.serif_size && global_fonts.serif_size !== "Default"
                   ? global_fonts.serif_size
                   : "";
-              globalSansSerifSizeInput.value =
+              globalSansSerifSizeSelect.value =
                 global_fonts.sans_serif_size &&
                 global_fonts.sans_serif_size !== "Default"
                   ? global_fonts.sans_serif_size
                   : "";
-              globalMonospaceSizeInput.value =
+              globalMonospaceSizeSelect.value =
                 global_fonts.monospace_size &&
                 global_fonts.monospace_size !== "Default"
                   ? global_fonts.monospace_size
@@ -348,9 +348,9 @@ const monospaceSelect = fontSelectionForm.elements["monospace"];
 const serifWeightSelect = fontSelectionForm.elements["serif_weight"];
 const sansSerifWeightSelect = fontSelectionForm.elements["sans_serif_weight"];
 const monospaceWeightSelect = fontSelectionForm.elements["monospace_weight"];
-const serifSizeInput = fontSelectionForm.elements["serif_size"];
-const sansSerifSizeInput = fontSelectionForm.elements["sans_serif_size"];
-const monospaceSizeInput = fontSelectionForm.elements["monospace_size"];
+const serifSizeSelect = fontSelectionForm.elements["serif_size"];
+const sansSerifSizeSelect = fontSelectionForm.elements["sans_serif_size"];
+const monospaceSizeSelect = fontSelectionForm.elements["monospace_size"];
 const serifPlaceholder = document.querySelector("#serif_placeholder");
 const sansSerifPlaceholder = document.querySelector("#sans_serif_placeholder");
 const monospacePlaceholder = document.querySelector("#monospace_placeholder");
@@ -392,15 +392,15 @@ const updatePlaceholders = (innerText) => {
     !innerText.monospace_weight || innerText.monospace_weight === "Default"
       ? ""
       : innerText.monospace_weight;
-  serifSizeInput.value =
+  serifSizeSelect.value =
     innerText.serif_size && innerText.serif_size !== "Default"
       ? innerText.serif_size
       : "";
-  sansSerifSizeInput.value =
+  sansSerifSizeSelect.value =
     innerText.sans_serif_size && innerText.sans_serif_size !== "Default"
       ? innerText.sans_serif_size
       : "";
-  monospaceSizeInput.value =
+  monospaceSizeSelect.value =
     innerText.monospace_size && innerText.monospace_size !== "Default"
       ? innerText.monospace_size
       : "";
@@ -523,9 +523,9 @@ fontSelectionForm.addEventListener("submit", (e) => {
   const serifWeightValue = serifWeightSelect.value;
   const sansSerifWeightValue = sansSerifWeightSelect.value;
   const monospaceWeightValue = monospaceWeightSelect.value;
-  const serifSizeValue = serifSizeInput.value;
-  const sansSerifSizeValue = sansSerifSizeInput.value;
-  const monospaceSizeValue = monospaceSizeInput.value;
+  const serifSizeValue = serifSizeSelect.value;
+  const sansSerifSizeValue = sansSerifSizeSelect.value;
+  const monospaceSizeValue = monospaceSizeSelect.value;
   if (
     !serifValue.length &&
     !sansSerifValue.length &&
@@ -623,9 +623,9 @@ globalFontSelectionForm.addEventListener("submit", (e) =>
     const globalSerifWeightValue = globalSerifWeightSelect.value;
     const globalSansSerifWeightValue = globalSansSerifWeightSelect.value;
     const globalMonospaceWeightValue = globalMonospaceWeightSelect.value;
-    const globalSerifSizeValue = globalSerifSizeInput.value;
-    const globalSansSerifSizeValue = globalSansSerifSizeInput.value;
-    const globalMonospaceSizeValue = globalMonospaceSizeInput.value;
+    const globalSerifSizeValue = globalSerifSizeSelect.value;
+    const globalSansSerifSizeValue = globalSansSerifSizeSelect.value;
+    const globalMonospaceSizeValue = globalMonospaceSizeSelect.value;
     const applyButton = document.getElementById("global-apply-btn");
     if (
       !globalSerifValue.length &&
