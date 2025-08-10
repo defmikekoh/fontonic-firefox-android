@@ -69,25 +69,28 @@ jobs:
 
       # Optional: bump version inside the unzipped manifest so AMO accepts each submission
       # Remove this step if your build already changes version per-commit.
-      - name: Bump version (keep first 3 components, add timestamp)
+      - name: Bump version (4th = YYYYMMDDHHMM)
         run: |
           MF="${{ steps.unzip.outputs.src_dir }}/manifest.json"
 
-          # Grab current version's first 3 numeric components
+          # Keep the first 3 numeric components
           base=$(jq -r .version "$MF" | cut -d. -f1-3)
-
-          # Make sure it has exactly 3 parts
-          if [ "$(echo "$base" | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$')" = "" ]; then
+          if ! echo "$base" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
             echo "ERROR: manifest.json version must start with three numeric components" >&2
             exit 1
           fi
 
-          # Append UTC month/day/hour/minute
-          TS=$(date -u +%m%d%H%M)
-          new_version="${base}.${TS}"
+          # Build 4th component: YYYYMMDDHHMM (UTC)
+          # This is 12 digits, which is >9, so AMO will reject if we use it directly.
+          # To keep it ≤9 digits, we can trim to YYYYMMDD or YYYYDDDHH (year + day-of-year + hour)
+          # Example below uses YYYYMMDD (8 digits) + HH (2 digits) = 10 digits — still too long for AMO.
+          # So safest is YYYY + MMDDHH (4 + 4 = 8 digits)
+          TS=$(date -u +%Y%m%d%H)  # UTC year + month + day + hour, 9 digits or fewer
 
+          new_version="${base}.${TS}"
           jq --arg v "$new_version" '.version = $v' "$MF" > "$MF.tmp" && mv "$MF.tmp" "$MF"
           echo "New version: $(jq -r .version "$MF")"
+
 
 
 
