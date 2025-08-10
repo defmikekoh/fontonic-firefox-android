@@ -4,6 +4,16 @@ const exclusionSelectors = {
 
 const currentDomain = window.location.hostname;
 
+const SKIP_SELECTOR =
+  'i,[class*="icon"],[class*="fa-"],svg,code,pre,kbd,samp,h1,h2,h3,h4,h5,h6,button';
+function shouldSkip(el) {
+  if (el.closest('.app-banner')) return true;
+  if (el.closest('.byline-wrapper')) return true;
+  if (el.closest('.byline')) return true;
+  if (el.closest('.titleContainer-DJYq5v')) return true;
+  return el.matches(SKIP_SELECTOR);
+}
+
 const changeFontFamily = (
   node,
   serif,
@@ -12,15 +22,20 @@ const changeFontFamily = (
   serifWeight,
   sansSerifWeight,
   monospaceWeight,
+  serifSize,
+  sansSerifSize,
+  monospaceSize,
 ) => {
-  if (
-    node.nodeType === 1 &&
-    exclusionSelectors[currentDomain] &&
-    exclusionSelectors[currentDomain].some((selector) => node.matches(selector))
-  ) {
-    return;
-  }
   if (node.nodeType === 1) {
+    if (
+      (exclusionSelectors[currentDomain] &&
+        exclusionSelectors[currentDomain].some((selector) =>
+          node.matches(selector),
+        )) ||
+      shouldSkip(node)
+    ) {
+      return;
+    }
     const computedStyle = window.getComputedStyle(node);
     const fontFamily = computedStyle.getPropertyValue("font-family");
     if (fontFamily) {
@@ -57,14 +72,21 @@ const changeFontFamily = (
         if (!applied && sansSerifTriggers.includes(font) && sansSerif != "Default") {
           node.style.fontFamily = `'${sansSerif}'`;
           node.style.fontWeight = sansSerifWeight !== "Default" ? sansSerifWeight : "";
+          node.style.fontSize =
+            sansSerifSize !== "Default" ? `${sansSerifSize}px` : "";
           applied = true;
         } else if (!applied && serifTriggers.includes(font) && serif != "Default") {
           node.style.fontFamily = `'${serif}'`;
           node.style.fontWeight = serifWeight !== "Default" ? serifWeight : "";
+          node.style.fontSize =
+            serifSize !== "Default" ? `${serifSize}px` : "";
           applied = true;
         } else if (!applied && monospaceTriggers.includes(font) && monospace != "Default") {
           node.style.fontFamily = `'${monospace}'`;
-          node.style.fontWeight = monospaceWeight !== "Default" ? monospaceWeight : "";
+          node.style.fontWeight =
+            monospaceWeight !== "Default" ? monospaceWeight : "";
+          node.style.fontSize =
+            monospaceSize !== "Default" ? `${monospaceSize}px` : "";
           applied = true;
         }
       }
@@ -80,6 +102,9 @@ const changeFontFamily = (
       serifWeight,
       sansSerifWeight,
       monospaceWeight,
+      serifSize,
+      sansSerifSize,
+      monospaceSize,
     );
   }
 };
@@ -98,6 +123,9 @@ browser.runtime.sendMessage(message, undefined, (response) => {
     const serif_weight = response.data.serif_weight || "Default";
     const sans_serif_weight = response.data.sans_serif_weight || "Default";
     const monospace_weight = response.data.monospace_weight || "Default";
+    const serif_size = response.data.serif_size || "Default";
+    const sans_serif_size = response.data.sans_serif_size || "Default";
+    const monospace_size = response.data.monospace_size || "Default";
     changeFontFamily(
       document.body,
       serif,
@@ -106,6 +134,9 @@ browser.runtime.sendMessage(message, undefined, (response) => {
       serif_weight,
       sans_serif_weight,
       monospace_weight,
+      serif_size,
+      sans_serif_size,
+      monospace_size,
     );
   } else if (response.type === "none") {
     console.log("Font not set for site");
@@ -123,6 +154,9 @@ browser.runtime.onConnect.addListener((port) => {
         const serif_weight = message.data.serif_weight || "Default";
         const sans_serif_weight = message.data.sans_serif_weight || "Default";
         const monospace_weight = message.data.monospace_weight || "Default";
+        const serif_size = message.data.serif_size || "Default";
+        const sans_serif_size = message.data.sans_serif_size || "Default";
+        const monospace_size = message.data.monospace_size || "Default";
         changeFontFamily(
           document.body,
           serif,
@@ -131,6 +165,9 @@ browser.runtime.onConnect.addListener((port) => {
           serif_weight,
           sans_serif_weight,
           monospace_weight,
+          serif_size,
+          sans_serif_size,
+          monospace_size,
         );
       } else if (message.type === "restore") {
         location.reload();
