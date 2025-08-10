@@ -1875,12 +1875,12 @@ html {
   display: grid;
 }
 
-.w-2\/3 {
-  width: 66.666667%;
-}
-
 .w-3\/4 {
   width: 75%;
+}
+
+.w-32 {
+  width: 8rem;
 }
 
 .w-full {
@@ -1921,10 +1921,6 @@ html {
 
 .gap-4 {
   gap: 1rem;
-}
-
-.justify-self-start {
-  justify-self: start;
 }
 
 .rounded-md {
