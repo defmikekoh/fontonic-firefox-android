@@ -1,220 +1,411 @@
 <html>
-
-<head>
+  <head>
     <title>Fontonic</title>
-    <meta charset='UTF-8' />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="popup.css">
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="popup.css" />
     <script defer src="../js/popup.js"></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <!-- Wrapper -->
-    <div id="wrapper" style="font-family: 'Inter Tight', sans-serif; padding: 2rem;">
-        <!-- Header -->
-        <div class="flex justify-between items-center">
-            <!-- Logo -->
-            <a href="https://fontonic.amkhrjee.xyz">
-                <div class="flex items-center">
-                    <img src="../res/icons/favicon-96x96.png">
-                    <h2 style="color: #ff914c;" class="text-6xl font-bold items-center">Fontonic</h2>
-                </div>
-            </a>
-            <div class="flex gap-4 items-center">
-                <button id="settings-btn" class="btn btn-ghost text-5xl">Settings</button>
-                <button id="support-btn" class="text-accent font-bold text-5xl">
-                    Support</button>
-            </div>
+    <div
+      id="wrapper"
+      style="font-family: &quot;Inter Tight&quot;, sans-serif; padding: 2rem"
+    >
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <!-- Logo -->
+        <a href="https://fontonic.amkhrjee.xyz">
+          <div class="flex items-center">
+            <img src="../res/icons/favicon-96x96.png" />
+            <h2 style="color: #ff914c" class="text-6xl font-bold items-center">
+              Fontonic
+            </h2>
+          </div>
+        </a>
+        <div class="flex gap-4 items-center">
+          <button id="settings-btn" class="btn btn-ghost text-5xl">
+            Settings
+          </button>
+          <button id="support-btn" class="text-accent font-bold text-5xl">
+            Support
+          </button>
         </div>
-        <br>
-        <div id="home-page">
-            <!-- Information -->
-            <div class="text-5xl">
-                <br>
-                <p>You can <a class="link link-primary" href=" https://forms.gle/3eqT9NU3mGHNjtyD8">report↗</a>
-                    unsupported websites.</p>
-                <br>
-                <div id="tip-box">
-                    <p id="tip">↺ Refresh if you don't see any changes.</p>
-                    <p id="tip-override-off" class="text-warning">✺ Global fonts apply is on. Override is off.
-                    </p>
-                    <p id="tip-override-on" class="text-warning">✺ Global fonts apply is on. Override is on.
-                    </p>
-                    <p id="tip-exempt" class="text-warning">⮾ This site is exempted from the global settings.</p>
-                </div>
-            </div>
-            <br>
-            <br><br>
-
-            <!-- Font Selection -->
-            <div>
-                <form name="fonts">
-                    <div class="grid grid-cols-4 gap-4">
-                        <label class="text-6xl font-serif" for="serif">Serif</label>
-                        <select class="text-6xl" id="serif" name="serif">
-                            <option id="serif_placeholder" value="">Default</option>
-                        </select>
-                        <select class="text-6xl" id="serif_weight" name="serif_weight">
-                            <option id="serif_weight_placeholder" value="">Default</option>
-                        </select>
-                        <input class="text-6xl" id="serif_size" name="serif_size" type="number" placeholder="Default" />
-                        <label class="text-6xl font-sans" for="sans_serif">Sans-serif</label>
-                        <select class="text-6xl" id="sans_serif" name="sans_serif">
-                            <option id="sans_serif_placeholder" value="">Default</option>
-                        </select>
-                        <select class="text-6xl" id="sans_serif_weight" name="sans_serif_weight">
-                            <option id="sans_serif_weight_placeholder" value="">Default</option>
-                        </select>
-                        <input class="text-6xl" id="sans_serif_size" name="sans_serif_size" type="number" placeholder="Default" />
-                        <label class="text-6xl font-mono" for="monospace">Monospace</label>
-                        <select class="text-6xl" id="monospace" name="monospace">
-                            <option id="monospace_placeholder" value="">Default</option>
-                        </select>
-                        <select class="text-6xl" id="monospace_weight" name="monospace_weight">
-                            <option id="monospace_weight_placeholder" value="">Default</option>
-                        </select>
-                        <input class="text-6xl" id="monospace_size" name="monospace_size" type="number" placeholder="Default" />
-                    </div>
-                    <br><br><br>
-                    <div id="form-btns" class="flex w-full gap-2">
-                        <button style="height: 7rem;" id="restore-btn" type="button"
-                            class="btn btn-accent flex-1 text-5xl">↺ Restore</button>
-                        <button style="height: 7rem;" id="apply-btn" type="submit"
-                            class="btn btn-primary flex-1 text-5xl">Apply
-                            Selection</button>
-
-                    </div>
-                </form>
-            </div>
+      </div>
+      <br />
+      <div id="home-page">
+        <!-- Information -->
+        <div class="text-5xl">
+          <br />
+          <p>
+            You can
+            <a
+              class="link link-primary"
+              href=" https://forms.gle/3eqT9NU3mGHNjtyD8"
+              >report↗</a
+            >
+            unsupported websites.
+          </p>
+          <br />
+          <div id="tip-box">
+            <p id="tip">↺ Refresh if you don't see any changes.</p>
+            <p id="tip-override-off" class="text-warning">
+              ✺ Global fonts apply is on. Override is off.
+            </p>
+            <p id="tip-override-on" class="text-warning">
+              ✺ Global fonts apply is on. Override is on.
+            </p>
+            <p id="tip-exempt" class="text-warning">
+              ⮾ This site is exempted from the global settings.
+            </p>
+          </div>
         </div>
+        <br />
+        <br /><br />
 
-        <!-- Settings page -->
-        <div id="settings-page">
-            <br>
-            <br>
-
-            <div class="flex justify-between items-center text-5xl">
-                <p>Apply selections to all sites</p>
-                <input style="scale: 2;" id="global_check" type="checkbox" class="toggle toggle-primary" />
+        <!-- Font Selection -->
+        <div>
+          <form name="fonts">
+            <div class="grid grid-cols-4 gap-4">
+              <label class="text-6xl font-serif" for="serif">Serif</label>
+              <select class="text-6xl" id="serif" name="serif">
+                <option id="serif_placeholder" value="">Default</option>
+              </select>
+              <select class="text-6xl" id="serif_weight" name="serif_weight">
+                <option id="serif_weight_placeholder" value="">Default</option>
+              </select>
+              <select class="text-6xl" id="serif_size" name="serif_size">
+                <option value="">Default</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+              </select>
+              <label class="text-6xl font-sans" for="sans_serif"
+                >Sans-serif</label
+              >
+              <select class="text-6xl" id="sans_serif" name="sans_serif">
+                <option id="sans_serif_placeholder" value="">Default</option>
+              </select>
+              <select
+                class="text-6xl"
+                id="sans_serif_weight"
+                name="sans_serif_weight"
+              >
+                <option id="sans_serif_weight_placeholder" value="">
+                  Default
+                </option>
+              </select>
+              <select
+                class="text-6xl"
+                id="sans_serif_size"
+                name="sans_serif_size"
+              >
+                <option value="">Default</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+              </select>
+              <label class="text-6xl font-mono" for="monospace"
+                >Monospace</label
+              >
+              <select class="text-6xl" id="monospace" name="monospace">
+                <option id="monospace_placeholder" value="">Default</option>
+              </select>
+              <select
+                class="text-6xl"
+                id="monospace_weight"
+                name="monospace_weight"
+              >
+                <option id="monospace_weight_placeholder" value="">
+                  Default
+                </option>
+              </select>
+              <select
+                class="text-6xl"
+                id="monospace_size"
+                name="monospace_size"
+              >
+                <option value="">Default</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+              </select>
             </div>
-            <br><br><br>
-            <div class="flex justify-between items-center text-5xl">
-                <p>Override existing selections</p>
-                <input style="scale: 2;" id="override_check" type="checkbox" disabled class="toggle toggle-primary" />
+            <br /><br /><br />
+            <div id="form-btns" class="flex w-full gap-2">
+              <button
+                style="height: 7rem"
+                id="restore-btn"
+                type="button"
+                class="btn btn-accent flex-1 text-5xl"
+              >
+                ↺ Restore
+              </button>
+              <button
+                style="height: 7rem"
+                id="apply-btn"
+                type="submit"
+                class="btn btn-primary flex-1 text-5xl"
+              >
+                Apply Selection
+              </button>
             </div>
-            <br>
-            <br><br>
-            <div class="flex justify-between items-center text-5xl">
-                <p>Exempt current site from global settings</p>
-                <input style="scale: 2;" id="exempt_check" type="checkbox" disabled class="toggle toggle-primary" />
-            </div>
-            <br><br>
-
-            <div class="divider"></div>
-            <div id="global_not_checked_info_text"
-                class="text-5xl border border-dashed rounded-md border-primary p-24 text-center flex justify-center items-center">
-                <p>To apply fonts to all websites, select fonts for any website and turn on the setting.</p>
-            </div>
-            <div id="global_fonts_selection">
-                <form name="global_fonts">
-                    <div class="grid grid-cols-4 gap-4 text-6xl">
-                        <label class="font-serif" for="serif">Serif</label>
-                        <select class="" id="global_serif" name="serif">
-                            <option id="global_serif_placeholder" value="">Default</option>
-                        </select>
-                        <select id="global_serif_weight" name="global_serif_weight">
-                            <option id="global_serif_weight_placeholder" value="">Default</option>
-                        </select>
-                        <input id="global_serif_size" name="global_serif_size" type="number" placeholder="Default" />
-                        <label class=" font-sans" for="sans_serif">Sans-serif</label>
-                        <select id="global_sans_serif" name="sans_serif">
-                            <option id="global_sans_serif_placeholder" value="">Default</option>
-                        </select>
-                        <select id="global_sans_serif_weight" name="global_sans_serif_weight">
-                            <option id="global_sans_serif_weight_placeholder" value="">Default</option>
-                        </select>
-                        <input id="global_sans_serif_size" name="global_sans_serif_size" type="number" placeholder="Default" />
-                        <label class=" font-mono" for="monospace">Monospace</label>
-                        <select id="global_monospace" name="monospace">
-                            <option id="global_monospace_placeholder" value="">Default</option>
-                        </select>
-                        <select id="global_monospace_weight" name="global_monospace_weight">
-                            <option id="global_monospace_weight_placeholder" value="">Default</option>
-                        </select>
-                        <input id="global_monospace_size" name="global_monospace_size" type="number" placeholder="Default" />
-                    </div>
-                    <br>
-                    <div id="global-form-btns" class="flex w-full gap-2 tooltip"
-                        data-tip="Modifies your global fonts selection">
-                        <button style="height: 7rem;" id="global-apply-btn" type="submit"
-                            class="btn btn-neutral flex-1 text-5xl">
-                            🌐 Apply to all sites
-                        </button>
-                    </div>
-                </form>
-            </div>
+          </form>
         </div>
+      </div>
 
-        <!-- Support Page -->
-        <div id="support-page">
-            <br><br>
-            <div class="grid grid-cols-2 gap-2">
-                <a style="height: 7rem;" href="https://paypal.me/amkhrjee?country.x=IN&locale.x=en_GB" target="_blank"
-                    class="btn btn-primary text-5xl">Support via PayPal</a>
-                <a style="height: 7rem;" href="https://www.buymeacoffee.com/amkhrjee" target="_blank"
-                    class="btn btn-primary text-5xl">Buy Me A
-                    Coffee</a>
-                <a style="height: 7rem;" href="https://ko-fi.com/amkhrjee" target="_blank"
-                    class="btn btn-primary text-5xl">Support via Ko-Fi</a>
-                <a style="height: 7rem;"
-                    href="https://chromewebstore.google.com/detail/fontonic-change-fonts/hnjlnpipbcbgllcjgbcjfgepmeomdcog"
-                    target="_blank" class="btn btn-primary text-5xl">Leave a rating</a>
-            </div>
-            <br>
-            <br><br>
-            <div class="text-5xl text-center text-accent font-bold">
-                <p>Support this project to keep it ad-free! ❤️</p>
-            </div>
-            <br>
-            <div class="text-4xl text-center p-4 ">
-                <p>
-                    v1.5 • Fontonic for Firefox • April 2025
-                </p>
-                <br>
-                <p>Made by <a class="link link-primary" href="https://amkhrjee.xyz" target="_blank">amkhrjee↗</a> • View
-                    <a class="link link-primary" href="https://github.com/amkhrjee/fontonic" target="_blank">source
-                        code↗</a>
-                </p>
-            </div>
+      <!-- Settings page -->
+      <div id="settings-page">
+        <br />
+        <br />
+
+        <div class="flex justify-between items-center text-5xl">
+          <p>Apply selections to all sites</p>
+          <input
+            style="scale: 2"
+            id="global_check"
+            type="checkbox"
+            class="toggle toggle-primary"
+          />
         </div>
-    </div>
+        <br /><br /><br />
+        <div class="flex justify-between items-center text-5xl">
+          <p>Override existing selections</p>
+          <input
+            style="scale: 2"
+            id="override_check"
+            type="checkbox"
+            disabled
+            class="toggle toggle-primary"
+          />
+        </div>
+        <br />
+        <br /><br />
+        <div class="flex justify-between items-center text-5xl">
+          <p>Exempt current site from global settings</p>
+          <input
+            style="scale: 2"
+            id="exempt_check"
+            type="checkbox"
+            disabled
+            class="toggle toggle-primary"
+          />
+        </div>
+        <br /><br />
+
+        <div class="divider"></div>
+        <div
+          id="global_not_checked_info_text"
+          class="text-5xl border border-dashed rounded-md border-primary p-24 text-center flex justify-center items-center"
+        >
+          <p>
+            To apply fonts to all websites, select fonts for any website and
+            turn on the setting.
+          </p>
+        </div>
+        <div id="global_fonts_selection">
+          <form name="global_fonts">
+            <div class="grid grid-cols-4 gap-4 text-6xl">
+              <label class="font-serif" for="serif">Serif</label>
+              <select class="" id="global_serif" name="serif">
+                <option id="global_serif_placeholder" value="">Default</option>
+              </select>
+              <select id="global_serif_weight" name="global_serif_weight">
+                <option id="global_serif_weight_placeholder" value="">
+                  Default
+                </option>
+              </select>
+              <select id="global_serif_size" name="global_serif_size">
+                <option value="">Default</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+              </select>
+              <label class="font-sans" for="sans_serif">Sans-serif</label>
+              <select id="global_sans_serif" name="sans_serif">
+                <option id="global_sans_serif_placeholder" value="">
+                  Default
+                </option>
+              </select>
+              <select
+                id="global_sans_serif_weight"
+                name="global_sans_serif_weight"
+              >
+                <option id="global_sans_serif_weight_placeholder" value="">
+                  Default
+                </option>
+              </select>
+              <select id="global_sans_serif_size" name="global_sans_serif_size">
+                <option value="">Default</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+              </select>
+              <label class="font-mono" for="monospace">Monospace</label>
+              <select id="global_monospace" name="monospace">
+                <option id="global_monospace_placeholder" value="">
+                  Default
+                </option>
+              </select>
+              <select
+                id="global_monospace_weight"
+                name="global_monospace_weight"
+              >
+                <option id="global_monospace_weight_placeholder" value="">
+                  Default
+                </option>
+              </select>
+              <select id="global_monospace_size" name="global_monospace_size">
+                <option value="">Default</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+              </select>
+            </div>
+            <br />
+            <div
+              id="global-form-btns"
+              class="flex w-full gap-2 tooltip"
+              data-tip="Modifies your global fonts selection"
+            >
+              <button
+                style="height: 7rem"
+                id="global-apply-btn"
+                type="submit"
+                class="btn btn-neutral flex-1 text-5xl"
+              >
+                🌐 Apply to all sites
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Support Page -->
+      <div id="support-page">
+        <br /><br />
+        <div class="grid grid-cols-2 gap-2">
+          <a
+            style="height: 7rem"
+            href="https://paypal.me/amkhrjee?country.x=IN&locale.x=en_GB"
+            target="_blank"
+            class="btn btn-primary text-5xl"
+            >Support via PayPal</a
+          >
+          <a
+            style="height: 7rem"
+            href="https://www.buymeacoffee.com/amkhrjee"
+            target="_blank"
+            class="btn btn-primary text-5xl"
+            >Buy Me A Coffee</a
+          >
+          <a
+            style="height: 7rem"
+            href="https://ko-fi.com/amkhrjee"
+            target="_blank"
+            class="btn btn-primary text-5xl"
+            >Support via Ko-Fi</a
+          >
+          <a
+            style="height: 7rem"
+            href="https://chromewebstore.google.com/detail/fontonic-change-fonts/hnjlnpipbcbgllcjgbcjfgepmeomdcog"
+            target="_blank"
+            class="btn btn-primary text-5xl"
+            >Leave a rating</a
+          >
+        </div>
+        <br />
+        <br /><br />
+        <div class="text-5xl text-center text-accent font-bold">
+          <p>Support this project to keep it ad-free! ❤️</p>
+        </div>
+        <br />
+        <div class="text-4xl text-center p-4">
+          <p>v1.5 • Fontonic for Firefox • April 2025</p>
+          <br />
+          <p>
+            Made by
+            <a
+              class="link link-primary"
+              href="https://amkhrjee.xyz"
+              target="_blank"
+              >amkhrjee↗</a
+            >
+            • View
+            <a
+              class="link link-primary"
+              href="https://github.com/amkhrjee/fontonic"
+              target="_blank"
+              >source code↗</a
+            >
+          </p>
+        </div>
+      </div>
     </div>
     <dialog id="restore_modal" class="modal font-sans">
-        <div class="modal-box w-full">
-            <h3 style="font-family: 'Inter Tight';" class="text-6xl font-bold">Fonts Restored</h3>
-            <p style="font-family: 'Inter Tight';" class="py-4 text-5xl">Refresh the page to see changes.</p>
-            <div style="font-family: 'Inter Tight';" class="modal-action">
-                <form method="dialog">
-                    <button style="font-family: 'Inter Tight';" class="btn text-5xl">OK</button>
-                </form>
-            </div>
+      <div class="modal-box w-full">
+        <h3
+          style="font-family: &quot;Inter Tight&quot;"
+          class="text-6xl font-bold"
+        >
+          Fonts Restored
+        </h3>
+        <p style="font-family: &quot;Inter Tight&quot;" class="py-4 text-5xl">
+          Refresh the page to see changes.
+        </p>
+        <div style="font-family: &quot;Inter Tight&quot;" class="modal-action">
+          <form method="dialog">
+            <button
+              style="font-family: &quot;Inter Tight&quot;"
+              class="btn text-5xl"
+            >
+              OK
+            </button>
+          </form>
         </div>
+      </div>
     </dialog>
     <dialog id="warning_modal" class="modal font-sans">
-        <div class="modal-box w-3/4">
-            <h3 style="font-family: 'Inter Tight';" class="font-bold text-6xl">Global apply was on</h3>
-            <p style="font-family: 'Inter Tight';" class="py-4 text-6xl">Fonts will restore to default on all websites.
-                You'll have to manually restore for exempted sites. Global apply will be turned off.</p>
-            <div style="font-family: 'Inter Tight';" class="modal-action">
-                <form method="dialog">
-                    <button style="font-family: 'Inter Tight';" class="btn text-5xl">OK</button>
-                </form>
-            </div>
+      <div class="modal-box w-3/4">
+        <h3
+          style="font-family: &quot;Inter Tight&quot;"
+          class="font-bold text-6xl"
+        >
+          Global apply was on
+        </h3>
+        <p style="font-family: &quot;Inter Tight&quot;" class="py-4 text-6xl">
+          Fonts will restore to default on all websites. You'll have to manually
+          restore for exempted sites. Global apply will be turned off.
+        </p>
+        <div style="font-family: &quot;Inter Tight&quot;" class="modal-action">
+          <form method="dialog">
+            <button
+              style="font-family: &quot;Inter Tight&quot;"
+              class="btn text-5xl"
+            >
+              OK
+            </button>
+          </form>
         </div>
+      </div>
     </dialog>
-</body>
-
+  </body>
 </html>

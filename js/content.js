@@ -7,10 +7,10 @@ const currentDomain = window.location.hostname;
 const SKIP_SELECTOR =
   'i,[class*="icon"],[class*="fa-"],svg,code,pre,kbd,samp,h1,h2,h3,h4,h5,h6,button';
 function shouldSkip(el) {
-  if (el.closest('.app-banner')) return true;
-  if (el.closest('.byline-wrapper')) return true;
-  if (el.closest('.byline')) return true;
-  if (el.closest('.titleContainer-DJYq5v')) return true;
+  if (el.closest(".app-banner")) return true;
+  if (el.closest(".byline-wrapper")) return true;
+  if (el.closest(".byline")) return true;
+  if (el.closest(".titleContainer-DJYq5v")) return true;
   return el.matches(SKIP_SELECTOR);
 }
 
@@ -44,7 +44,7 @@ const changeFontFamily = (
       // Split into array for order-sensitive matching
       const fontList = fontFamilyLower
         .split(",")
-        .map(f => f.trim().replace(/^["']|["']$/g, "")); // Remove leading/trailing quotes
+        .map((f) => f.trim().replace(/^["']|["']$/g, "")); // Remove leading/trailing quotes
 
       // Define triggers for each type
       const sansSerifTriggers = [
@@ -53,19 +53,10 @@ const changeFontFamily = (
         "helvetica",
         "open sans",
         "open sans-fallback",
-        "verdana"
+        "verdana",
       ];
-      const serifTriggers = [
-        "serif",
-        "georgia",
-        "times",
-        "times new roman"
-      ];
-      const monospaceTriggers = [
-        "monospace",
-        "courier",
-        "courier new"
-      ];
+      const serifTriggers = ["serif", "georgia", "times", "times new roman"];
+      const monospaceTriggers = ["monospace", "courier", "courier new"];
 
       let fontType = null;
       for (const font of fontList) {
@@ -89,7 +80,11 @@ const changeFontFamily = (
           node.style.fontWeight = sansSerifWeight;
         }
         if (sansSerifSize !== "Default" && sansSerifSize) {
-          node.style.fontSize = `${sansSerifSize}px`;
+          node.style.setProperty(
+            "font-size",
+            `${sansSerifSize}px`,
+            "important",
+          );
         }
       } else if (fontType === "serif") {
         if (serif !== "Default") {
@@ -99,7 +94,7 @@ const changeFontFamily = (
           node.style.fontWeight = serifWeight;
         }
         if (serifSize !== "Default" && serifSize) {
-          node.style.fontSize = `${serifSize}px`;
+          node.style.setProperty("font-size", `${serifSize}px`, "important");
         }
       } else if (fontType === "monospace") {
         if (monospace !== "Default") {
@@ -109,7 +104,11 @@ const changeFontFamily = (
           node.style.fontWeight = monospaceWeight;
         }
         if (monospaceSize !== "Default" && monospaceSize) {
-          node.style.fontSize = `${monospaceSize}px`;
+          node.style.setProperty(
+            "font-size",
+            `${monospaceSize}px`,
+            "important",
+          );
         }
       }
     }
