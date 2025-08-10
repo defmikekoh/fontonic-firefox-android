@@ -1,0 +1,108 @@
+name: Sign Firefox Android XPI (from build ZIP)
+
+on:
+  push:
+    branches: [ defmikekoh ]
+  workflow_dispatch: {}
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install deps and build
+        run: |
+          npm ci || true
+          npm run build
+
+      - name: Install tools (web-ext, jq, unzip)
+        run: |
+          npm i -g web-ext
+          sudo apt-get update
+          sudo apt-get install -y jq unzip
+
+      - name: Locate build ZIP
+        id: findzip
+        run: |
+          ls -1 web-ext-artifacts/*.zip | sort | tail -n 1 > /tmp/zip_path
+          ZIP=$(cat /tmp/zip_path)
+          if [ ! -s /tmp/zip_path ]; then
+            echo "No ZIP found in web-ext-artifacts/" >&2
+            exit 1
+          fi
+          echo "zip=$ZIP" >> $GITHUB_OUTPUT
+          echo "Found ZIP: $ZIP"
+
+      - name: Unzip to source dir for signing
+        id: unzip
+        run: |
+          rm -rf build_src
+          mkdir -p build_src
+          unzip -q "${{ steps.findzip.outputs.zip }}" -d build_src
+
+          # Find the folder that actually contains manifest.json
+          MF=$(find build_src -maxdepth 3 -type f -name manifest.json | head -n 1 || true)
+          if [ -z "$MF" ]; then
+            echo "manifest.json not found inside the ZIP" >&2
+            exit 1
+          fi
+          SRC_DIR=$(dirname "$MF")
+          echo "src_dir=$SRC_DIR" >> $GITHUB_OUTPUT
+          echo "Using source dir: $SRC_DIR"
+
+      - name: Ensure Gecko ID exists
+        run: |
+          ID=$(jq -r '.browser_specific_settings.gecko.id // .applications.gecko.id // empty' "${{ steps.unzip.outputs.src_dir }}/manifest.json")
+          if [ -z "$ID" ]; then
+            echo "ERROR: manifest.json must include browser_specific_settings.gecko.id (or applications.gecko.id)." >&2
+            exit 1
+          fi
+          echo "Gecko ID: $ID"
+
+      # Optional: bump version inside the unzipped manifest so AMO accepts each submission
+      # Remove this step if your build already changes version per-commit.
+      - name: Bump version (append UTC timestamp)
+        run: |
+          MF="${{ steps.unzip.outputs.src_dir }}/manifest.json"
+          TS=$(date -u +%Y%m%d%H%M%S)
+          jq '.version |= (. + "." + "'$TS'")' "$MF" > "$MF.tmp" && mv "$MF.tmp" "$MF"
+          echo "New version: $(jq -r .version "$MF")"
+
+      - name: Sign on AMO (unlisted)
+        env:
+          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        run: |
+          mkdir -p signed
+          web-ext sign \
+            --channel=unlisted \
+            --source-dir "${{ steps.unzip.outputs.src_dir }}" \
+            --artifacts-dir ./signed \
+            --api-key "$AMO_JWT_ISSUER" \
+            --api-secret "$AMO_JWT_SECRET"
+
+      - name: Upload signed XPI
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed-xpi
+          path: signed/*.xpi
+
+      # Optional: attach to a Release for easy tap-download on Android
+      - name: Create GitHub Release (manual runs only)
+        if: github.event_name == 'workflow_dispatch'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-test-${{ github.run_number }}
+          name: Android test build ${{ github.run_number }}
+          body: "Signed XPI for Android testing (unlisted)."
+          files: signed/*.xpi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
