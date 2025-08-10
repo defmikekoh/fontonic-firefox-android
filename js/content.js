@@ -73,20 +73,24 @@ const changeFontFamily = (
           node.style.fontFamily = `'${sansSerif}'`;
           node.style.fontWeight = sansSerifWeight !== "Default" ? sansSerifWeight : "";
           node.style.fontSize =
-            sansSerifSize !== "Default" ? `${sansSerifSize}px` : "";
+            sansSerifSize !== "Default" && sansSerifSize
+              ? `${sansSerifSize}px`
+              : "";
           applied = true;
         } else if (!applied && serifTriggers.includes(font) && serif != "Default") {
           node.style.fontFamily = `'${serif}'`;
           node.style.fontWeight = serifWeight !== "Default" ? serifWeight : "";
           node.style.fontSize =
-            serifSize !== "Default" ? `${serifSize}px` : "";
+            serifSize !== "Default" && serifSize ? `${serifSize}px` : "";
           applied = true;
         } else if (!applied && monospaceTriggers.includes(font) && monospace != "Default") {
           node.style.fontFamily = `'${monospace}'`;
           node.style.fontWeight =
             monospaceWeight !== "Default" ? monospaceWeight : "";
           node.style.fontSize =
-            monospaceSize !== "Default" ? `${monospaceSize}px` : "";
+            monospaceSize !== "Default" && monospaceSize
+              ? `${monospaceSize}px`
+              : "";
           applied = true;
         }
       }
