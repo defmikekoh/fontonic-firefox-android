@@ -1,5 +1,12 @@
 name: Sign Firefox Android XPI (from build ZIP)
 
+concurrency:
+  group: xpi-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
 on:
   push:
     branches: [ defmikekoh ]
@@ -17,6 +24,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: 'npm'
 
       - name: Install tools (web-ext, jq, unzip)
         run: |
@@ -26,7 +34,7 @@ jobs:
 
       - name: Install deps and build
         run: |
-          npm ci || true
+          npm ci
           npm run build
 
       - name: Locate build ZIP
@@ -87,9 +95,12 @@ jobs:
           jq --arg v "$new_version" '.version = $v' "$MF" > "$MF.tmp" && mv "$MF.tmp" "$MF"
           echo "New version: $(jq -r .version "$MF")"
 
-
-
-
+      - name: Capture version for artifact/release names
+        id: ver
+        run: |
+          MF="${{ steps.unzip.outputs.src_dir }}/manifest.json"
+          echo "v=$(jq -r .version "$MF")" >> $GITHUB_OUTPUT
+          echo "Version: $(jq -r .version "$MF")"
 
       - name: Sign on AMO (unlisted)
         env:
@@ -102,21 +113,56 @@ jobs:
             --source-dir "${{ steps.unzip.outputs.src_dir }}" \
             --artifacts-dir ./signed \
             --api-key "$AMO_JWT_ISSUER" \
-            --api-secret "$AMO_JWT_SECRET"
+            --api-secret "$AMO_JWT_SECRET" \
+            --timeout 60000
 
       - name: Upload signed XPI
         uses: actions/upload-artifact@v4
         with:
-          name: signed-xpi
+          name: signed-xpi-${{ steps.ver.outputs.v }}
           path: signed/*.xpi
+
+      # Draft release on every push for a direct .xpi link
+      - name: Create/Update draft "latest" release (every push)
+        if: github.event_name == 'push'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-test-latest
+          name: Android test (latest) ${{ steps.ver.outputs.v }}
+          body: |
+            Draft build for Android testing.
+            Version: ${{ steps.ver.outputs.v }}
+            Commit: ${{ github.sha }}
+          draft: true
+          prerelease: true
+          files: signed/*.xpi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print direct link and QR to latest draft .xpi
+        if: github.event_name == 'push'
+        run: |
+          echo "Fetching latest release download URL..."
+          API_URL="https://api.github.com/repos/${{ github.repository }}/releases/tags/android-test-latest"
+          DOWNLOAD_URL=$(curl -sL "$API_URL" | jq -r '.assets[0].browser_download_url')
+          if [ "$DOWNLOAD_URL" = "null" ] || [ -z "$DOWNLOAD_URL" ]; then
+            echo "No asset found for latest draft release."
+            exit 1
+          fi
+          echo "Direct download URL: $DOWNLOAD_URL"
+          echo
+          echo "QR code for mobile download:"
+          curl -s "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${DOWNLOAD_URL}" --output qrcode.png
+          # Display as base64 in logs so it's clickable
+          echo "data:image/png;base64,$(base64 -w0 qrcode.png)"
 
       # Optional: attach to a Release for easy tap-download on Android
       - name: Create GitHub Release (manual runs only)
         if: github.event_name == 'workflow_dispatch'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: android-test-${{ github.run_number }}
-          name: Android test build ${{ github.run_number }}
+          tag_name: android-test-${{ steps.ver.outputs.v }}
+          name: Android test build ${{ steps.ver.outputs.v }}
           body: "Signed XPI for Android testing (unlisted)."
           files: signed/*.xpi
         env:
