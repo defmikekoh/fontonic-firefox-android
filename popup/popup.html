@@ -72,76 +72,78 @@
         <!-- Font Selection -->
         <div>
           <form name="fonts">
-            <div class="grid grid-cols-4 gap-4">
-              <label class="text-6xl font-serif" for="serif">Serif</label>
-              <select class="text-6xl" id="serif" name="serif">
-                <option id="serif_placeholder" value="">Default</option>
-              </select>
-              <select class="text-6xl" id="serif_size" name="serif_size">
-                <option value="">Default</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
-                <option value="20">20</option>
-              </select>
-              <select class="text-6xl" id="serif_weight" name="serif_weight">
-                <option id="serif_weight_placeholder" value="">Default</option>
-              </select>
-              <label class="text-6xl font-sans" for="sans_serif"
-                >Sans-serif</label
-              >
-              <select class="text-6xl" id="sans_serif" name="sans_serif">
-                <option id="sans_serif_placeholder" value="">Default</option>
-              </select>
-              <select
-                class="text-6xl"
-                id="sans_serif_size"
-                name="sans_serif_size"
-              >
-                <option value="">Default</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
-                <option value="20">20</option>
-              </select>
-              <select
-                class="text-6xl"
-                id="sans_serif_weight"
-                name="sans_serif_weight"
-              >
-                <option id="sans_serif_weight_placeholder" value="">
-                  Default
-                </option>
-              </select>
-              <label class="text-6xl font-mono" for="monospace"
-                >Monospace</label
-              >
-              <select class="text-6xl" id="monospace" name="monospace">
-                <option id="monospace_placeholder" value="">Default</option>
-              </select>
-              <select
-                class="text-6xl"
-                id="monospace_size"
-                name="monospace_size"
-              >
-                <option value="">Default</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
-                <option value="20">20</option>
-              </select>
-              <select
-                class="text-6xl"
-                id="monospace_weight"
-                name="monospace_weight"
-              >
-                <option id="monospace_weight_placeholder" value="">
-                  Default
-                </option>
-              </select>
+            <div class="flex flex-col gap-4">
+              <div class="flex flex-row items-center gap-4">
+                <label class="text-6xl font-serif w-1/4" for="serif">Serif</label>
+                <select class="text-6xl w-1/4" id="serif" name="serif">
+                  <option id="serif_placeholder" value="">Default</option>
+                </select>
+                <select class="text-6xl w-1/4" id="serif_size" name="serif_size">
+                  <option value="">Default</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                </select>
+                <select class="text-6xl w-1/4" id="serif_weight" name="serif_weight">
+                  <option id="serif_weight_placeholder" value="">Default</option>
+                </select>
+              </div>
+              <div class="flex flex-row items-center gap-4">
+                <label class="text-6xl font-sans w-1/4" for="sans_serif">Sans-serif</label>
+                <select class="text-6xl w-1/4" id="sans_serif" name="sans_serif">
+                  <option id="sans_serif_placeholder" value="">Default</option>
+                </select>
+                <select
+                  class="text-6xl w-1/4"
+                  id="sans_serif_size"
+                  name="sans_serif_size"
+                >
+                  <option value="">Default</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                </select>
+                <select
+                  class="text-6xl w-1/4"
+                  id="sans_serif_weight"
+                  name="sans_serif_weight"
+                >
+                  <option id="sans_serif_weight_placeholder" value="">
+                    Default
+                  </option>
+                </select>
+              </div>
+              <div class="flex flex-row items-center gap-4">
+                <label class="text-6xl font-mono w-1/4" for="monospace">Monospace</label>
+                <select class="text-6xl w-1/4" id="monospace" name="monospace">
+                  <option id="monospace_placeholder" value="">Default</option>
+                </select>
+                <select
+                  class="text-6xl w-1/4"
+                  id="monospace_size"
+                  name="monospace_size"
+                >
+                  <option value="">Default</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                </select>
+                <select
+                  class="text-6xl w-1/4"
+                  id="monospace_weight"
+                  name="monospace_weight"
+                >
+                  <option id="monospace_weight_placeholder" value="">
+                    Default
+                  </option>
+                </select>
+              </div>
             </div>
             <br /><br /><br />
             <div id="form-btns" class="flex w-full gap-2">
@@ -217,68 +219,76 @@
         </div>
         <div id="global_fonts_selection">
           <form name="global_fonts">
-            <div class="grid grid-cols-4 gap-4 text-6xl">
-              <label class="font-serif" for="serif">Serif</label>
-              <select class="" id="global_serif" name="serif">
-                <option id="global_serif_placeholder" value="">Default</option>
-              </select>
-              <select id="global_serif_size" name="global_serif_size">
-                <option value="">Default</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
-                <option value="20">20</option>
-              </select>
-              <select id="global_serif_weight" name="global_serif_weight">
-                <option id="global_serif_weight_placeholder" value="">
-                  Default
-                </option>
-              </select>
-              <label class="font-sans" for="sans_serif">Sans-serif</label>
-              <select id="global_sans_serif" name="sans_serif">
-                <option id="global_sans_serif_placeholder" value="">
-                  Default
-                </option>
-              </select>
-              <select id="global_sans_serif_size" name="global_sans_serif_size">
-                <option value="">Default</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
-                <option value="20">20</option>
-              </select>
-              <select
-                id="global_sans_serif_weight"
-                name="global_sans_serif_weight"
-              >
-                <option id="global_sans_serif_weight_placeholder" value="">
-                  Default
-                </option>
-              </select>
-              <label class="font-mono" for="monospace">Monospace</label>
-              <select id="global_monospace" name="monospace">
-                <option id="global_monospace_placeholder" value="">
-                  Default
-                </option>
-              </select>
-              <select id="global_monospace_size" name="global_monospace_size">
-                <option value="">Default</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
-                <option value="20">20</option>
-              </select>
-              <select
-                id="global_monospace_weight"
-                name="global_monospace_weight"
-              >
-                <option id="global_monospace_weight_placeholder" value="">
-                  Default
-                </option>
-              </select>
+            <div class="flex flex-col gap-4 text-6xl">
+              <div class="flex flex-row items-center gap-4">
+                <label class="font-serif w-1/4" for="serif">Serif</label>
+                <select class="w-1/4" id="global_serif" name="serif">
+                  <option id="global_serif_placeholder" value="">Default</option>
+                </select>
+                <select id="global_serif_size" name="global_serif_size" class="w-1/4">
+                  <option value="">Default</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                </select>
+                <select id="global_serif_weight" name="global_serif_weight" class="w-1/4">
+                  <option id="global_serif_weight_placeholder" value="">
+                    Default
+                  </option>
+                </select>
+              </div>
+              <div class="flex flex-row items-center gap-4">
+                <label class="font-sans w-1/4" for="sans_serif">Sans-serif</label>
+                <select id="global_sans_serif" name="sans_serif" class="w-1/4">
+                  <option id="global_sans_serif_placeholder" value="">
+                    Default
+                  </option>
+                </select>
+                <select id="global_sans_serif_size" name="global_sans_serif_size" class="w-1/4">
+                  <option value="">Default</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                </select>
+                <select
+                  id="global_sans_serif_weight"
+                  name="global_sans_serif_weight"
+                  class="w-1/4"
+                >
+                  <option id="global_sans_serif_weight_placeholder" value="">
+                    Default
+                  </option>
+                </select>
+              </div>
+              <div class="flex flex-row items-center gap-4">
+                <label class="font-mono w-1/4" for="monospace">Monospace</label>
+                <select id="global_monospace" name="monospace" class="w-1/4">
+                  <option id="global_monospace_placeholder" value="">
+                    Default
+                  </option>
+                </select>
+                <select id="global_monospace_size" name="global_monospace_size" class="w-1/4">
+                  <option value="">Default</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                </select>
+                <select
+                  id="global_monospace_weight"
+                  name="global_monospace_weight"
+                  class="w-1/4"
+                >
+                  <option id="global_monospace_weight_placeholder" value="">
+                    Default
+                  </option>
+                </select>
+              </div>
             </div>
             <br />
             <div
