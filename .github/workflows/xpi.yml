@@ -18,16 +18,16 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install deps and build
-        run: |
-          npm ci || true
-          npm run build
-
       - name: Install tools (web-ext, jq, unzip)
         run: |
           npm i -g web-ext
           sudo apt-get update
           sudo apt-get install -y jq unzip
+
+      - name: Install deps and build
+        run: |
+          npm ci || true
+          npm run build
 
       - name: Locate build ZIP
         id: findzip
