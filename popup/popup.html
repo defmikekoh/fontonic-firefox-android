@@ -52,7 +52,7 @@
             <!-- Font Selection -->
             <div>
                 <form name="fonts">
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="grid grid-cols-4 gap-4">
                         <label class="text-6xl font-serif" for="serif">Serif</label>
                         <select class="text-6xl" id="serif" name="serif">
                             <option id="serif_placeholder" value="">Default</option>
@@ -60,6 +60,7 @@
                         <select class="text-6xl" id="serif_weight" name="serif_weight">
                             <option id="serif_weight_placeholder" value="">Default</option>
                         </select>
+                        <input class="text-6xl" id="serif_size" name="serif_size" type="number" placeholder="Default" />
                         <label class="text-6xl font-sans" for="sans_serif">Sans-serif</label>
                         <select class="text-6xl" id="sans_serif" name="sans_serif">
                             <option id="sans_serif_placeholder" value="">Default</option>
@@ -67,6 +68,7 @@
                         <select class="text-6xl" id="sans_serif_weight" name="sans_serif_weight">
                             <option id="sans_serif_weight_placeholder" value="">Default</option>
                         </select>
+                        <input class="text-6xl" id="sans_serif_size" name="sans_serif_size" type="number" placeholder="Default" />
                         <label class="text-6xl font-mono" for="monospace">Monospace</label>
                         <select class="text-6xl" id="monospace" name="monospace">
                             <option id="monospace_placeholder" value="">Default</option>
@@ -74,6 +76,7 @@
                         <select class="text-6xl" id="monospace_weight" name="monospace_weight">
                             <option id="monospace_weight_placeholder" value="">Default</option>
                         </select>
+                        <input class="text-6xl" id="monospace_size" name="monospace_size" type="number" placeholder="Default" />
                     </div>
                     <br><br><br>
                     <div id="form-btns" class="flex w-full gap-2">
@@ -117,14 +120,15 @@
             </div>
             <div id="global_fonts_selection">
                 <form name="global_fonts">
-                    <div class="grid grid-cols-3 gap-4 text-6xl">
-                        <label class=font-serif" for="serif">Serif</label>
+                    <div class="grid grid-cols-4 gap-4 text-6xl">
+                        <label class="font-serif" for="serif">Serif</label>
                         <select class="" id="global_serif" name="serif">
                             <option id="global_serif_placeholder" value="">Default</option>
                         </select>
                         <select id="global_serif_weight" name="global_serif_weight">
                             <option id="global_serif_weight_placeholder" value="">Default</option>
                         </select>
+                        <input id="global_serif_size" name="global_serif_size" type="number" placeholder="Default" />
                         <label class=" font-sans" for="sans_serif">Sans-serif</label>
                         <select id="global_sans_serif" name="sans_serif">
                             <option id="global_sans_serif_placeholder" value="">Default</option>
@@ -132,6 +136,7 @@
                         <select id="global_sans_serif_weight" name="global_sans_serif_weight">
                             <option id="global_sans_serif_weight_placeholder" value="">Default</option>
                         </select>
+                        <input id="global_sans_serif_size" name="global_sans_serif_size" type="number" placeholder="Default" />
                         <label class=" font-mono" for="monospace">Monospace</label>
                         <select id="global_monospace" name="monospace">
                             <option id="global_monospace_placeholder" value="">Default</option>
@@ -139,6 +144,7 @@
                         <select id="global_monospace_weight" name="global_monospace_weight">
                             <option id="global_monospace_weight_placeholder" value="">Default</option>
                         </select>
+                        <input id="global_monospace_size" name="global_monospace_size" type="number" placeholder="Default" />
                     </div>
                     <br>
                     <div id="global-form-btns" class="flex w-full gap-2 tooltip"
