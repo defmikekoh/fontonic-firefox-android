@@ -67,31 +67,49 @@ const changeFontFamily = (
         "courier new"
       ];
 
-      let applied = false;
+      let fontType = null;
       for (const font of fontList) {
-        if (!applied && sansSerifTriggers.includes(font) && sansSerif != "Default") {
+        if (sansSerifTriggers.includes(font)) {
+          fontType = "sans-serif";
+          break;
+        } else if (serifTriggers.includes(font)) {
+          fontType = "serif";
+          break;
+        } else if (monospaceTriggers.includes(font)) {
+          fontType = "monospace";
+          break;
+        }
+      }
+
+      if (fontType === "sans-serif") {
+        if (sansSerif !== "Default") {
           node.style.fontFamily = `'${sansSerif}'`;
-          node.style.fontWeight = sansSerifWeight !== "Default" ? sansSerifWeight : "";
-          node.style.fontSize =
-            sansSerifSize !== "Default" && sansSerifSize
-              ? `${sansSerifSize}px`
-              : "";
-          applied = true;
-        } else if (!applied && serifTriggers.includes(font) && serif != "Default") {
+        }
+        if (sansSerifWeight !== "Default") {
+          node.style.fontWeight = sansSerifWeight;
+        }
+        if (sansSerifSize !== "Default" && sansSerifSize) {
+          node.style.fontSize = `${sansSerifSize}px`;
+        }
+      } else if (fontType === "serif") {
+        if (serif !== "Default") {
           node.style.fontFamily = `'${serif}'`;
-          node.style.fontWeight = serifWeight !== "Default" ? serifWeight : "";
-          node.style.fontSize =
-            serifSize !== "Default" && serifSize ? `${serifSize}px` : "";
-          applied = true;
-        } else if (!applied && monospaceTriggers.includes(font) && monospace != "Default") {
+        }
+        if (serifWeight !== "Default") {
+          node.style.fontWeight = serifWeight;
+        }
+        if (serifSize !== "Default" && serifSize) {
+          node.style.fontSize = `${serifSize}px`;
+        }
+      } else if (fontType === "monospace") {
+        if (monospace !== "Default") {
           node.style.fontFamily = `'${monospace}'`;
-          node.style.fontWeight =
-            monospaceWeight !== "Default" ? monospaceWeight : "";
-          node.style.fontSize =
-            monospaceSize !== "Default" && monospaceSize
-              ? `${monospaceSize}px`
-              : "";
-          applied = true;
+        }
+        if (monospaceWeight !== "Default") {
+          node.style.fontWeight = monospaceWeight;
+        }
+        if (monospaceSize !== "Default" && monospaceSize) {
+          node.style.fontSize = `${monospaceSize}px`;
         }
       }
     }
