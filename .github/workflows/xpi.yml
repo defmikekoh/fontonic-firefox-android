@@ -88,8 +88,8 @@ jobs:
             exit 1
           fi
 
-          # Use GitHub Actions run number as the 4th component
-          rn="${GITHUB_RUN_NUMBER}"
+          # Use GitHub Actions run number as the 4th component (offset by 100)
+          rn="$((GITHUB_RUN_NUMBER + 100))"
 
           new_version="${base}.${rn}"
           jq --arg v "$new_version" '.version = $v' "$MF" > "$MF.tmp" && mv "$MF.tmp" "$MF"
