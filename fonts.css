@@ -85,6 +85,7 @@
   font-style: normal;
   font-weight: 400;
   src: url('https://fonts.cdnfonts.com/s/67517/Neue%20Plak%20Regular.woff') format('woff');
+  font-display: swap;
 }
 
 /* Neue Plak Italic — matched to Regular, so 400 italic */
@@ -93,6 +94,7 @@
   font-style: italic;
   font-weight: 400;
   src: url('https://fonts.cdnfonts.com/s/67517/Neue%20Plak%20Text%20Italic.woff') format('woff');
+  font-display: swap;
 }
 
 /* Neue Plak Text Regular — slightly heavier body style */
@@ -101,6 +103,7 @@
   font-style: normal;
   font-weight: 400;
   src: url('https://fonts.cdnfonts.com/s/67517/Neue%20Plak%20Text%20Regular.woff') format('woff');
+  font-display: swap;
 }
 
 /* Neue Plak Text Italic — same family and weight */
@@ -109,15 +112,16 @@
   font-style: italic;
   font-weight: 400;
   src: url('https://fonts.cdnfonts.com/s/67517/Neue%20Plak%20Text%20Italic.woff') format('woff');
+  font-display: swap;
 }
 
 @font-face {
-    font-family: "Tiempos Text Web";
-    src: url("https://db.onlinewebfonts.com/t/f11d4971f802f3977771b9dacfedc0e0.woff2") format("woff2"),
-         url("https://db.onlinewebfonts.com/t/f11d4971f802f3977771b9dacfedc0e0.woff") format("woff");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
+  font-family: "Tiempos Text Web";
+  src: url("https://db.onlinewebfonts.com/t/f11d4971f802f3977771b9dacfedc0e0.woff2") format("woff2"),
+        url("https://db.onlinewebfonts.com/t/f11d4971f802f3977771b9dacfedc0e0.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -133,6 +137,33 @@
   src: url("https://catest-dev.afternoonteagifts.co.uk/fonts/Tiempos/TiemposText-Regular.woff2") format("woff2"),
        url("https://catest-dev.afternoonteagifts.co.uk/fonts/Tiempos/TiemposText-Regular.woff") format("woff");
   font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+/*
+@font-face {
+  font-family: "TiemposText-Regular";
+  src: url("https://g.webfontfree.com/Code/WOFF2/18/c4/18c4e9297c5120922bc4b199e3714bf1.woff2") format("woff2"),
+       url("https://g.webfontfree.com/Code/WOFF/18/c4/18c4e9297c5120922bc4b199e3714bf1.woff") format("woff"),);
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+*/
+
+@font-face {
+  font-family: "Proxima Nova";
+  src: url("https://catest-dev.afternoonteagifts.co.uk/fonts/proxima-nova/proximanova-regular-webfont.woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Proxima Nova";
+  src: url("https://catest-dev.afternoonteagifts.co.uk/fonts/proxima-nova/proximanova-regularitalic-webfont.woff");
+  font-style: italic;
   font-weight: 400;
   font-display: swap;
 }

@@ -400,6 +400,7 @@ const populateFonts = (element) => {
     "PT Sans",
     "Noto Sans",
     "Source Sans Pro",
+    "Proxima Nova",
     "ABC Ginto Nord Condensed Unlicensed Trial",
     "ABC Ginto Nord Unlicensed Trial",
     "Public Sans",
