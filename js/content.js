@@ -38,6 +38,7 @@ const changeFontFamily = (
     }
     const computedStyle = window.getComputedStyle(node);
     const fontFamily = computedStyle.getPropertyValue("font-family");
+    let fontType = null;
     if (fontFamily) {
       // Normalize to lowercase for robust matching
       const fontFamilyLower = fontFamily.toLowerCase();
@@ -58,7 +59,6 @@ const changeFontFamily = (
       const serifTriggers = ["serif", "georgia", "times", "times new roman"];
       const monospaceTriggers = ["monospace", "courier", "courier new"];
 
-      let fontType = null;
       for (const font of fontList) {
         if (sansSerifTriggers.includes(font)) {
           fontType = "sans-serif";
@@ -71,62 +71,55 @@ const changeFontFamily = (
           break;
         }
       }
+    }
 
-      if (fontType === "sans-serif") {
-        if (sansSerif !== "Default") {
-          node.style.fontFamily = `'${sansSerif}'`;
-        }
-        if (sansSerifWeight !== "Default") {
-          node.style.fontWeight = sansSerifWeight;
-        }
-        if (sansSerifSize !== "Default" && sansSerifSize) {
-          node.style.setProperty(
-            "font-size",
-            `${sansSerifSize}px`,
-            "important",
-          );
-        }
-      } else if (fontType === "serif") {
-        if (serif !== "Default") {
-          node.style.fontFamily = `'${serif}'`;
-        }
-        if (serifWeight !== "Default") {
-          node.style.fontWeight = serifWeight;
-        }
-        if (serifSize !== "Default" && serifSize) {
-          node.style.setProperty("font-size", `${serifSize}px`, "important");
-        }
-      } else if (fontType === "monospace") {
-        if (monospace !== "Default") {
-          node.style.fontFamily = `'${monospace}'`;
-        }
-        if (monospaceWeight !== "Default") {
-          node.style.fontWeight = monospaceWeight;
-        }
-        if (monospaceSize !== "Default" && monospaceSize) {
-          node.style.setProperty(
-            "font-size",
-            `${monospaceSize}px`,
-            "important",
-          );
-        }
+    // Recursively process child nodes before modifying the current node
+    for (const childNode of node.childNodes) {
+      changeFontFamily(
+        childNode,
+        serif,
+        sansSerif,
+        monospace,
+        serifWeight,
+        sansSerifWeight,
+        monospaceWeight,
+        serifSize,
+        sansSerifSize,
+        monospaceSize,
+      );
+    }
+
+    if (fontType === "sans-serif") {
+      if (sansSerif !== "Default") {
+        node.style.fontFamily = `'${sansSerif}'`;
+      }
+      if (sansSerifWeight !== "Default") {
+        node.style.fontWeight = sansSerifWeight;
+      }
+      if (sansSerifSize !== "Default" && sansSerifSize) {
+        node.style.setProperty("font-size", `${sansSerifSize}px`, "important");
+      }
+    } else if (fontType === "serif") {
+      if (serif !== "Default") {
+        node.style.fontFamily = `'${serif}'`;
+      }
+      if (serifWeight !== "Default") {
+        node.style.fontWeight = serifWeight;
+      }
+      if (serifSize !== "Default" && serifSize) {
+        node.style.setProperty("font-size", `${serifSize}px`, "important");
+      }
+    } else if (fontType === "monospace") {
+      if (monospace !== "Default") {
+        node.style.fontFamily = `'${monospace}'`;
+      }
+      if (monospaceWeight !== "Default") {
+        node.style.fontWeight = monospaceWeight;
+      }
+      if (monospaceSize !== "Default" && monospaceSize) {
+        node.style.setProperty("font-size", `${monospaceSize}px`, "important");
       }
     }
-  }
-  // Recursively process child nodes
-  for (const childNode of node.childNodes) {
-    changeFontFamily(
-      childNode,
-      serif,
-      sansSerif,
-      monospace,
-      serifWeight,
-      sansSerifWeight,
-      monospaceWeight,
-      serifSize,
-      sansSerifSize,
-      monospaceSize,
-    );
   }
 };
 
