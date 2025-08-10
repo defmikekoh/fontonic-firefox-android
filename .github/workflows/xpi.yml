@@ -8,8 +8,6 @@ permissions:
   contents: write
 
 on:
-  push:
-    branches: [ defmikekoh ]
   workflow_dispatch: {}
 
 jobs:
@@ -155,7 +153,6 @@ jobs:
 
       # Move android-test-latest tag to this commit so the release has a real tag
       - name: Move android-test-latest tag to this commit
-        if: github.event_name == 'push'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -165,8 +162,7 @@ jobs:
 
       # Prerelease on every push for a direct .xpi link
 
-      - name: Create/Update draft "latest" release (every push)
-        if: github.event_name == 'push'
+      - name: Create/Update "latest" release (manual)
         uses: softprops/action-gh-release@v2
         with:
           tag_name: android-test-latest
@@ -184,7 +180,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Prune old assets from android-test-latest release
-        if: github.event_name == 'push'
         run: |
           echo "Pruning old assets..."
           API_URL="https://api.github.com/repos/${{ github.repository }}/releases/tags/android-test-latest"
@@ -207,7 +202,6 @@ jobs:
           done
 
       - name: Print direct link and QR to latest .xpi
-        if: github.event_name == 'push'
         run: |
           echo "Fetching latest (tagged) release download URL..."
           API_URL="https://api.github.com/repos/${{ github.repository }}/releases/tags/android-test-latest"
@@ -222,15 +216,3 @@ jobs:
           curl -s "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${DOWNLOAD_URL}" --output qrcode.png
           # Display as base64 in logs so it's clickable
           echo "data:image/png;base64,$(base64 -w0 qrcode.png)"
-
-      # Optional: attach to a Release for easy tap-download on Android
-      - name: Create GitHub Release (manual runs only)
-        if: github.event_name == 'workflow_dispatch'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: android-test-${{ steps.ver.outputs.v }}
-          name: Android test build ${{ steps.ver.outputs.v }}
-          body: "Signed XPI for Android testing (unlisted)."
-          files: signed/*.xpi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
