@@ -163,7 +163,7 @@ jobs:
           git tag -f android-test-latest $GITHUB_SHA
           git push -f origin android-test-latest
 
-      # Draft release on every push for a direct .xpi link
+      # Prerelease on every push for a direct .xpi link
       - name: Create/Update draft "latest" release (every push)
         if: github.event_name == 'push'
         uses: softprops/action-gh-release@v2
@@ -175,20 +175,21 @@ jobs:
             Draft build for Android testing.
             Version: ${{ steps.ver.outputs.v }}
             Commit: ${{ github.sha }}
-          draft: true
+          draft: false
           prerelease: true
+          make_latest: false
           files: signed/*.xpi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Print direct link and QR to latest draft .xpi
+      - name: Print direct link and QR to latest .xpi
         if: github.event_name == 'push'
         run: |
-          echo "Fetching latest release download URL..."
+          echo "Fetching latest (tagged) release download URL..."
           API_URL="https://api.github.com/repos/${{ github.repository }}/releases/tags/android-test-latest"
           DOWNLOAD_URL=$(curl -sL "$API_URL" | jq -r '.assets[0].browser_download_url')
           if [ "$DOWNLOAD_URL" = "null" ] || [ -z "$DOWNLOAD_URL" ]; then
-            echo "No asset found for latest draft release."
+            echo "No asset found for latest tagged release."
             exit 1
           fi
           echo "Direct download URL: $DOWNLOAD_URL"
