@@ -50,7 +50,7 @@ const tipWhenOverrideOff = document.getElementById("tip-override-off");
 const tipWhenSiteIsExempted = document.getElementById("tip-exempt");
 const tipBox = document.getElementById("tip-box");
 const globalNotSelectedInfoText = document.getElementById(
-  "global_not_checked_info_text"
+  "global_not_checked_info_text",
 );
 const globalFontsSelection = document.getElementById("global_fonts_selection");
 const globalFontSelectionForm = document.forms["global_fonts"];
@@ -72,22 +72,22 @@ const globalSansSerifSizeInput =
 const globalMonospaceSizeInput =
   globalFontSelectionForm.elements["global_monospace_size"];
 const globalSerifPlaceholder = document.querySelector(
-  "#global_serif_placeholder"
+  "#global_serif_placeholder",
 );
 const globalSansSerifPlaceholder = document.querySelector(
-  "#global_sans_serif_placeholder"
+  "#global_sans_serif_placeholder",
 );
 const globalMonospacePlaceholder = document.querySelector(
-  "#global_monospace_placeholder"
+  "#global_monospace_placeholder",
 );
 const globalSerifWeightPlaceholder = document.querySelector(
-  "#global_serif_weight_placeholder"
+  "#global_serif_weight_placeholder",
 );
 const globalSansSerifWeightPlaceholder = document.querySelector(
-  "#global_sans_serif_weight_placeholder"
+  "#global_sans_serif_weight_placeholder",
 );
 const globalMonospaceWeightPlaceholder = document.querySelector(
-  "#global_monospace_weight_placeholder"
+  "#global_monospace_weight_placeholder",
 );
 tipWhenOverrideOn.remove();
 tipWhenOverrideOff.remove();
@@ -107,7 +107,7 @@ const getDomain = () => {
       (tabs) => {
         if (tabs[0] && tabs[0].url) resolve(new URL(tabs[0].url).hostname);
         else reject(new Error("Could not return tab url"));
-      }
+      },
     );
   });
 };
@@ -139,12 +139,6 @@ browser.storage.sync.get(["global"]).then((result) =>
           global_fonts.sans_serif_weight || "Default";
         globalMonospaceWeightPlaceholder.textContent =
           global_fonts.monospace_weight || "Default";
-        globalSerifSizeInput.placeholder =
-          global_fonts.serif_size || "Default";
-        globalSansSerifSizeInput.placeholder =
-          global_fonts.sans_serif_size || "Default";
-        globalMonospaceSizeInput.placeholder =
-          global_fonts.monospace_size || "Default";
         // Placeholder value
         globalSerifPlaceholder.value =
           global_fonts.serif === "Default" ? "" : global_fonts.serif;
@@ -192,12 +186,12 @@ browser.storage.sync.get(["global"]).then((result) =>
             "exempts" in result &&
             result["exempts"].includes(yield getDomain()) &&
             showTip(tipWhenSiteIsExempted);
-        })
+        }),
       );
     } else {
       globalFontsSelection.remove();
     }
-  })
+  }),
 );
 settingsButton.addEventListener("click", () =>
   __awaiter(this, void 0, void 0, function* () {
@@ -219,7 +213,7 @@ settingsButton.addEventListener("click", () =>
           });
           if (globalCheck.checked) {
             showTip(
-              overrideCheck.checked ? tipWhenOverrideOn : tipWhenOverrideOff
+              overrideCheck.checked ? tipWhenOverrideOn : tipWhenOverrideOff,
             );
             exemptCheck.checked && showTip(tipWhenSiteIsExempted);
             globalNotSelectedInfoText.remove();
@@ -247,12 +241,6 @@ settingsButton.addEventListener("click", () =>
                 global_fonts.sans_serif_weight || "Default";
               globalMonospaceWeightPlaceholder.textContent =
                 global_fonts.monospace_weight || "Default";
-              globalSerifSizeInput.placeholder =
-                global_fonts.serif_size || "Default";
-              globalSansSerifSizeInput.placeholder =
-                global_fonts.sans_serif_size || "Default";
-              globalMonospaceSizeInput.placeholder =
-                global_fonts.monospace_size || "Default";
               // Placeholder value
               globalSerifPlaceholder.value =
                 global_fonts.serif === "Default" ? "" : global_fonts.serif;
@@ -280,8 +268,7 @@ settingsButton.addEventListener("click", () =>
                   ? ""
                   : global_fonts.monospace_weight;
               globalSerifSizeInput.value =
-                global_fonts.serif_size &&
-                global_fonts.serif_size !== "Default"
+                global_fonts.serif_size && global_fonts.serif_size !== "Default"
                   ? global_fonts.serif_size
                   : "";
               globalSansSerifSizeInput.value =
@@ -300,7 +287,7 @@ settingsButton.addEventListener("click", () =>
             globalFontsSelection.remove();
             settingsPage.appendChild(globalNotSelectedInfoText);
           }
-        })
+        }),
       );
       overrideCheck.addEventListener("change", () =>
         __awaiter(this, void 0, void 0, function* () {
@@ -308,9 +295,9 @@ settingsButton.addEventListener("click", () =>
             override: overrideCheck.checked,
           });
           showTip(
-            overrideCheck.checked ? tipWhenOverrideOn : tipWhenOverrideOff
+            overrideCheck.checked ? tipWhenOverrideOn : tipWhenOverrideOff,
           );
-        })
+        }),
       );
       exemptCheck.addEventListener("change", () =>
         __awaiter(this, void 0, void 0, function* () {
@@ -324,20 +311,20 @@ settingsButton.addEventListener("click", () =>
           else {
             exempted_domains = exempted_domains.filter((el) => el !== domain);
             showTip(
-              overrideCheck.checked ? tipWhenOverrideOn : tipWhenOverrideOff
+              overrideCheck.checked ? tipWhenOverrideOn : tipWhenOverrideOff,
             );
           }
           yield browser.storage.sync.set({
             exempts: exempted_domains,
           });
-        })
+        }),
       );
     } else {
       settingsButton.textContent = "Settings";
       settingsPage.remove();
       wrapper.appendChild(homePage);
     }
-  })
+  }),
 );
 supportButton.addEventListener("click", () => {
   if (supportButton.textContent.includes("Supp")) {
@@ -368,13 +355,13 @@ const serifPlaceholder = document.querySelector("#serif_placeholder");
 const sansSerifPlaceholder = document.querySelector("#sans_serif_placeholder");
 const monospacePlaceholder = document.querySelector("#monospace_placeholder");
 const serifWeightPlaceholder = document.querySelector(
-  "#serif_weight_placeholder"
+  "#serif_weight_placeholder",
 );
 const sansSerifWeightPlaceholder = document.querySelector(
-  "#sans_serif_weight_placeholder"
+  "#sans_serif_weight_placeholder",
 );
 const monospaceWeightPlaceholder = document.querySelector(
-  "#monospace_weight_placeholder"
+  "#monospace_weight_placeholder",
 );
 // Populating placeholder values + checkbox
 const updatePlaceholders = (innerText) => {
@@ -382,15 +369,11 @@ const updatePlaceholders = (innerText) => {
   serifPlaceholder.textContent = innerText.serif;
   sansSerifPlaceholder.textContent = innerText.sans_serif;
   monospacePlaceholder.textContent = innerText.monospace;
-  serifWeightPlaceholder.textContent =
-    innerText.serif_weight || "Default";
+  serifWeightPlaceholder.textContent = innerText.serif_weight || "Default";
   sansSerifWeightPlaceholder.textContent =
     innerText.sans_serif_weight || "Default";
   monospaceWeightPlaceholder.textContent =
     innerText.monospace_weight || "Default";
-  serifSizeInput.placeholder = innerText.serif_size || "Default";
-  sansSerifSizeInput.placeholder = innerText.sans_serif_size || "Default";
-  monospaceSizeInput.placeholder = innerText.monospace_size || "Default";
   // Placeholder value
   serifPlaceholder.value = innerText.serif === "Default" ? "" : innerText.serif;
   sansSerifPlaceholder.value =
@@ -569,9 +552,7 @@ fontSelectionForm.addEventListener("submit", (e) => {
         // telling the service worker to apply the font
         const fontData = {
           serif: serifValue.length ? serifValue : "Default",
-          serif_weight: serifWeightValue.length
-            ? serifWeightValue
-            : "Default",
+          serif_weight: serifWeightValue.length ? serifWeightValue : "Default",
           sans_serif: sansSerifValue.length ? sansSerifValue : "Default",
           sans_serif_weight: sansSerifWeightValue.length
             ? sansSerifWeightValue
@@ -617,7 +598,7 @@ fontSelectionForm.addEventListener("submit", (e) => {
           exempts_list["exempts"].includes(domain)
         ) {
           console.log(
-            "This site has been exempted, so don't change the global fonts"
+            "This site has been exempted, so don't change the global fonts",
           );
         } else {
           const result = yield browser.storage.sync.get(["global"]);
@@ -626,7 +607,7 @@ fontSelectionForm.addEventListener("submit", (e) => {
               global_fonts: fontData,
             });
         }
-      })
+      }),
     );
   } catch (e) {
     console.error("Error applying or saving font.");
@@ -676,9 +657,7 @@ globalFontSelectionForm.addEventListener("submit", (e) =>
         sans_serif_weight: globalSansSerifWeightValue.length
           ? globalSansSerifWeightValue
           : "Default",
-        monospace: globaMonospaceValue.length
-          ? globaMonospaceValue
-          : "Default",
+        monospace: globaMonospaceValue.length ? globaMonospaceValue : "Default",
         monospace_weight: globalMonospaceWeightValue.length
           ? globalMonospaceWeightValue
           : "Default",
@@ -693,7 +672,7 @@ globalFontSelectionForm.addEventListener("submit", (e) =>
           : "Default",
       },
     });
-  })
+  }),
 );
 restoreButton.addEventListener("click", () =>
   __awaiter(this, void 0, void 0, function* () {
@@ -730,5 +709,5 @@ restoreButton.addEventListener("click", () =>
     document.getElementById("restore_modal").showModal();
     browser.storage.sync.remove(yield getDomain());
     restoreButton.remove();
-  })
+  }),
 );
