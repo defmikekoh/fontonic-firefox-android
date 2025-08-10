@@ -102,19 +102,50 @@ jobs:
           echo "v=$(jq -r .version "$MF")" >> $GITHUB_OUTPUT
           echo "Version: $(jq -r .version "$MF")"
 
-      - name: Sign on AMO (unlisted)
+      - name: Sign on AMO (unlisted, with retry)
         env:
           AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
           AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
         run: |
+          set -euo pipefail
           mkdir -p signed
-          web-ext sign \
-            --channel=unlisted \
-            --source-dir "${{ steps.unzip.outputs.src_dir }}" \
-            --artifacts-dir ./signed \
-            --api-key "$AMO_JWT_ISSUER" \
-            --api-secret "$AMO_JWT_SECRET" \
-            --timeout 60000
+          # Try up to 6 times, waiting up to ~15 minutes total.
+          # Each attempt gives AMO up to 5 minutes to approve before timing out.
+          attempts=6
+          attempt=1
+          while [ $attempt -le $attempts ]; do
+            echo "::group::web-ext sign attempt $attempt/$attempts"
+            # Clean any partials so we can detect success
+            rm -f signed/*.xpi || true
+            # Run sign with a longer timeout (ms)
+            if web-ext sign \
+              --channel=unlisted \
+              --source-dir "${{ steps.unzip.outputs.src_dir }}" \
+              --artifacts-dir ./signed \
+              --api-key "$AMO_JWT_ISSUER" \
+              --api-secret "$AMO_JWT_SECRET" \
+              --timeout 300000 ; then
+              echo "web-ext sign completed."
+            else
+              echo "web-ext sign exited non-zero (possible approval timeout)."
+            fi
+            echo "::endgroup::"
+            # Success condition: a signed XPI now exists
+            if ls signed/*.xpi >/dev/null 2>&1; then
+              echo "Found signed XPI after attempt $attempt."
+              break
+            fi
+            if [ $attempt -lt $attempts ]; then
+              echo "No XPI yet; sleeping 90s before retry..."
+              sleep 90
+            fi
+            attempt=$((attempt+1))
+          done
+          # Final check
+          if ! ls signed/*.xpi >/dev/null 2>&1; then
+            echo "ERROR: No signed XPI produced after $attempts attempts. AMO may still be processing or rejected the upload."
+            exit 1
+          fi
 
       - name: Upload signed XPI
         uses: actions/upload-artifact@v4
