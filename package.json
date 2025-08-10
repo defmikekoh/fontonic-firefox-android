@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "tailwind": "npx tailwindcss -i input.css -o ./popup/popup.css --watch",
-        "build": "npx tailwindcss -i input.css -o ./popup/popup.css && web-ext build -i=\"tailwind*\" input.css \"*.md\" \"package*.json\" LICENSE --overwrite-dest",
-    "buildnosign": "npx tailwindcss -i input.css -o ./popup/popup.css && web-ext build --filename fontonic-firefox-android-nosign.xpi -i=\"tailwind*\" input.css \"*.md\" \"package*.json\" LICENSE --overwrite-dest"
+    "build":    "npx tailwindcss -i input.css -o ./popup/popup.css && web-ext build -i=\"tailwind*\" input.css \"*.md\" \"package*.json\" LICENSE --overwrite-dest",
+    "buildxpi": "npx tailwindcss -i input.css -o ./popup/popup.css && web-ext build --filename fontonic-firefox-android-nosign.xpi -i=\"tailwind*\" input.css \"*.md\" \"package*.json\" LICENSE --overwrite-dest"
   },
   "keywords": [
     "firefox add-on",

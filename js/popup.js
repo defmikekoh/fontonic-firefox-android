@@ -129,14 +129,22 @@ browser.storage.sync.get(["global"]).then((result) =>
       const globalFonts = yield browser.storage.sync.get(["global_fonts"]);
       if ("global_fonts" in globalFonts) {
         const global_fonts = globalFonts["global_fonts"];
-        // Placeholder text content - show current font but always allow Default selection
-        globalSerifPlaceholder.textContent = global_fonts.serif === "Default" ? "Default" : `Default (${global_fonts.serif})`;
-        globalSansSerifPlaceholder.textContent = global_fonts.sans_serif === "Default" ? "Default" : `Default (${global_fonts.sans_serif})`;
-        globalMonospacePlaceholder.textContent = global_fonts.monospace === "Default" ? "Default" : `Default (${global_fonts.monospace})`;
-        globalSerifWeightPlaceholder.textContent = !global_fonts.serif_weight || global_fonts.serif_weight === "Default" ? "Default" : `Default (${global_fonts.serif_weight})`;
-        globalSansSerifWeightPlaceholder.textContent = !global_fonts.sans_serif_weight || global_fonts.sans_serif_weight === "Default" ? "Default" : `Default (${global_fonts.sans_serif_weight})`;
-        globalMonospaceWeightPlaceholder.textContent = !global_fonts.monospace_weight || global_fonts.monospace_weight === "Default" ? "Default" : `Default (${global_fonts.monospace_weight})`;
-        // Placeholder value - always empty so users can select Default
+        // Placeholder text content - show current selection as status
+        globalSerifPlaceholder.textContent = global_fonts.serif;
+        globalSansSerifPlaceholder.textContent = global_fonts.sans_serif;
+        globalMonospacePlaceholder.textContent = global_fonts.monospace;
+        globalSerifWeightPlaceholder.textContent = global_fonts.serif_weight || "Default";
+        globalSansSerifWeightPlaceholder.textContent = global_fonts.sans_serif_weight || "Default";
+        globalMonospaceWeightPlaceholder.textContent = global_fonts.monospace_weight || "Default";
+
+        // Make placeholder unselectable (disabled) and keep value empty
+        globalSerifPlaceholder.disabled = true;
+        globalSansSerifPlaceholder.disabled = true;
+        globalMonospacePlaceholder.disabled = true;
+        globalSerifWeightPlaceholder.disabled = true;
+        globalSansSerifWeightPlaceholder.disabled = true;
+        globalMonospaceWeightPlaceholder.disabled = true;
+
         globalSerifPlaceholder.value = "";
         globalSansSerifPlaceholder.value = "";
         globalMonospacePlaceholder.value = "";
@@ -214,14 +222,22 @@ settingsButton.addEventListener("click", () =>
             ]);
             if ("global_fonts" in globalFonts) {
               const global_fonts = globalFonts["global_fonts"];
-              // Placeholder text content - show current font but always allow Default selection
-              globalSerifPlaceholder.textContent = global_fonts.serif === "Default" ? "Default" : `Default (${global_fonts.serif})`;
-              globalSansSerifPlaceholder.textContent = global_fonts.sans_serif === "Default" ? "Default" : `Default (${global_fonts.sans_serif})`;
-              globalMonospacePlaceholder.textContent = global_fonts.monospace === "Default" ? "Default" : `Default (${global_fonts.monospace})`;
-              globalSerifWeightPlaceholder.textContent = !global_fonts.serif_weight || global_fonts.serif_weight === "Default" ? "Default" : `Default (${global_fonts.serif_weight})`;
-              globalSansSerifWeightPlaceholder.textContent = !global_fonts.sans_serif_weight || global_fonts.sans_serif_weight === "Default" ? "Default" : `Default (${global_fonts.sans_serif_weight})`;
-              globalMonospaceWeightPlaceholder.textContent = !global_fonts.monospace_weight || global_fonts.monospace_weight === "Default" ? "Default" : `Default (${global_fonts.monospace_weight})`;
-              // Placeholder value - always empty so users can select Default
+              // Placeholder text content - show current selection as status
+              globalSerifPlaceholder.textContent = global_fonts.serif;
+              globalSansSerifPlaceholder.textContent = global_fonts.sans_serif;
+              globalMonospacePlaceholder.textContent = global_fonts.monospace;
+              globalSerifWeightPlaceholder.textContent = global_fonts.serif_weight || "Default";
+              globalSansSerifWeightPlaceholder.textContent = global_fonts.sans_serif_weight || "Default";
+              globalMonospaceWeightPlaceholder.textContent = global_fonts.monospace_weight || "Default";
+
+              // Make placeholder unselectable (disabled) and keep value empty
+              globalSerifPlaceholder.disabled = true;
+              globalSansSerifPlaceholder.disabled = true;
+              globalMonospacePlaceholder.disabled = true;
+              globalSerifWeightPlaceholder.disabled = true;
+              globalSansSerifWeightPlaceholder.disabled = true;
+              globalMonospaceWeightPlaceholder.disabled = true;
+
               globalSerifPlaceholder.value = "";
               globalSansSerifPlaceholder.value = "";
               globalMonospacePlaceholder.value = "";
@@ -326,14 +342,22 @@ const monospaceWeightPlaceholder = document.querySelector(
 );
 // Populating placeholder values + checkbox
 const updatePlaceholders = (innerText) => {
-  // Placeholder text content - always show "Default (current: FontName)" for fonts
-  serifPlaceholder.textContent = innerText.serif === "Default" ? "Default" : `Default (${innerText.serif})`;
-  sansSerifPlaceholder.textContent = innerText.sans_serif === "Default" ? "Default" : `Default (${innerText.sans_serif})`;
-  monospacePlaceholder.textContent = innerText.monospace === "Default" ? "Default" : `Default (${innerText.monospace})`;
-  serifWeightPlaceholder.textContent = !innerText.serif_weight || innerText.serif_weight === "Default" ? "Default" : `Default (${innerText.serif_weight})`;
-  sansSerifWeightPlaceholder.textContent = !innerText.sans_serif_weight || innerText.sans_serif_weight === "Default" ? "Default" : `Default (${innerText.sans_serif_weight})`;
-  monospaceWeightPlaceholder.textContent = !innerText.monospace_weight || innerText.monospace_weight === "Default" ? "Default" : `Default (${innerText.monospace_weight})`;
-  // Placeholder value - always keep as empty string so users can select "Default"
+  // Placeholder text content - show current selection as status
+  serifPlaceholder.textContent = innerText.serif;
+  sansSerifPlaceholder.textContent = innerText.sans_serif;
+  monospacePlaceholder.textContent = innerText.monospace;
+  serifWeightPlaceholder.textContent = innerText.serif_weight || "Default";
+  sansSerifWeightPlaceholder.textContent = innerText.sans_serif_weight || "Default";
+  monospaceWeightPlaceholder.textContent = innerText.monospace_weight || "Default";
+
+  // Make placeholder unselectable (disabled) and keep value empty
+  serifPlaceholder.disabled = true;
+  sansSerifPlaceholder.disabled = true;
+  monospacePlaceholder.disabled = true;
+  serifWeightPlaceholder.disabled = true;
+  sansSerifWeightPlaceholder.disabled = true;
+  monospaceWeightPlaceholder.disabled = true;
+
   serifPlaceholder.value = "";
   sansSerifPlaceholder.value = "";
   monospacePlaceholder.value = "";
@@ -365,6 +389,12 @@ getDomain().then((domain) => {
 // load locally installed fonts
 // Load fonts into the  dropdowns
 const populateFonts = (element) => {
+  // Add Default option as the first selectable option
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "← Reset to Default";
+  element.appendChild(defaultOption);
+
   [
     // high frequency serif
     "Merriweather",
@@ -431,6 +461,12 @@ const populateFonts = (element) => {
   });
 };
 const populateWeights = (element) => {
+  // Add Default option as the first selectable option
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "← Reset to Default";
+  element.appendChild(defaultOption);
+
   [
     "100",
     "200",
@@ -521,23 +557,11 @@ fontSelectionForm.addEventListener("submit", (e) => {
           type: "apply_font",
           data: fontData,
         });
-        // saving the fonts to sync storage
+        // saving the fonts to sync storage - always save even if resetting to defaults
         const domain = new URL(tabs[0].url).hostname;
-        if (
-          serifValue.length ||
-          sansSerifValue.length ||
-          monospaceValue.length ||
-          serifWeightValue.length ||
-          sansSerifWeightValue.length ||
-          monospaceWeightValue.length ||
-          serifSizeValue.length ||
-          sansSerifSizeValue.length ||
-          monospaceSizeValue.length
-        ) {
-          yield browser.storage.sync.set({
-            [domain]: fontData,
-          });
-        }
+        yield browser.storage.sync.set({
+          [domain]: fontData,
+        });
         // if global is checked, save to global_fonts
         // don't if the site has been exempted
         const exempts_list = yield browser.storage.sync.get(["exempts"]);
