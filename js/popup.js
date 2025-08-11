@@ -343,12 +343,12 @@ const monospaceWeightPlaceholder = document.querySelector(
 // Populating placeholder values + checkbox
 const updatePlaceholders = (innerText) => {
   // Placeholder text content - show current selection as status
-  serifPlaceholder.textContent = innerText.serif;
-  sansSerifPlaceholder.textContent = innerText.sans_serif;
-  monospacePlaceholder.textContent = innerText.monospace;
-  serifWeightPlaceholder.textContent = innerText.serif_weight || "Default";
-  sansSerifWeightPlaceholder.textContent = innerText.sans_serif_weight || "Default";
-  monospaceWeightPlaceholder.textContent = innerText.monospace_weight || "Default";
+  serifPlaceholder.textContent = innerText.serif === "Default" ? "Default" : innerText.serif;
+  sansSerifPlaceholder.textContent = innerText.sans_serif === "Default" ? "Default" : innerText.sans_serif;
+  monospacePlaceholder.textContent = innerText.monospace === "Default" ? "Default" : innerText.monospace;
+  serifWeightPlaceholder.textContent = innerText.serif_weight === "Default" ? "Default" : (innerText.serif_weight || "Default");
+  sansSerifWeightPlaceholder.textContent = innerText.sans_serif_weight === "Default" ? "Default" : (innerText.sans_serif_weight || "Default");
+  monospaceWeightPlaceholder.textContent = innerText.monospace_weight === "Default" ? "Default" : (innerText.monospace_weight || "Default");
 
   // Make placeholder unselectable (disabled) and keep value empty
   serifPlaceholder.disabled = true;
