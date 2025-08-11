@@ -411,6 +411,7 @@ const populateFonts = (element) => {
     "Charter ITC TT",
     // high frequency sans-serif
     "Montserrat",
+    "Sora",
     "Poppins",
     "Inter",
     "Atkinson Hyperlegible Next",
