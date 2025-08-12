@@ -130,12 +130,12 @@ browser.storage.sync.get(["global"]).then((result) =>
       if ("global_fonts" in globalFonts) {
         const global_fonts = globalFonts["global_fonts"];
         // Placeholder text content - show current selection as status
-        globalSerifPlaceholder.textContent = global_fonts.serif;
-        globalSansSerifPlaceholder.textContent = global_fonts.sans_serif;
-        globalMonospacePlaceholder.textContent = global_fonts.monospace;
-        globalSerifWeightPlaceholder.textContent = global_fonts.serif_weight || "Default";
-        globalSansSerifWeightPlaceholder.textContent = global_fonts.sans_serif_weight || "Default";
-        globalMonospaceWeightPlaceholder.textContent = global_fonts.monospace_weight || "Default";
+        globalSerifPlaceholder.textContent = global_fonts.serif === "Default" ? "Default" : global_fonts.serif;
+        globalSansSerifPlaceholder.textContent = global_fonts.sans_serif === "Default" ? "Default" : global_fonts.sans_serif;
+        globalMonospacePlaceholder.textContent = global_fonts.monospace === "Default" ? "Default" : global_fonts.monospace;
+        globalSerifWeightPlaceholder.textContent = global_fonts.serif_weight === "Default" ? "Default" : (global_fonts.serif_weight || "Default");
+        globalSansSerifWeightPlaceholder.textContent = global_fonts.sans_serif_weight === "Default" ? "Default" : (global_fonts.sans_serif_weight || "Default");
+        globalMonospaceWeightPlaceholder.textContent = global_fonts.monospace_weight === "Default" ? "Default" : (global_fonts.monospace_weight || "Default");
 
         // Make placeholder unselectable (disabled) and keep value empty
         globalSerifPlaceholder.disabled = true;
@@ -223,12 +223,12 @@ settingsButton.addEventListener("click", () =>
             if ("global_fonts" in globalFonts) {
               const global_fonts = globalFonts["global_fonts"];
               // Placeholder text content - show current selection as status
-              globalSerifPlaceholder.textContent = global_fonts.serif;
-              globalSansSerifPlaceholder.textContent = global_fonts.sans_serif;
-              globalMonospacePlaceholder.textContent = global_fonts.monospace;
-              globalSerifWeightPlaceholder.textContent = global_fonts.serif_weight || "Default";
-              globalSansSerifWeightPlaceholder.textContent = global_fonts.sans_serif_weight || "Default";
-              globalMonospaceWeightPlaceholder.textContent = global_fonts.monospace_weight || "Default";
+              globalSerifPlaceholder.textContent = global_fonts.serif === "Default" ? "Default" : global_fonts.serif;
+              globalSansSerifPlaceholder.textContent = global_fonts.sans_serif === "Default" ? "Default" : global_fonts.sans_serif;
+              globalMonospacePlaceholder.textContent = global_fonts.monospace === "Default" ? "Default" : global_fonts.monospace;
+              globalSerifWeightPlaceholder.textContent = global_fonts.serif_weight === "Default" ? "Default" : (global_fonts.serif_weight || "Default");
+              globalSansSerifWeightPlaceholder.textContent = global_fonts.sans_serif_weight === "Default" ? "Default" : (global_fonts.sans_serif_weight || "Default");
+              globalMonospaceWeightPlaceholder.textContent = global_fonts.monospace_weight === "Default" ? "Default" : (global_fonts.monospace_weight || "Default");
 
               // Make placeholder unselectable (disabled) and keep value empty
               globalSerifPlaceholder.disabled = true;
@@ -364,6 +364,15 @@ const updatePlaceholders = (innerText) => {
   serifWeightPlaceholder.value = "";
   sansSerifWeightPlaceholder.value = "";
   monospaceWeightPlaceholder.value = "";
+
+  // Set actual form field values
+  serifSelect.value = innerText.serif !== "Default" ? innerText.serif : "";
+  sansSerifSelect.value = innerText.sans_serif !== "Default" ? innerText.sans_serif : "";
+  monospaceSelect.value = innerText.monospace !== "Default" ? innerText.monospace : "";
+  serifWeightSelect.value = innerText.serif_weight !== "Default" ? (innerText.serif_weight || "") : "";
+  sansSerifWeightSelect.value = innerText.sans_serif_weight !== "Default" ? (innerText.sans_serif_weight || "") : "";
+  monospaceWeightSelect.value = innerText.monospace_weight !== "Default" ? (innerText.monospace_weight || "") : "";
+
   serifSizeSelect.value =
     innerText.serif_size && innerText.serif_size !== "Default"
       ? innerText.serif_size
