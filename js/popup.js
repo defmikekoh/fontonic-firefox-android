@@ -693,3 +693,123 @@ restoreButton.addEventListener("click", () =>
     restoreButton.remove();
   }),
 );
+
+// Apply Fav Serif button functionality
+const applyFavSerifBtn = document.getElementById("apply-fav-serif-btn");
+applyFavSerifBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
+  // Set Serif to Merriweather 16 400
+  const fontData = {
+    serif: "Merriweather",
+    serif_weight: "400", 
+    serif_size: "16",
+    sans_serif: "Default",
+    sans_serif_weight: "Default",
+    sans_serif_size: "Default",
+    monospace: "Default",
+    monospace_weight: "Default",
+    monospace_size: "Default"
+  };
+  
+  try {
+    browser.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => __awaiter(this, void 0, void 0, function* () {
+      // Apply the font
+      browser.tabs.connect(tabs[0].id).postMessage({
+        type: "apply_font",
+        data: fontData,
+      });
+      
+      // Save to storage
+      const domain = new URL(tabs[0].url).hostname;
+      yield browser.storage.sync.set({
+        [domain]: fontData,
+      });
+      
+      // Update global fonts if global is enabled and site not exempted
+      const exempts_list = yield browser.storage.sync.get(["exempts"]);
+      if (!("exempts" in exempts_list && exempts_list["exempts"].includes(domain))) {
+        const result = yield browser.storage.sync.get(["global"]);
+        if ("global" in result && result["global"]) {
+          yield browser.storage.sync.set({
+            global_fonts: fontData,
+          });
+        }
+      }
+      
+      // Update UI placeholders
+      updatePlaceholders(fontData);
+      if (!formButtons.contains(restoreButton)) {
+        formButtons.prepend(restoreButton);
+      }
+    }));
+    
+    // Update button text temporarily
+    applyFavSerifBtn.textContent = "✔ Applied Fav Serif";
+    setTimeout(() => {
+      applyFavSerifBtn.textContent = "Apply Fav Serif";
+    }, 1500);
+    
+  } catch (e) {
+    console.error("Error applying favorite serif font.");
+    console.error(e);
+  }
+}));
+
+// Apply Fav Sans button functionality  
+const applyFavSansBtn = document.getElementById("apply-fav-sans-btn");
+applyFavSansBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
+  // Set Sans-serif to Rubik 17 400
+  const fontData = {
+    serif: "Default",
+    serif_weight: "Default",
+    serif_size: "Default", 
+    sans_serif: "Rubik",
+    sans_serif_weight: "400",
+    sans_serif_size: "17",
+    monospace: "Default",
+    monospace_weight: "Default", 
+    monospace_size: "Default"
+  };
+  
+  try {
+    browser.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => __awaiter(this, void 0, void 0, function* () {
+      // Apply the font
+      browser.tabs.connect(tabs[0].id).postMessage({
+        type: "apply_font",
+        data: fontData,
+      });
+      
+      // Save to storage
+      const domain = new URL(tabs[0].url).hostname;
+      yield browser.storage.sync.set({
+        [domain]: fontData,
+      });
+      
+      // Update global fonts if global is enabled and site not exempted
+      const exempts_list = yield browser.storage.sync.get(["exempts"]);
+      if (!("exempts" in exempts_list && exempts_list["exempts"].includes(domain))) {
+        const result = yield browser.storage.sync.get(["global"]);
+        if ("global" in result && result["global"]) {
+          yield browser.storage.sync.set({
+            global_fonts: fontData,
+          });
+        }
+      }
+      
+      // Update UI placeholders
+      updatePlaceholders(fontData);
+      if (!formButtons.contains(restoreButton)) {
+        formButtons.prepend(restoreButton);
+      }
+    }));
+    
+    // Update button text temporarily
+    applyFavSansBtn.textContent = "✔ Applied Fav Sans";
+    setTimeout(() => {
+      applyFavSansBtn.textContent = "Apply Fav Sans";
+    }, 1500);
+    
+  } catch (e) {
+    console.error("Error applying favorite sans-serif font.");
+    console.error(e);
+  }
+}));
