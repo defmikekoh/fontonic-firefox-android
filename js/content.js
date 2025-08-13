@@ -127,20 +127,65 @@ const changeFontFamily = (
 let currentFontSettings = null;
 let mutationObserver = null;
 
-// Performance detection for eink tablets and low-end devices
-const isLowPerformanceDevice = () => {
-  // Check device memory if available - eink tablets often have 6GB or less
-  if (navigator.deviceMemory && navigator.deviceMemory < 7) {
-    return true;
+// Performance timing test to detect slow devices
+const runPerformanceTest = () => {
+  const testIterations = 50;
+  const start = performance.now();
+  
+  // Perform DOM operations that are heavy on slow devices
+  for (let i = 0; i < testIterations; i++) {
+    document.body.style.opacity = (i % 2 === 0) ? '0.99' : '1';
+    document.body.offsetHeight; // Force reflow
   }
   
-  return false;
+  const elapsed = performance.now() - start;
+  console.log(`Fontonic: Performance test completed in ${elapsed.toFixed(2)}ms`);
+  return elapsed;
 };
 
-const LOW_PERF_DEVICE = isLowPerformanceDevice();
-if (LOW_PERF_DEVICE) {
-  console.log("Fontonic: Low-performance device detected, using optimized font application");
-}
+// Performance detection for eink tablets and low-end devices
+const isLowPerformanceDevice = async () => {
+  // Check if we have a stored performance result
+  const stored = await browser.storage.local.get(['fontonicPerformanceTest']);
+  
+  if (stored.fontonicPerformanceTest && stored.fontonicPerformanceTest.timestamp) {
+    const daysSinceTest = (Date.now() - stored.fontonicPerformanceTest.timestamp) / (1000 * 60 * 60 * 24);
+    
+    // Use cached result if test was run within last 30 days
+    if (daysSinceTest < 30) {
+      const isLowPerf = stored.fontonicPerformanceTest.isLowPerformance;
+      console.log(`Fontonic: Using cached performance result: ${isLowPerf ? 'low' : 'high'} performance`);
+      return isLowPerf;
+    }
+  }
+  
+  // Run performance test
+  const testTime = runPerformanceTest();
+  
+  // Threshold: >20ms suggests slow device (eink tablets, low-end devices)
+  const isLowPerf = testTime > 20;
+  
+  // Store result in local storage
+  await browser.storage.local.set({
+    fontonicPerformanceTest: {
+      timestamp: Date.now(),
+      testTime: testTime,
+      isLowPerformance: isLowPerf
+    }
+  });
+  
+  console.log(`Fontonic: Performance test result: ${isLowPerf ? 'low' : 'high'} performance (${testTime.toFixed(2)}ms)`);
+  return isLowPerf;
+};
+
+// Initialize performance detection
+let LOW_PERF_DEVICE = false;
+isLowPerformanceDevice().then(result => {
+  LOW_PERF_DEVICE = result;
+  if (LOW_PERF_DEVICE) {
+    console.log("Fontonic: Low-performance device detected, using optimized font application");
+  }
+});
 
 // Function to apply fonts with retry logic
 const applyFontsWithRetry = (fontData) => {
@@ -168,13 +213,16 @@ const applyFontsWithRetry = (fontData) => {
 };
 
 // Progressive delay application for late hydration
-const applyFontsProgressive = (fontData) => {
+const applyFontsProgressive = async (fontData) => {
   currentFontSettings = fontData;
   
   // Apply immediately
   applyFontsWithRetry(fontData);
   
-  if (LOW_PERF_DEVICE) {
+  // Get current performance status (may trigger test if not cached)
+  const isLowPerf = await isLowPerformanceDevice();
+  
+  if (isLowPerf) {
     // Conservative approach for eink tablets and slow devices
     // Only 2 additional retries with longer delays
     setTimeout(() => applyFontsWithRetry(fontData), 1000);
@@ -191,7 +239,7 @@ const applyFontsProgressive = (fontData) => {
 };
 
 // Set up MutationObserver to handle dynamic content changes
-const setupMutationObserver = () => {
+const setupMutationObserver = async () => {
   if (!document.body) {
     setTimeout(setupMutationObserver, 50);
     return;
@@ -201,9 +249,12 @@ const setupMutationObserver = () => {
     mutationObserver.disconnect();
   }
   
+  // Get current performance status for throttling
+  const isLowPerf = await isLowPerformanceDevice();
+  
   // Performance-based throttling
-  const debounceDelay = LOW_PERF_DEVICE ? 1000 : 200; // Longer delay for eink tablets
-  const minContentThreshold = LOW_PERF_DEVICE ? 50 : 10; // Higher threshold for triggering on slow devices
+  const debounceDelay = isLowPerf ? 1000 : 200; // Longer delay for eink tablets
+  const minContentThreshold = isLowPerf ? 50 : 10; // Higher threshold for triggering on slow devices
   
   mutationObserver = new MutationObserver((mutations) => {
     let shouldReapply = false;
@@ -222,7 +273,7 @@ const setupMutationObserver = () => {
               shouldReapply = true;
               
               // For low-performance devices, be even more selective
-              if (LOW_PERF_DEVICE) {
+              if (isLowPerf) {
                 // Only trigger on really large content additions
                 const hasLargeContent = node.children.length > 5 || 
                                       node.textContent.trim().length > 200;
@@ -240,7 +291,7 @@ const setupMutationObserver = () => {
     });
     
     // For low-performance devices, only reapply on significant changes
-    const shouldTrigger = LOW_PERF_DEVICE ? significantChange : shouldReapply;
+    const shouldTrigger = isLowPerf ? significantChange : shouldReapply;
     
     if (shouldTrigger && currentFontSettings) {
       // Debounce rapid mutations with performance-based delay
@@ -259,18 +310,20 @@ const setupMutationObserver = () => {
   };
   
   // On low-performance devices, observe less aggressively
-  if (LOW_PERF_DEVICE) {
+  if (isLowPerf) {
     observerOptions.subtree = false; // Only observe direct children, not deep tree
   }
   
   mutationObserver.observe(document.body, observerOptions);
   
-  console.log(`MutationObserver set up (performance mode: ${LOW_PERF_DEVICE ? 'low' : 'normal'})`);
+  console.log(`MutationObserver set up (performance mode: ${isLowPerf ? 'low' : 'normal'})`);
 };
 
 // Additional event listeners for various DOM ready states
-const addDOMReadyListeners = (fontData) => {
-  if (LOW_PERF_DEVICE) {
+const addDOMReadyListeners = async (fontData) => {
+  const isLowPerf = await isLowPerformanceDevice();
+  
+  if (isLowPerf) {
     // Simplified approach for eink tablets - only listen to essential events
     if (document.readyState !== 'complete') {
       window.addEventListener('load', () => {

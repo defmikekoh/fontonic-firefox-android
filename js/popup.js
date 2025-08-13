@@ -813,3 +813,29 @@ applyFavSansBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, 
     console.error(e);
   }
 }));
+
+// Reset Timing Test button functionality
+const resetTimingTestBtn = document.getElementById("reset-timing-test-btn");
+resetTimingTestBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
+  try {
+    // Clear the stored performance test result
+    yield browser.storage.local.remove('fontonicPerformanceTest');
+    
+    // Update button text temporarily
+    resetTimingTestBtn.textContent = "✔ Test Reset";
+    setTimeout(() => {
+      resetTimingTestBtn.textContent = "Reset Test";
+    }, 1500);
+    
+    console.log("Fontonic: Performance test cache cleared");
+    
+  } catch (e) {
+    console.error("Error resetting performance test:");
+    console.error(e);
+    
+    resetTimingTestBtn.textContent = "❌ Error";
+    setTimeout(() => {
+      resetTimingTestBtn.textContent = "Reset Test";
+    }, 1500);
+  }
+}));

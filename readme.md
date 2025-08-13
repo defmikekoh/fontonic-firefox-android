@@ -35,11 +35,13 @@ The extension automatically detects device performance and optimizes accordingly
 
 #### Detection Criteria
 Low-performance mode activates when:
-- Device memory < 7GB
+- Performance timing test > 20ms (cached for 30 days)
+
+The extension runs a 50-iteration DOM manipulation test to measure device performance. Results are cached for 30 days. Users can reset the test via Settings > "Reset performance test" to force a retest.
 
 This ensures optimal performance on devices like:
 - xppen Magic Note Pad
-- ONYX BOOX Note Air 3C
+- ONYX BOOX Note Air 3C  
 - Other eink tablets and low-end Android devices
 
 ## Report or Request
