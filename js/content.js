@@ -223,11 +223,10 @@ const applyFontsProgressive = async (fontData) => {
   const isLowPerf = await isLowPerformanceDevice();
   
   if (isLowPerf) {
-    // Conservative approach for eink tablets and slow devices
-    // Only 2 additional retries with longer delays
-    setTimeout(() => applyFontsWithRetry(fontData), 1000);
+    // Single delayed application for eink tablets and slow devices
+    // Avoids multiple refresh cycles on eink displays
     setTimeout(() => applyFontsWithRetry(fontData), 3000);
-    console.log("Fontonic: Using low-performance progressive delays");
+    console.log("Fontonic: Using single delayed application for low-performance device");
   } else {
     // Full progressive approach for faster devices
     setTimeout(() => applyFontsWithRetry(fontData), 100);
