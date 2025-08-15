@@ -970,15 +970,25 @@ const initializeTriggers = () => {
 // Load existing triggers from storage
 const loadTriggers = () => __awaiter(this, void 0, void 0, function* () {
   try {
+    // Wait a bit longer for DOM elements to be ready
+    let attempts = 0;
+    while ((!sansSerifTriggersTextarea || !serifTriggersTextarea || !monospaceTriggersTextarea) && attempts < 10) {
+      await new Promise(resolve => setTimeout(resolve, 50));
+      sansSerifTriggersTextarea = document.getElementById("sans-serif-triggers");
+      serifTriggersTextarea = document.getElementById("serif-triggers");
+      monospaceTriggersTextarea = document.getElementById("monospace-triggers");
+      attempts++;
+    }
+    
     if (!sansSerifTriggersTextarea || !serifTriggersTextarea || !monospaceTriggersTextarea) {
-      console.log("Trigger textareas not ready yet");
+      console.log("Trigger textareas still not ready after retries");
       return;
     }
     
     const result = yield browser.storage.sync.get(['fontTriggers']);
     const triggers = result.fontTriggers || DEFAULT_TRIGGERS;
 
-    // Set values and dynamic heights
+    // Set values as real content (not placeholder)
     sansSerifTriggersTextarea.value = triggers.sansSerifTriggers.join('\n');
     serifTriggersTextarea.value = triggers.serifTriggers.join('\n');
     monospaceTriggersTextarea.value = triggers.monospaceTriggers.join('\n');
@@ -1048,8 +1058,19 @@ const saveTriggers = () => __awaiter(this, void 0, void 0, function* () {
 // Reset triggers to defaults functionality
 const resetTriggers = () => __awaiter(this, void 0, void 0, function* () {
   try {
+    // Retry getting DOM elements if needed
+    let attempts = 0;
+    while ((!sansSerifTriggersTextarea || !serifTriggersTextarea || !monospaceTriggersTextarea) && attempts < 10) {
+      await new Promise(resolve => setTimeout(resolve, 50));
+      sansSerifTriggersTextarea = document.getElementById("sans-serif-triggers");
+      serifTriggersTextarea = document.getElementById("serif-triggers");
+      monospaceTriggersTextarea = document.getElementById("monospace-triggers");
+      resetTriggersBtn = document.getElementById("reset-triggers-btn");
+      attempts++;
+    }
+    
     if (!sansSerifTriggersTextarea || !serifTriggersTextarea || !monospaceTriggersTextarea || !resetTriggersBtn) {
-      console.error("Trigger elements not initialized");
+      console.error("Trigger elements not initialized after retries");
       return;
     }
     
@@ -1071,7 +1092,7 @@ const resetTriggers = () => __awaiter(this, void 0, void 0, function* () {
       resetTriggersBtn.textContent = "Reset All to Defaults";
     }, 1500);
     
-    console.log("Fontonic: Font triggers reset to defaults");
+    console.log("Fontonic: Font triggers reset to defaults - textareas updated");
     
   } catch (e) {
     console.error("Error resetting font triggers:", e);
