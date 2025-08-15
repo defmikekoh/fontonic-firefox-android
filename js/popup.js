@@ -189,7 +189,7 @@ browser.storage.sync.get(["global"]).then((result) =>
 );
 
 advancedButton.addEventListener("click", () => {
-  if (advancedButton.textContent.includes("Advanced")) {
+  if (advancedButton.textContent.includes("Adv")) {
     advancedButton.textContent = "<- Go back";
     if (settingsButton.textContent.includes("G")) settingsPage.remove();
     else if (supportButton.textContent.includes("<")) supportPage.remove();
@@ -198,10 +198,10 @@ advancedButton.addEventListener("click", () => {
     supportButton.textContent = "Support";
     wrapper.appendChild(advancedPage);
     
-    // Load triggers when advanced page is shown
-    setTimeout(loadTriggers, 100);
+    // Initialize triggers when advanced page is shown
+    setTimeout(initializeTriggers, 100);
   } else {
-    advancedButton.textContent = "Advanced";
+    advancedButton.textContent = "Adv";
     advancedPage.remove();
     wrapper.appendChild(homePage);
   }
@@ -215,7 +215,7 @@ settingsButton.addEventListener("click", () =>
       else if (advancedButton.textContent.includes("<")) advancedPage.remove();
       else homePage.remove();
       supportButton.textContent = "Support";
-      advancedButton.textContent = "Advanced";
+      advancedButton.textContent = "Adv";
       wrapper.appendChild(settingsPage);
       // Check for exisitng settings
       globalCheck.addEventListener("change", () =>
@@ -335,7 +335,7 @@ supportButton.addEventListener("click", () => {
     else if (advancedButton.textContent.includes("<")) advancedPage.remove();
     else homePage.remove();
     settingsButton.textContent = "Settings";
-    advancedButton.textContent = "Advanced";
+    advancedButton.textContent = "Adv";
     wrapper.appendChild(supportPage);
   } else {
     supportButton.textContent = "Support";
@@ -927,12 +927,12 @@ resetTimingTestBtn.addEventListener("click", () => __awaiter(this, void 0, void 
   }
 }));
 
-// Font Triggers Management functionality
-const sansSerifTriggersTextarea = document.getElementById("sans-serif-triggers");
-const serifTriggersTextarea = document.getElementById("serif-triggers");
-const monospaceTriggersTextarea = document.getElementById("monospace-triggers");
-const saveTriggersBtn = document.getElementById("save-triggers-btn");
-const resetTriggersBtn = document.getElementById("reset-triggers-btn");
+// Font Triggers Management functionality (will be null until advanced page is loaded)
+let sansSerifTriggersTextarea = null;
+let serifTriggersTextarea = null;
+let monospaceTriggersTextarea = null;
+let saveTriggersBtn = null;
+let resetTriggersBtn = null;
 
 // Default triggers
 const DEFAULT_TRIGGERS = {
@@ -948,89 +948,140 @@ const DEFAULT_TRIGGERS = {
   monospaceTriggers: ["monospace", "courier", "courier new"]
 };
 
-// Load existing triggers on settings page load
+// Initialize trigger elements and load data
+const initializeTriggers = () => {
+  // Get DOM elements
+  sansSerifTriggersTextarea = document.getElementById("sans-serif-triggers");
+  serifTriggersTextarea = document.getElementById("serif-triggers");
+  monospaceTriggersTextarea = document.getElementById("monospace-triggers");
+  saveTriggersBtn = document.getElementById("save-triggers-btn");
+  resetTriggersBtn = document.getElementById("reset-triggers-btn");
+  
+  // Add event listeners
+  if (saveTriggersBtn && resetTriggersBtn) {
+    saveTriggersBtn.addEventListener("click", saveTriggers);
+    resetTriggersBtn.addEventListener("click", resetTriggers);
+  }
+  
+  // Load existing data
+  loadTriggers();
+};
+
+// Load existing triggers from storage
 const loadTriggers = () => __awaiter(this, void 0, void 0, function* () {
   try {
+    if (!sansSerifTriggersTextarea || !serifTriggersTextarea || !monospaceTriggersTextarea) {
+      console.log("Trigger textareas not ready yet");
+      return;
+    }
+    
     const result = yield browser.storage.sync.get(['fontTriggers']);
     const triggers = result.fontTriggers || DEFAULT_TRIGGERS;
 
+    // Set values and dynamic heights
     sansSerifTriggersTextarea.value = triggers.sansSerifTriggers.join('\n');
     serifTriggersTextarea.value = triggers.serifTriggers.join('\n');
     monospaceTriggersTextarea.value = triggers.monospaceTriggers.join('\n');
+    
+    // Set textarea heights to match number of values (minimum 3 rows)
+    sansSerifTriggersTextarea.rows = Math.max(3, triggers.sansSerifTriggers.length);
+    serifTriggersTextarea.rows = Math.max(3, triggers.serifTriggers.length);
+    monospaceTriggersTextarea.rows = Math.max(3, triggers.monospaceTriggers.length);
+    
+    console.log("Fontonic: Triggers loaded into textareas", triggers);
   } catch (e) {
     console.error("Error loading font triggers:", e);
   }
 });
 
 // Save triggers functionality
-saveTriggersBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
+const saveTriggers = () => __awaiter(this, void 0, void 0, function* () {
   try {
+    if (!sansSerifTriggersTextarea || !serifTriggersTextarea || !monospaceTriggersTextarea || !saveTriggersBtn) {
+      console.error("Trigger elements not initialized");
+      return;
+    }
+    
     const sansSerifTriggers = sansSerifTriggersTextarea.value
       .split('\n')
       .map(t => t.trim().toLowerCase())
       .filter(t => t.length > 0);
-
+    
     const serifTriggers = serifTriggersTextarea.value
-      .split('\n')
+      .split('\n') 
       .map(t => t.trim().toLowerCase())
       .filter(t => t.length > 0);
-
+    
     const monospaceTriggers = monospaceTriggersTextarea.value
       .split('\n')
       .map(t => t.trim().toLowerCase())
       .filter(t => t.length > 0);
-
+    
     const triggers = {
       sansSerifTriggers,
       serifTriggers,
       monospaceTriggers
     };
-
+    
     yield browser.storage.sync.set({ fontTriggers: triggers });
-
+    
     // Update button text temporarily
     saveTriggersBtn.textContent = "✔ Triggers Saved";
     setTimeout(() => {
       saveTriggersBtn.textContent = "Save Triggers";
     }, 1500);
-
+    
     console.log("Fontonic: Font triggers saved", triggers);
-
+    
   } catch (e) {
     console.error("Error saving font triggers:", e);
-
-    saveTriggersBtn.textContent = "❌ Error";
-    setTimeout(() => {
-      saveTriggersBtn.textContent = "Save Triggers";
-    }, 1500);
+    
+    if (saveTriggersBtn) {
+      saveTriggersBtn.textContent = "❌ Error";
+      setTimeout(() => {
+        saveTriggersBtn.textContent = "Save Triggers";
+      }, 1500);
+    }
   }
-}));
+});
 
 // Reset triggers to defaults functionality
-resetTriggersBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
+const resetTriggers = () => __awaiter(this, void 0, void 0, function* () {
   try {
+    if (!sansSerifTriggersTextarea || !serifTriggersTextarea || !monospaceTriggersTextarea || !resetTriggersBtn) {
+      console.error("Trigger elements not initialized");
+      return;
+    }
+    
     yield browser.storage.sync.set({ fontTriggers: DEFAULT_TRIGGERS });
-
+    
     // Update textareas with defaults
     sansSerifTriggersTextarea.value = DEFAULT_TRIGGERS.sansSerifTriggers.join('\n');
     serifTriggersTextarea.value = DEFAULT_TRIGGERS.serifTriggers.join('\n');
     monospaceTriggersTextarea.value = DEFAULT_TRIGGERS.monospaceTriggers.join('\n');
-
+    
+    // Update textarea heights to match number of default values
+    sansSerifTriggersTextarea.rows = Math.max(3, DEFAULT_TRIGGERS.sansSerifTriggers.length);
+    serifTriggersTextarea.rows = Math.max(3, DEFAULT_TRIGGERS.serifTriggers.length);
+    monospaceTriggersTextarea.rows = Math.max(3, DEFAULT_TRIGGERS.monospaceTriggers.length);
+    
     // Update button text temporarily
     resetTriggersBtn.textContent = "✔ Reset";
     setTimeout(() => {
       resetTriggersBtn.textContent = "Reset to Defaults";
     }, 1500);
-
+    
     console.log("Fontonic: Font triggers reset to defaults");
-
+    
   } catch (e) {
     console.error("Error resetting font triggers:", e);
-
-    resetTriggersBtn.textContent = "❌ Error";
-    setTimeout(() => {
-      resetTriggersBtn.textContent = "Reset to Defaults";
-    }, 1500);
+    
+    if (resetTriggersBtn) {
+      resetTriggersBtn.textContent = "❌ Error";
+      setTimeout(() => {
+        resetTriggersBtn.textContent = "Reset to Defaults";
+      }, 1500);
+    }
   }
-}));
+});
 

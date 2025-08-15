@@ -25,7 +25,7 @@
             </a>
             <div class="flex gap-4 items-center">
                 <button id="settings-btn" class="btn btn-ghost text-5xl">Settings</button>
-                <button id="advanced-btn" class="btn btn-ghost text-5xl">Advanced</button>
+                <button id="advanced-btn" class="btn btn-ghost text-5xl">Adv</button>
                 <button id="support-btn" class="text-accent font-bold text-5xl">
                     Support</button>
             </div>
@@ -227,15 +227,8 @@
         <!-- Advanced Settings Page -->
         <div id="advanced-page">
             <br><br>
-            
-            <div class="flex justify-between items-center text-5xl">
-                <p>Reset performance test</p>
-                <button id="reset-timing-test-btn" type="button"
-                    class="btn btn-warning text-4xl">Reset Test</button>
-            </div>
-            <br><br>
 
-            <!-- Font Triggers Management -->
+            <!-- Font Triggers Management (moved to top) -->
             <div class="border border-base-300 rounded-box p-6">
                 <div class="text-5xl font-medium mb-6">
                     Manage Font Triggers
@@ -243,34 +236,61 @@
                 <div class="text-4xl">
                     <p class="mb-6">Add or remove font names that trigger each font type (one per line):</p>
                     
-                    <div class="flex flex-col gap-8">
-                        <div>
-                            <label class="font-bold text-5xl mb-2 block">Serif triggers:</label>
-                            <textarea id="serif-triggers" class="textarea textarea-bordered w-full h-32 text-4xl"
-                                placeholder="serif&#10;georgia&#10;times&#10;times new roman"></textarea>
+                    <!-- Serif Triggers Accordion -->
+                    <div class="collapse collapse-arrow border border-base-300 rounded-box mb-4">
+                        <input type="radio" name="trigger-accordion" class="collapse-checkbox" checked /> 
+                        <div class="collapse-title text-5xl font-medium">
+                            Serif triggers
                         </div>
+                        <div class="collapse-content">
+                            <textarea id="serif-triggers" class="textarea textarea-bordered w-full text-4xl mt-4" 
+                                rows="6" placeholder="serif&#10;georgia&#10;times&#10;times new roman"></textarea>
+                        </div>
+                    </div>
 
-                        <div>
-                            <label class="font-bold text-5xl mb-2 block">Sans-serif triggers:</label>
-                            <textarea id="sans-serif-triggers" class="textarea textarea-bordered w-full h-32 text-4xl"
-                                placeholder="sans-serif&#10;arial&#10;helvetica&#10;open sans"></textarea>
+                    <!-- Sans-serif Triggers Accordion -->
+                    <div class="collapse collapse-arrow border border-base-300 rounded-box mb-4">
+                        <input type="radio" name="trigger-accordion" class="collapse-checkbox" /> 
+                        <div class="collapse-title text-5xl font-medium">
+                            Sans-serif triggers
                         </div>
+                        <div class="collapse-content">
+                            <textarea id="sans-serif-triggers" class="textarea textarea-bordered w-full text-4xl mt-4" 
+                                rows="6" placeholder="sans-serif&#10;arial&#10;helvetica&#10;open sans"></textarea>
+                        </div>
+                    </div>
 
-                        <div>
-                            <label class="font-bold text-5xl mb-2 block">Monospace triggers:</label>
-                            <textarea id="monospace-triggers" class="textarea textarea-bordered w-full h-24 text-4xl"
-                                placeholder="monospace&#10;courier&#10;courier new"></textarea>
+                    <!-- Monospace Triggers Accordion -->
+                    <div class="collapse collapse-arrow border border-base-300 rounded-box mb-6">
+                        <input type="radio" name="trigger-accordion" class="collapse-checkbox" /> 
+                        <div class="collapse-title text-5xl font-medium">
+                            Monospace triggers
                         </div>
+                        <div class="collapse-content">
+                            <textarea id="monospace-triggers" class="textarea textarea-bordered w-full text-4xl mt-4" 
+                                rows="4" placeholder="monospace&#10;courier&#10;courier new"></textarea>
+                        </div>
+                    </div>
 
-                        <div class="flex gap-2">
-                            <button id="save-triggers-btn" type="button"
-                                class="btn btn-primary text-4xl flex-1">Save Triggers</button>
-                            <button id="reset-triggers-btn" type="button"
-                                class="btn btn-secondary text-4xl">Reset to Defaults</button>
-                        </div>
+                    <div class="flex gap-2">
+                        <button id="save-triggers-btn" type="button"
+                            class="btn btn-primary text-4xl flex-1">Save Triggers</button>
+                        <button id="reset-triggers-btn" type="button"
+                            class="btn btn-secondary text-4xl">Reset to Defaults</button>
                     </div>
                 </div>
             </div>
+            
+            <br><br>
+            <div class="divider"></div>
+            <br>
+            
+            <div class="flex justify-between items-center text-5xl">
+                <p>Reset performance test</p>
+                <button id="reset-timing-test-btn" type="button"
+                    class="btn btn-warning text-4xl">Reset Test</button>
+            </div>
+            <br><br>
         </div>
 
         <!-- Support Page -->
