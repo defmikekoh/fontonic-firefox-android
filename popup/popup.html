@@ -47,14 +47,14 @@
                 </div>
                 <br>
                 <div class="flex gap-2">
-                    <button id="apply-fav-serif-btn" type="button" 
-                        style="background-color: #ff914c; height: 7rem;" 
+                    <button id="apply-fav-serif-btn" type="button"
+                        style="background-color: #ff914c; height: 7rem;"
                         class="btn flex-1 text-4xl text-white">Fav Serif</button>
-                    <button id="apply-fav-sans-btn" type="button" 
-                        style="background-color: #ff914c; height: 7rem;" 
+                    <button id="apply-fav-sans-btn" type="button"
+                        style="background-color: #ff914c; height: 7rem;"
                         class="btn flex-1 text-4xl text-white">Fav Sans</button>
-                    <button id="apply-serif-to-sans-btn" type="button" 
-                        style="background-color: #ff914c; height: 7rem;" 
+                    <button id="apply-serif-to-sans-btn" type="button"
+                        style="background-color: #ff914c; height: 7rem;"
                         class="btn flex-1 text-3xl text-white">Fav Serif to Sans</button>
                 </div>
             </div>
@@ -150,11 +150,50 @@
                 <input style="scale: 2;" id="exempt_check" type="checkbox" disabled class="toggle toggle-primary" />
             </div>
             <br><br>
-            
+
             <div class="flex justify-between items-center text-5xl">
                 <p>Reset performance test</p>
-                <button id="reset-timing-test-btn" type="button" 
+                <button id="reset-timing-test-btn" type="button"
                     class="btn btn-warning text-4xl">Reset Test</button>
+            </div>
+            <br><br>
+
+            <!-- Font Triggers Management -->
+            <div class="collapse collapse-arrow border border-base-300 rounded-box">
+                <input type="checkbox" class="collapse-checkbox" />
+                <div class="collapse-title text-5xl font-medium">
+                    Manage Font Triggers
+                </div>
+                <div class="collapse-content text-4xl">
+                    <p class="mb-4">Add or remove font names that trigger each font type (one per line):</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="font-bold text-5xl mb-2 block">Serif triggers:</label>
+                            <textarea id="serif-triggers" class="textarea textarea-bordered w-full h-24 text-4xl"
+                                placeholder="serif&#10;georgia&#10;times&#10;times new roman"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="font-bold text-5xl mb-2 block">Sans-serif triggers:</label>
+                            <textarea id="sans-serif-triggers" class="textarea textarea-bordered w-full h-24 text-4xl"
+                                placeholder="sans-serif&#10;arial&#10;helvetica&#10;open sans"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="font-bold text-5xl mb-2 block">Monospace triggers:</label>
+                            <textarea id="monospace-triggers" class="textarea textarea-bordered w-full h-20 text-4xl"
+                                placeholder="monospace&#10;courier&#10;courier new"></textarea>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button id="save-triggers-btn" type="button"
+                                class="btn btn-primary text-4xl flex-1">Save Triggers</button>
+                            <button id="reset-triggers-btn" type="button"
+                                class="btn btn-secondary text-4xl">Reset to Defaults</button>
+                        </div>
+                    </div>
+                </div>
             </div>
             <br><br>
 

@@ -14,6 +14,35 @@ function shouldSkip(el) {
   return el.matches(SKIP_SELECTOR);
 }
 
+// Global variable to store current triggers
+let currentTriggers = null;
+
+// Default triggers (fallback)
+const DEFAULT_TRIGGERS = {
+  sansSerifTriggers: [
+    "sans-serif",
+    "arial",
+    "helvetica",
+    "open sans",
+    "open sans-fallback",
+    "verdana",
+  ],
+  serifTriggers: ["serif", "georgia", "times", "times new roman", "mencken-std"],
+  monospaceTriggers: ["monospace", "courier", "courier new"]
+};
+
+// Load triggers from storage
+const loadTriggers = async () => {
+  try {
+    const result = await browser.storage.local.get(['fontTriggers']);
+    currentTriggers = result.fontTriggers || DEFAULT_TRIGGERS;
+    console.log("Fontonic: Font triggers loaded", currentTriggers);
+  } catch (e) {
+    console.error("Error loading font triggers:", e);
+    currentTriggers = DEFAULT_TRIGGERS;
+  }
+};
+
 const changeFontFamily = (
   node,
   serif,
@@ -47,17 +76,11 @@ const changeFontFamily = (
         .split(",")
         .map((f) => f.trim().replace(/^["']|["']$/g, "")); // Remove leading/trailing quotes
 
-      // Define triggers for each type
-      const sansSerifTriggers = [
-        "sans-serif",
-        "arial",
-        "helvetica",
-        "open sans",
-        "open sans-fallback",
-        "verdana",
-      ];
-      const serifTriggers = ["serif", "georgia", "times", "times new roman"];
-      const monospaceTriggers = ["monospace", "courier", "courier new"];
+      // Use dynamic triggers from storage
+      const triggers = currentTriggers || DEFAULT_TRIGGERS;
+      const sansSerifTriggers = triggers.sansSerifTriggers;
+      const serifTriggers = triggers.serifTriggers;
+      const monospaceTriggers = triggers.monospaceTriggers;
 
       for (const font of fontList) {
         if (sansSerifTriggers.includes(font)) {
@@ -131,13 +154,13 @@ let mutationObserver = null;
 const runPerformanceTest = () => {
   const testIterations = 50;
   const start = performance.now();
-  
+
   // Perform DOM operations that are heavy on slow devices
   for (let i = 0; i < testIterations; i++) {
     document.body.style.opacity = (i % 2 === 0) ? '0.99' : '1';
     document.body.offsetHeight; // Force reflow
   }
-  
+
   const elapsed = performance.now() - start;
   console.log(`Fontonic: Performance test completed in ${elapsed.toFixed(2)}ms`);
   return elapsed;
@@ -147,10 +170,10 @@ const runPerformanceTest = () => {
 const isLowPerformanceDevice = async () => {
   // Check if we have a stored performance result
   const stored = await browser.storage.local.get(['fontonicPerformanceTest']);
-  
+
   if (stored.fontonicPerformanceTest && stored.fontonicPerformanceTest.timestamp) {
     const daysSinceTest = (Date.now() - stored.fontonicPerformanceTest.timestamp) / (1000 * 60 * 60 * 24);
-    
+
     // Use cached result if test was run within last 30 days
     if (daysSinceTest < 30) {
       const isLowPerf = stored.fontonicPerformanceTest.isLowPerformance;
@@ -158,13 +181,13 @@ const isLowPerformanceDevice = async () => {
       return isLowPerf;
     }
   }
-  
+
   // Run performance test
   const testTime = runPerformanceTest();
-  
+
   // Threshold: >20ms suggests slow device (eink tablets, low-end devices)
   const isLowPerf = testTime > 20;
-  
+
   // Store result in local storage
   await browser.storage.local.set({
     fontonicPerformanceTest: {
@@ -173,7 +196,7 @@ const isLowPerformanceDevice = async () => {
       isLowPerformance: isLowPerf
     }
   });
-  
+
   console.log(`Fontonic: Performance test result: ${isLowPerf ? 'low' : 'high'} performance (${testTime.toFixed(2)}ms)`);
   return isLowPerf;
 };
@@ -190,13 +213,13 @@ isLowPerformanceDevice().then(result => {
 // Function to apply fonts with retry logic
 const applyFontsWithRetry = (fontData) => {
   if (!fontData) return;
-  
+
   // Wait for document.body to be available
   if (!document.body) {
     setTimeout(() => applyFontsWithRetry(fontData), 50);
     return;
   }
-  
+
   console.log("Applying fonts to DOM");
   changeFontFamily(
     document.body,
@@ -215,13 +238,13 @@ const applyFontsWithRetry = (fontData) => {
 // Progressive delay application for late hydration
 const applyFontsProgressive = async (fontData) => {
   currentFontSettings = fontData;
-  
+
   // Apply immediately
   applyFontsWithRetry(fontData);
-  
+
   // Get current performance status (may trigger test if not cached)
   const isLowPerf = await isLowPerformanceDevice();
-  
+
   if (isLowPerf) {
     // Single delayed application for eink tablets and slow devices
     // Avoids multiple refresh cycles on eink displays
@@ -243,38 +266,38 @@ const setupMutationObserver = async () => {
     setTimeout(setupMutationObserver, 50);
     return;
   }
-  
+
   if (mutationObserver) {
     mutationObserver.disconnect();
   }
-  
+
   // Get current performance status for throttling
   const isLowPerf = await isLowPerformanceDevice();
-  
+
   // Performance-based throttling
   const debounceDelay = isLowPerf ? 1000 : 200; // Longer delay for eink tablets
   const minContentThreshold = isLowPerf ? 50 : 10; // Higher threshold for triggering on slow devices
-  
+
   mutationObserver = new MutationObserver((mutations) => {
     let shouldReapply = false;
     let significantChange = false;
-    
+
     mutations.forEach((mutation) => {
       // Check if new nodes were added
       if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
         for (let node of mutation.addedNodes) {
           // Only care about element nodes with significant content
           if (node.nodeType === 1) {
-            const hasSignificantContent = node.children.length > 0 || 
+            const hasSignificantContent = node.children.length > 0 ||
                                         node.textContent.trim().length > minContentThreshold;
-            
+
             if (hasSignificantContent) {
               shouldReapply = true;
-              
+
               // For low-performance devices, be even more selective
               if (isLowPerf) {
                 // Only trigger on really large content additions
-                const hasLargeContent = node.children.length > 5 || 
+                const hasLargeContent = node.children.length > 5 ||
                                       node.textContent.trim().length > 200;
                 if (hasLargeContent) {
                   significantChange = true;
@@ -288,10 +311,10 @@ const setupMutationObserver = async () => {
         }
       }
     });
-    
+
     // For low-performance devices, only reapply on significant changes
     const shouldTrigger = isLowPerf ? significantChange : shouldReapply;
-    
+
     if (shouldTrigger && currentFontSettings) {
       // Debounce rapid mutations with performance-based delay
       clearTimeout(window.fontonicReapplyTimeout);
@@ -301,27 +324,27 @@ const setupMutationObserver = async () => {
       }, debounceDelay);
     }
   });
-  
+
   // Start observing with performance-based options
   const observerOptions = {
     childList: true,
     subtree: true
   };
-  
+
   // On low-performance devices, observe less aggressively
   if (isLowPerf) {
     observerOptions.subtree = false; // Only observe direct children, not deep tree
   }
-  
+
   mutationObserver.observe(document.body, observerOptions);
-  
+
   console.log(`MutationObserver set up (performance mode: ${isLowPerf ? 'low' : 'normal'})`);
 };
 
 // Additional event listeners for various DOM ready states
 const addDOMReadyListeners = async (fontData) => {
   const isLowPerf = await isLowPerformanceDevice();
-  
+
   if (isLowPerf) {
     // Simplified approach for eink tablets - only listen to essential events
     if (document.readyState !== 'complete') {
@@ -338,14 +361,14 @@ const addDOMReadyListeners = async (fontData) => {
         setTimeout(() => applyFontsWithRetry(fontData), 100);
       });
     }
-    
+
     // Listen for full page load
     if (document.readyState !== 'complete') {
       window.addEventListener('load', () => {
         setTimeout(() => applyFontsWithRetry(fontData), 200);
       });
     }
-    
+
     // Listen for readyState changes
     document.addEventListener('readystatechange', () => {
       if (document.readyState === 'interactive' || document.readyState === 'complete') {
@@ -354,6 +377,17 @@ const addDOMReadyListeners = async (fontData) => {
     });
   }
 };
+
+// Initialize triggers loading
+loadTriggers();
+
+// Listen for storage changes to reload triggers
+browser.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && changes.fontTriggers) {
+    console.log("Fontonic: Font triggers updated, reloading...");
+    loadTriggers();
+  }
+});
 
 let message = {
   action: "on-page-load",
@@ -364,7 +398,7 @@ let message = {
 browser.runtime.sendMessage(message, undefined, (response) => {
   if (response.type === "apply_font") {
     console.log("Loading fonts from storage");
-    
+
     const fontData = {
       serif: response.data.serif,
       sans_serif: response.data.sans_serif,
@@ -376,12 +410,12 @@ browser.runtime.sendMessage(message, undefined, (response) => {
       sans_serif_size: response.data.sans_serif_size || "Default",
       monospace_size: response.data.monospace_size || "Default",
     };
-    
+
     // Apply fonts with progressive retries, mutation observer, and DOM ready listeners
     applyFontsProgressive(fontData);
     addDOMReadyListeners(fontData);
     setupMutationObserver();
-    
+
   } else if (response.type === "none") {
     console.log("Font not set for site");
   }
@@ -392,7 +426,7 @@ browser.runtime.onConnect.addListener((port) => {
     {
       if (message.type === "apply_font") {
         console.log("Request received from popup for applying fonts");
-        
+
         const fontData = {
           serif: message.data.serif,
           sans_serif: message.data.sans_serif,
@@ -404,16 +438,16 @@ browser.runtime.onConnect.addListener((port) => {
           sans_serif_size: message.data.sans_serif_size || "Default",
           monospace_size: message.data.monospace_size || "Default",
         };
-        
+
         // Use progressive application for popup-triggered changes too
         applyFontsProgressive(fontData);
         addDOMReadyListeners(fontData);
-        
+
         // Set up mutation observer if not already active
         if (!mutationObserver) {
           setupMutationObserver();
         }
-        
+
       } else if (message.type === "restore") {
         // Clean up observer on restore
         if (mutationObserver) {
