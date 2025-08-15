@@ -973,7 +973,7 @@ const loadTriggers = () => __awaiter(this, void 0, void 0, function* () {
     // Wait a bit longer for DOM elements to be ready
     let attempts = 0;
     while ((!sansSerifTriggersTextarea || !serifTriggersTextarea || !monospaceTriggersTextarea) && attempts < 10) {
-      await new Promise(resolve => setTimeout(resolve, 50));
+      yield new Promise(resolve => setTimeout(resolve, 50));
       sansSerifTriggersTextarea = document.getElementById("sans-serif-triggers");
       serifTriggersTextarea = document.getElementById("serif-triggers");
       monospaceTriggersTextarea = document.getElementById("monospace-triggers");
@@ -1061,7 +1061,7 @@ const resetTriggers = () => __awaiter(this, void 0, void 0, function* () {
     // Retry getting DOM elements if needed
     let attempts = 0;
     while ((!sansSerifTriggersTextarea || !serifTriggersTextarea || !monospaceTriggersTextarea) && attempts < 10) {
-      await new Promise(resolve => setTimeout(resolve, 50));
+      yield new Promise(resolve => setTimeout(resolve, 50));
       sansSerifTriggersTextarea = document.getElementById("sans-serif-triggers");
       serifTriggersTextarea = document.getElementById("serif-triggers");
       monospaceTriggersTextarea = document.getElementById("monospace-triggers");

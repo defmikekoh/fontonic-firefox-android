@@ -109,7 +109,7 @@ jobs:
           mkdir -p signed
           # Try up to 6 times, waiting up to ~15 minutes total.
           # Each attempt gives AMO up to 5 minutes to approve before timing out.
-          attempts=6
+          attempts=2
           attempt=1
           while [ $attempt -le $attempts ]; do
             echo "::group::web-ext sign attempt $attempt/$attempts"
