@@ -1026,9 +1026,9 @@ const saveTriggers = () => __awaiter(this, void 0, void 0, function* () {
     yield browser.storage.sync.set({ fontTriggers: triggers });
     
     // Update button text temporarily
-    saveTriggersBtn.textContent = "✔ Triggers Saved";
+    saveTriggersBtn.textContent = "✔ All Triggers Saved";
     setTimeout(() => {
-      saveTriggersBtn.textContent = "Save Triggers";
+      saveTriggersBtn.textContent = "Save All Triggers";
     }, 1500);
     
     console.log("Fontonic: Font triggers saved", triggers);
@@ -1039,7 +1039,7 @@ const saveTriggers = () => __awaiter(this, void 0, void 0, function* () {
     if (saveTriggersBtn) {
       saveTriggersBtn.textContent = "❌ Error";
       setTimeout(() => {
-        saveTriggersBtn.textContent = "Save Triggers";
+        saveTriggersBtn.textContent = "Save All Triggers";
       }, 1500);
     }
   }
@@ -1066,9 +1066,9 @@ const resetTriggers = () => __awaiter(this, void 0, void 0, function* () {
     monospaceTriggersTextarea.rows = Math.max(3, DEFAULT_TRIGGERS.monospaceTriggers.length);
     
     // Update button text temporarily
-    resetTriggersBtn.textContent = "✔ Reset";
+    resetTriggersBtn.textContent = "✔ All Reset";
     setTimeout(() => {
-      resetTriggersBtn.textContent = "Reset to Defaults";
+      resetTriggersBtn.textContent = "Reset All to Defaults";
     }, 1500);
     
     console.log("Fontonic: Font triggers reset to defaults");
@@ -1079,7 +1079,7 @@ const resetTriggers = () => __awaiter(this, void 0, void 0, function* () {
     if (resetTriggersBtn) {
       resetTriggersBtn.textContent = "❌ Error";
       setTimeout(() => {
-        resetTriggersBtn.textContent = "Reset to Defaults";
+        resetTriggersBtn.textContent = "Reset All to Defaults";
       }, 1500);
     }
   }
