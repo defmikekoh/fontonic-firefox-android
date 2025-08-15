@@ -924,7 +924,7 @@ const DEFAULT_TRIGGERS = {
 // Load existing triggers on settings page load
 const loadTriggers = () => __awaiter(this, void 0, void 0, function* () {
   try {
-    const result = yield browser.storage.local.get(['fontTriggers']);
+    const result = yield browser.storage.sync.get(['fontTriggers']);
     const triggers = result.fontTriggers || DEFAULT_TRIGGERS;
 
     sansSerifTriggersTextarea.value = triggers.sansSerifTriggers.join('\n');
@@ -959,7 +959,7 @@ saveTriggersBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, 
       monospaceTriggers
     };
 
-    yield browser.storage.local.set({ fontTriggers: triggers });
+    yield browser.storage.sync.set({ fontTriggers: triggers });
 
     // Update button text temporarily
     saveTriggersBtn.textContent = "✔ Triggers Saved";
@@ -982,7 +982,7 @@ saveTriggersBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, 
 // Reset triggers to defaults functionality
 resetTriggersBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
   try {
-    yield browser.storage.local.set({ fontTriggers: DEFAULT_TRIGGERS });
+    yield browser.storage.sync.set({ fontTriggers: DEFAULT_TRIGGERS });
 
     // Update textareas with defaults
     sansSerifTriggersTextarea.value = DEFAULT_TRIGGERS.sansSerifTriggers.join('\n');

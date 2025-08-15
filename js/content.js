@@ -34,7 +34,7 @@ const DEFAULT_TRIGGERS = {
 // Load triggers from storage
 const loadTriggers = async () => {
   try {
-    const result = await browser.storage.local.get(['fontTriggers']);
+    const result = await browser.storage.sync.get(['fontTriggers']);
     currentTriggers = result.fontTriggers || DEFAULT_TRIGGERS;
     console.log("Fontonic: Font triggers loaded", currentTriggers);
   } catch (e) {
@@ -383,7 +383,7 @@ loadTriggers();
 
 // Listen for storage changes to reload triggers
 browser.storage.onChanged.addListener((changes, area) => {
-  if (area === 'local' && changes.fontTriggers) {
+  if (area === 'sync' && changes.fontTriggers) {
     console.log("Fontonic: Font triggers updated, reloading...");
     loadTriggers();
   }
