@@ -32,9 +32,11 @@ var __awaiter =
     });
   };
 const settingsButton = document.getElementById("settings-btn");
+const advancedButton = document.getElementById("advanced-btn");
 const supportButton = document.getElementById("support-btn");
 const homePage = document.getElementById("home-page");
 const settingsPage = document.getElementById("settings-page");
+const advancedPage = document.getElementById("advanced-page");
 const wrapper = document.getElementById("wrapper");
 const supportPage = document.getElementById("support-page");
 const restoreButton = document.getElementById("restore-btn");
@@ -113,6 +115,7 @@ const getDomain = () => {
 };
 // by default these extra pages are unmounted
 settingsPage.remove();
+advancedPage.remove();
 supportPage.remove();
 restoreButton.remove();
 const goToSettings = () => {
@@ -184,13 +187,35 @@ browser.storage.sync.get(["global"]).then((result) =>
     }
   }),
 );
+
+advancedButton.addEventListener("click", () => {
+  if (advancedButton.textContent.includes("Advanced")) {
+    advancedButton.textContent = "<- Go back";
+    if (settingsButton.textContent.includes("G")) settingsPage.remove();
+    else if (supportButton.textContent.includes("<")) supportPage.remove();
+    else homePage.remove();
+    settingsButton.textContent = "Settings";
+    supportButton.textContent = "Support";
+    wrapper.appendChild(advancedPage);
+    
+    // Load triggers when advanced page is shown
+    setTimeout(loadTriggers, 100);
+  } else {
+    advancedButton.textContent = "Advanced";
+    advancedPage.remove();
+    wrapper.appendChild(homePage);
+  }
+});
+
 settingsButton.addEventListener("click", () =>
   __awaiter(this, void 0, void 0, function* () {
     if (settingsButton.textContent.charAt(0) === "S") {
       settingsButton.textContent = "Go back";
       if (supportButton.textContent.includes("<")) supportPage.remove();
+      else if (advancedButton.textContent.includes("<")) advancedPage.remove();
       else homePage.remove();
       supportButton.textContent = "Support";
+      advancedButton.textContent = "Advanced";
       wrapper.appendChild(settingsPage);
       // Check for exisitng settings
       globalCheck.addEventListener("change", () =>
@@ -307,8 +332,10 @@ supportButton.addEventListener("click", () => {
   if (supportButton.textContent.includes("Supp")) {
     supportButton.textContent = "<- Go back";
     if (settingsButton.textContent.includes("G")) settingsPage.remove();
+    else if (advancedButton.textContent.includes("<")) advancedPage.remove();
     else homePage.remove();
     settingsButton.textContent = "Settings";
+    advancedButton.textContent = "Advanced";
     wrapper.appendChild(supportPage);
   } else {
     supportButton.textContent = "Support";
@@ -1007,9 +1034,3 @@ resetTriggersBtn.addEventListener("click", () => __awaiter(this, void 0, void 0,
   }
 }));
 
-// Load triggers when settings page is shown
-settingsButton.addEventListener("click", () => {
-  if (settingsButton.textContent.charAt(0) === "S") {
-    setTimeout(loadTriggers, 100); // Small delay to ensure elements are rendered
-  }
-});
