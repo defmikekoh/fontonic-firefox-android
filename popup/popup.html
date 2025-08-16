@@ -34,12 +34,7 @@
         <div id="home-page">
             <!-- Information -->
             <div class="text-5xl">
-                <br>
-                <p>You can <a class="link link-primary" href=" https://forms.gle/3eqT9NU3mGHNjtyD8">report↗</a>
-                    unsupported websites.</p>
-                <br>
                 <div id="tip-box">
-                    <p id="tip">↺ Refresh if you don't see any changes.</p>
                     <p id="tip-override-off" class="text-warning">✺ Global fonts apply is on. Override is off.
                     </p>
                     <p id="tip-override-on" class="text-warning">✺ Global fonts apply is on. Override is on.
@@ -47,6 +42,78 @@
                     <p id="tip-exempt" class="text-warning">⮾ This site is exempted from the global settings.</p>
                 </div>
                 <br>
+                
+                <!-- Configure Favorite Fonts -->
+                <div class="collapse collapse-arrow border border-base-300 rounded-box mb-4">
+                    <input type="checkbox" class="collapse-checkbox" /> 
+                    <div class="collapse-title text-4xl font-medium">
+                        Configure Favorite Fonts
+                    </div>
+                    <div class="collapse-content text-4xl">
+                        <!-- Fav Serif Configuration -->
+                        <div class="mb-6">
+                            <label class="font-bold text-4xl mb-2 block">Fav Serif:</label>
+                            <div class="grid gap-4" style="grid-template-columns: 1fr 120px 120px;">
+                                <select class="text-4xl w-full" id="fav-serif-font">
+                                    <option value="Merriweather">Merriweather</option>
+                                </select>
+                                <select class="text-4xl w-full" id="fav-serif-size">
+                                    <option value="16">16</option>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                                </select>
+                                <select class="text-4xl w-full" id="fav-serif-weight">
+                                    <option value="">Default</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Fav Sans Configuration -->
+                        <div class="mb-6">
+                            <label class="font-bold text-4xl mb-2 block">Fav Sans:</label>
+                            <div class="grid gap-4" style="grid-template-columns: 1fr 120px 120px;">
+                                <select class="text-4xl w-full" id="fav-sans-font">
+                                    <option value="Rubik">Rubik</option>
+                                </select>
+                                <select class="text-4xl w-full" id="fav-sans-size">
+                                    <option value="16">16</option>
+                                    <option value="17" selected>17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                                </select>
+                                <select class="text-4xl w-full" id="fav-sans-weight">
+                                    <option value="">Default</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Fav Serif to Sans Configuration -->
+                        <div class="mb-6">
+                            <label class="font-bold text-4xl mb-2 block">Fav Serif to Sans:</label>
+                            <div class="grid gap-4" style="grid-template-columns: 1fr 120px 120px;">
+                                <select class="text-4xl w-full" id="fav-serif-to-sans-font">
+                                    <option value="Merriweather">Merriweather</option>
+                                </select>
+                                <select class="text-4xl w-full" id="fav-serif-to-sans-size">
+                                    <option value="16">16</option>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                                </select>
+                                <select class="text-4xl w-full" id="fav-serif-to-sans-weight">
+                                    <option value="">Default</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button id="save-fav-config-btn" type="button" 
+                            class="btn btn-primary text-4xl w-full">Save Favorite Fonts</button>
+                    </div>
+                </div>
                 <div class="flex gap-2">
                     <button id="apply-fav-serif-btn" type="button"
                         style="background-color: #ff914c; height: 7rem;"

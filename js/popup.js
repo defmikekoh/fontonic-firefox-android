@@ -42,6 +42,18 @@ const supportPage = document.getElementById("support-page");
 const restoreButton = document.getElementById("restore-btn");
 const formButtons = document.getElementById("form-btns");
 const applyButton = document.getElementById("apply-btn");
+
+// Favorite fonts configuration elements
+const favSerifFontSelect = document.getElementById("fav-serif-font");
+const favSerifSizeSelect = document.getElementById("fav-serif-size");
+const favSerifWeightSelect = document.getElementById("fav-serif-weight");
+const favSansFontSelect = document.getElementById("fav-sans-font");
+const favSansSizeSelect = document.getElementById("fav-sans-size");
+const favSansWeightSelect = document.getElementById("fav-sans-weight");
+const favSerifToSansFontSelect = document.getElementById("fav-serif-to-sans-font");
+const favSerifToSansSizeSelect = document.getElementById("fav-serif-to-sans-size");
+const favSerifToSansWeightSelect = document.getElementById("fav-serif-to-sans-weight");
+const saveFavConfigBtn = document.getElementById("save-fav-config-btn");
 // Check buttons
 const globalCheck = document.getElementById("global_check");
 const overrideCheck = document.getElementById("override_check");
@@ -536,6 +548,88 @@ populateFonts(globalMonospaceSelect);
 populateWeights(globalSerifWeightSelect);
 populateWeights(globalSansSerifWeightSelect);
 populateWeights(globalMonospaceWeightSelect);
+
+// Populate favorite fonts selectors
+populateFonts(favSerifFontSelect);
+populateFonts(favSansFontSelect);
+populateFonts(favSerifToSansFontSelect);
+populateWeights(favSerifWeightSelect);
+populateWeights(favSansWeightSelect);
+populateWeights(favSerifToSansWeightSelect);
+
+// Default favorite fonts configuration
+const DEFAULT_FAV_FONTS = {
+  favSerif: { font: "Merriweather", size: "16", weight: "" },
+  favSans: { font: "Rubik", size: "17", weight: "" },
+  favSerifToSans: { font: "Merriweather", size: "16", weight: "" }
+};
+
+// Load and apply favorite fonts configuration
+const loadFavFontsConfig = () => __awaiter(this, void 0, void 0, function* () {
+  try {
+    const result = yield browser.storage.sync.get(['favFontsConfig']);
+    const config = result.favFontsConfig || DEFAULT_FAV_FONTS;
+    
+    // Set values
+    favSerifFontSelect.value = config.favSerif.font;
+    favSerifSizeSelect.value = config.favSerif.size;
+    favSerifWeightSelect.value = config.favSerif.weight;
+    
+    favSansFontSelect.value = config.favSans.font;
+    favSansSizeSelect.value = config.favSans.size;
+    favSansWeightSelect.value = config.favSans.weight;
+    
+    favSerifToSansFontSelect.value = config.favSerifToSans.font;
+    favSerifToSansSizeSelect.value = config.favSerifToSans.size;
+    favSerifToSansWeightSelect.value = config.favSerifToSans.weight;
+    
+    console.log("Favorite fonts config loaded:", config);
+  } catch (e) {
+    console.error("Error loading favorite fonts config:", e);
+  }
+});
+
+// Save favorite fonts configuration
+saveFavConfigBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
+  try {
+    const config = {
+      favSerif: {
+        font: favSerifFontSelect.value || "Merriweather",
+        size: favSerifSizeSelect.value || "16", 
+        weight: favSerifWeightSelect.value || ""
+      },
+      favSans: {
+        font: favSansFontSelect.value || "Rubik",
+        size: favSansSizeSelect.value || "17",
+        weight: favSansWeightSelect.value || ""
+      },
+      favSerifToSans: {
+        font: favSerifToSansFontSelect.value || "Merriweather",
+        size: favSerifToSansSizeSelect.value || "16",
+        weight: favSerifToSansWeightSelect.value || ""
+      }
+    };
+    
+    yield browser.storage.sync.set({ favFontsConfig: config });
+    
+    // Update button text temporarily
+    saveFavConfigBtn.textContent = "✔ Saved";
+    setTimeout(() => {
+      saveFavConfigBtn.textContent = "Save Favorite Fonts";
+    }, 1500);
+    
+    console.log("Favorite fonts config saved:", config);
+  } catch (e) {
+    console.error("Error saving favorite fonts config:", e);
+    saveFavConfigBtn.textContent = "❌ Error";
+    setTimeout(() => {
+      saveFavConfigBtn.textContent = "Save Favorite Fonts";
+    }, 1500);
+  }
+}));
+
+// Load configuration on page load
+loadFavFontsConfig();
 fontSelectionForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const serifValue = serifSelect.value;
@@ -724,11 +818,14 @@ restoreButton.addEventListener("click", () =>
 // Apply Fav Serif button functionality
 const applyFavSerifBtn = document.getElementById("apply-fav-serif-btn");
 applyFavSerifBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
-  // Set Serif to Merriweather 16 400
+  // Get current configuration from storage
+  const result = yield browser.storage.sync.get(['favFontsConfig']);
+  const config = result.favFontsConfig || DEFAULT_FAV_FONTS;
+  
   const fontData = {
-    serif: "Merriweather",
-    serif_weight: "400",
-    serif_size: "16",
+    serif: config.favSerif.font,
+    serif_weight: config.favSerif.weight || "Default",
+    serif_size: config.favSerif.size,
     sans_serif: "Default",
     sans_serif_weight: "Default",
     sans_serif_size: "Default",
@@ -784,14 +881,17 @@ applyFavSerifBtn.addEventListener("click", () => __awaiter(this, void 0, void 0,
 // Apply Fav Sans button functionality
 const applyFavSansBtn = document.getElementById("apply-fav-sans-btn");
 applyFavSansBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
-  // Set Sans-serif to Rubik 17 400
+  // Get current configuration from storage
+  const result = yield browser.storage.sync.get(['favFontsConfig']);
+  const config = result.favFontsConfig || DEFAULT_FAV_FONTS;
+  
   const fontData = {
     serif: "Default",
     serif_weight: "Default",
     serif_size: "Default",
-    sans_serif: "Rubik",
-    sans_serif_weight: "400",
-    sans_serif_size: "17",
+    sans_serif: config.favSans.font,
+    sans_serif_weight: config.favSans.weight || "Default",
+    sans_serif_size: config.favSans.size,
     monospace: "Default",
     monospace_weight: "Default",
     monospace_size: "Default"
@@ -844,14 +944,17 @@ applyFavSansBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, 
 // Apply Fav Serif to Sans button functionality
 const applySerifToSansBtn = document.getElementById("apply-serif-to-sans-btn");
 applySerifToSansBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
-  // Set Sans-serif to Merriweather 16 400 (serif settings applied to sans-serif)
+  // Get current configuration from storage
+  const result = yield browser.storage.sync.get(['favFontsConfig']);
+  const config = result.favFontsConfig || DEFAULT_FAV_FONTS;
+  
   const fontData = {
     serif: "Default",
     serif_weight: "Default",
     serif_size: "Default",
-    sans_serif: "Merriweather",
-    sans_serif_weight: "400",
-    sans_serif_size: "16",
+    sans_serif: config.favSerifToSans.font,
+    sans_serif_weight: config.favSerifToSans.weight || "Default",
+    sans_serif_size: config.favSerifToSans.size,
     monospace: "Default",
     monospace_weight: "Default",
     monospace_size: "Default"

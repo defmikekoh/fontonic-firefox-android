@@ -2241,6 +2241,10 @@ details.collapse summary::-webkit-details-marker {
   visibility: collapse;
 }
 
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
 .mb-4 {
   margin-bottom: 1rem;
 }
@@ -2251,6 +2255,10 @@ details.collapse summary::-webkit-details-marker {
 
 .mt-4 {
   margin-top: 1rem;
+}
+
+.block {
+  display: block;
 }
 
 .flex {
