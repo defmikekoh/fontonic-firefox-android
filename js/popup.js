@@ -1096,6 +1096,19 @@ const loadTriggers = () => __awaiter(this, void 0, void 0, function* () {
     serifTriggersTextarea.value = triggers.serifTriggers.join('\n');
     monospaceTriggersTextarea.value = triggers.monospaceTriggers.join('\n');
     
+    // Force re-set values with a small delay to ensure they stick
+    setTimeout(() => {
+      if (sansSerifTriggersTextarea.value === '') {
+        sansSerifTriggersTextarea.value = triggers.sansSerifTriggers.join('\n');
+      }
+      if (serifTriggersTextarea.value === '') {
+        serifTriggersTextarea.value = triggers.serifTriggers.join('\n');
+      }
+      if (monospaceTriggersTextarea.value === '') {
+        monospaceTriggersTextarea.value = triggers.monospaceTriggers.join('\n');
+      }
+    }, 100);
+    
     // Set textarea heights to match number of values (minimum 3 rows)
     sansSerifTriggersTextarea.rows = Math.max(3, triggers.sansSerifTriggers.length);
     serifTriggersTextarea.rows = Math.max(3, triggers.serifTriggers.length);
