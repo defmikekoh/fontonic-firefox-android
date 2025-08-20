@@ -262,6 +262,18 @@ const globalSansSerifSizeSelect =
   globalFontSelectionForm.elements["global_sans_serif_size"];
 const globalMonospaceSizeSelect =
   globalFontSelectionForm.elements["global_monospace_size"];
+const globalSerifLineHeightSelect =
+  globalFontSelectionForm.elements["global_serif_line_height"];
+const globalSansSerifLineHeightSelect =
+  globalFontSelectionForm.elements["global_sans_serif_line_height"];
+const globalMonospaceLineHeightSelect =
+  globalFontSelectionForm.elements["global_monospace_line_height"];
+const globalSerifColorSelect =
+  globalFontSelectionForm.elements["global_serif_color"];
+const globalSansSerifColorSelect =
+  globalFontSelectionForm.elements["global_sans_serif_color"];
+const globalMonospaceColorSelect =
+  globalFontSelectionForm.elements["global_monospace_color"];
 const globalSerifPlaceholder = document.querySelector(
   "#global_serif_placeholder",
 );
@@ -551,6 +563,12 @@ const monospaceWeightSelect = fontSelectionForm.elements["monospace_weight"];
 const serifSizeSelect = fontSelectionForm.elements["serif_size"];
 const sansSerifSizeSelect = fontSelectionForm.elements["sans_serif_size"];
 const monospaceSizeSelect = fontSelectionForm.elements["monospace_size"];
+const serifLineHeightSelect = fontSelectionForm.elements["serif_line_height"];
+const sansSerifLineHeightSelect = fontSelectionForm.elements["sans_serif_line_height"];
+const monospaceLineHeightSelect = fontSelectionForm.elements["monospace_line_height"];
+const serifColorSelect = fontSelectionForm.elements["serif_color"];
+const sansSerifColorSelect = fontSelectionForm.elements["sans_serif_color"];
+const monospaceColorSelect = fontSelectionForm.elements["monospace_color"];
 const serifPlaceholder = document.querySelector("#serif_placeholder");
 const sansSerifPlaceholder = document.querySelector("#sans_serif_placeholder");
 const monospacePlaceholder = document.querySelector("#monospace_placeholder");
@@ -607,6 +625,34 @@ const updatePlaceholders = (innerText) => {
   monospaceSizeSelect.value =
     innerText.monospace_size && innerText.monospace_size !== "Default"
       ? innerText.monospace_size
+      : "";
+
+  // Set line height values
+  serifLineHeightSelect.value =
+    innerText.serif_line_height && innerText.serif_line_height !== "Default"
+      ? innerText.serif_line_height
+      : "";
+  sansSerifLineHeightSelect.value =
+    innerText.sans_serif_line_height && innerText.sans_serif_line_height !== "Default"
+      ? innerText.sans_serif_line_height
+      : "";
+  monospaceLineHeightSelect.value =
+    innerText.monospace_line_height && innerText.monospace_line_height !== "Default"
+      ? innerText.monospace_line_height
+      : "";
+
+  // Set color values
+  serifColorSelect.value =
+    innerText.serif_color && innerText.serif_color !== "Default"
+      ? innerText.serif_color
+      : "";
+  sansSerifColorSelect.value =
+    innerText.sans_serif_color && innerText.sans_serif_color !== "Default"
+      ? innerText.sans_serif_color
+      : "";
+  monospaceColorSelect.value =
+    innerText.monospace_color && innerText.monospace_color !== "Default"
+      ? innerText.monospace_color
       : "";
 };
 getDomain().then((domain) => {
@@ -825,6 +871,12 @@ fontSelectionForm.addEventListener("submit", (e) => {
   const serifSizeValue = serifSizeSelect.value;
   const sansSerifSizeValue = sansSerifSizeSelect.value;
   const monospaceSizeValue = monospaceSizeSelect.value;
+  const serifLineHeightValue = serifLineHeightSelect.value;
+  const sansSerifLineHeightValue = sansSerifLineHeightSelect.value;
+  const monospaceLineHeightValue = monospaceLineHeightSelect.value;
+  const serifColorValue = serifColorSelect.value;
+  const sansSerifColorValue = sansSerifColorSelect.value;
+  const monospaceColorValue = monospaceColorSelect.value;
   if (
     !serifValue.length &&
     !sansSerifValue.length &&
@@ -834,7 +886,13 @@ fontSelectionForm.addEventListener("submit", (e) => {
     !monospaceWeightValue.length &&
     !serifSizeValue.length &&
     !sansSerifSizeValue.length &&
-    !monospaceSizeValue.length
+    !monospaceSizeValue.length &&
+    !serifLineHeightValue.length &&
+    !sansSerifLineHeightValue.length &&
+    !monospaceLineHeightValue.length &&
+    !serifColorValue.length &&
+    !sansSerifColorValue.length &&
+    !monospaceColorValue.length
   )
     applyButton.textContent = "No Changes Made";
   else {
@@ -867,6 +925,12 @@ fontSelectionForm.addEventListener("submit", (e) => {
           monospace_size: monospaceSizeValue.length
             ? monospaceSizeValue
             : "Default",
+          serif_line_height: serifLineHeightValue.length ? serifLineHeightValue : "Default",
+          sans_serif_line_height: sansSerifLineHeightValue.length ? sansSerifLineHeightValue : "Default",
+          monospace_line_height: monospaceLineHeightValue.length ? monospaceLineHeightValue : "Default",
+          serif_color: serifColorValue.length ? serifColorValue : "Default",
+          sans_serif_color: sansSerifColorValue.length ? sansSerifColorValue : "Default",
+          monospace_color: monospaceColorValue.length ? monospaceColorValue : "Default",
         };
         browser.tabs.connect(tabs[0].id).postMessage({
           type: "apply_font",
@@ -913,6 +977,12 @@ globalFontSelectionForm.addEventListener("submit", (e) =>
     const globalSerifSizeValue = globalSerifSizeSelect.value;
     const globalSansSerifSizeValue = globalSansSerifSizeSelect.value;
     const globalMonospaceSizeValue = globalMonospaceSizeSelect.value;
+    const globalSerifLineHeightValue = globalSerifLineHeightSelect.value;
+    const globalSansSerifLineHeightValue = globalSansSerifLineHeightSelect.value;
+    const globalMonospaceLineHeightValue = globalMonospaceLineHeightSelect.value;
+    const globalSerifColorValue = globalSerifColorSelect.value;
+    const globalSansSerifColorValue = globalSansSerifColorSelect.value;
+    const globalMonospaceColorValue = globalMonospaceColorSelect.value;
     const applyButton = document.getElementById("global-apply-btn");
     if (
       !globalSerifValue.length &&
@@ -923,7 +993,13 @@ globalFontSelectionForm.addEventListener("submit", (e) =>
       !globalMonospaceWeightValue.length &&
       !globalSerifSizeValue.length &&
       !globalSansSerifSizeValue.length &&
-      !globalMonospaceSizeValue.length
+      !globalMonospaceSizeValue.length &&
+      !globalSerifLineHeightValue.length &&
+      !globalSansSerifLineHeightValue.length &&
+      !globalMonospaceLineHeightValue.length &&
+      !globalSerifColorValue.length &&
+      !globalSansSerifColorValue.length &&
+      !globalMonospaceColorValue.length
     )
       applyButton.textContent = "No Changes Made";
     else {
@@ -956,6 +1032,24 @@ globalFontSelectionForm.addEventListener("submit", (e) =>
           : "Default",
         monospace_size: globalMonospaceSizeValue.length
           ? globalMonospaceSizeValue
+          : "Default",
+        serif_line_height: globalSerifLineHeightValue.length
+          ? globalSerifLineHeightValue
+          : "Default",
+        sans_serif_line_height: globalSansSerifLineHeightValue.length
+          ? globalSansSerifLineHeightValue
+          : "Default",
+        monospace_line_height: globalMonospaceLineHeightValue.length
+          ? globalMonospaceLineHeightValue
+          : "Default",
+        serif_color: globalSerifColorValue.length
+          ? globalSerifColorValue
+          : "Default",
+        sans_serif_color: globalSansSerifColorValue.length
+          ? globalSansSerifColorValue
+          : "Default",
+        monospace_color: globalMonospaceColorValue.length
+          ? globalMonospaceColorValue
           : "Default",
       },
     });
@@ -992,6 +1086,12 @@ restoreButton.addEventListener("click", () =>
       serif_size: "Default",
       sans_serif_size: "Default",
       monospace_size: "Default",
+      serif_line_height: "Default",
+      sans_serif_line_height: "Default",
+      monospace_line_height: "Default",
+      serif_color: "Default",
+      sans_serif_color: "Default",
+      monospace_color: "Default",
     });
     document.getElementById("restore_modal").showModal();
     browser.storage.sync.remove(yield getDomain());
@@ -1015,7 +1115,13 @@ applyFavSerifBtn.addEventListener("click", () => __awaiter(this, void 0, void 0,
     sans_serif_size: "Default",
     monospace: "Default",
     monospace_weight: "Default",
-    monospace_size: "Default"
+    monospace_size: "Default",
+    serif_line_height: "Default",
+    sans_serif_line_height: "Default",
+    monospace_line_height: "Default",
+    serif_color: "Default",
+    sans_serif_color: "Default",
+    monospace_color: "Default"
   };
 
   try {
@@ -1078,7 +1184,13 @@ applyFavSansBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, 
     sans_serif_size: config.favSans.size,
     monospace: "Default",
     monospace_weight: "Default",
-    monospace_size: "Default"
+    monospace_size: "Default",
+    serif_line_height: "Default",
+    sans_serif_line_height: "Default",
+    monospace_line_height: "Default",
+    serif_color: "Default",
+    sans_serif_color: "Default",
+    monospace_color: "Default"
   };
 
   try {
@@ -1141,7 +1253,13 @@ applySerifToSansBtn.addEventListener("click", () => __awaiter(this, void 0, void
     sans_serif_size: config.favSerifToSans.size,
     monospace: "Default",
     monospace_weight: "Default",
-    monospace_size: "Default"
+    monospace_size: "Default",
+    serif_line_height: "Default",
+    sans_serif_line_height: "Default",
+    monospace_line_height: "Default",
+    serif_color: "Default",
+    sans_serif_color: "Default",
+    monospace_color: "Default"
   };
 
   try {

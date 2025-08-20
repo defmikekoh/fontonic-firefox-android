@@ -54,6 +54,12 @@ const changeFontFamily = (
   serifSize,
   sansSerifSize,
   monospaceSize,
+  serifLineHeight,
+  sansSerifLineHeight,
+  monospaceLineHeight,
+  serifColor,
+  sansSerifColor,
+  monospaceColor,
 ) => {
   if (node.nodeType === 1) {
     if (
@@ -109,6 +115,12 @@ const changeFontFamily = (
         serifSize,
         sansSerifSize,
         monospaceSize,
+        serifLineHeight,
+        sansSerifLineHeight,
+        monospaceLineHeight,
+        serifColor,
+        sansSerifColor,
+        monospaceColor,
       );
     }
 
@@ -122,6 +134,16 @@ const changeFontFamily = (
       if (sansSerifSize !== "Default" && sansSerifSize) {
         node.style.setProperty("font-size", `${sansSerifSize}px`, "important");
       }
+      if (sansSerifLineHeight !== "Default" && sansSerifLineHeight) {
+        node.style.setProperty("line-height", sansSerifLineHeight, "important");
+      }
+      if (sansSerifColor !== "Default" && sansSerifColor) {
+        // Method 1: CSS specificity - target main text elements while preserving special element colors
+        if (node.matches('body, p, div, span, h1, h2, h3, h4, h5, h6') && 
+            !node.closest('a, button, input, textarea, select, option, label, code, pre, kbd, samp, mark, .btn, [class*="button"], [class*="icon"], [role="button"], [data-testid*="button"]')) {
+          node.style.setProperty("color", sansSerifColor, "important");
+        }
+      }
     } else if (fontType === "serif") {
       if (serif !== "Default") {
         node.style.fontFamily = `'${serif}'`;
@@ -132,6 +154,16 @@ const changeFontFamily = (
       if (serifSize !== "Default" && serifSize) {
         node.style.setProperty("font-size", `${serifSize}px`, "important");
       }
+      if (serifLineHeight !== "Default" && serifLineHeight) {
+        node.style.setProperty("line-height", serifLineHeight, "important");
+      }
+      if (serifColor !== "Default" && serifColor) {
+        // Method 1: CSS specificity - target main text elements while preserving special element colors
+        if (node.matches('body, p, div, span, h1, h2, h3, h4, h5, h6') && 
+            !node.closest('a, button, input, textarea, select, option, label, code, pre, kbd, samp, mark, .btn, [class*="button"], [class*="icon"], [role="button"], [data-testid*="button"]')) {
+          node.style.setProperty("color", serifColor, "important");
+        }
+      }
     } else if (fontType === "monospace") {
       if (monospace !== "Default") {
         node.style.fontFamily = `'${monospace}'`;
@@ -141,6 +173,16 @@ const changeFontFamily = (
       }
       if (monospaceSize !== "Default" && monospaceSize) {
         node.style.setProperty("font-size", `${monospaceSize}px`, "important");
+      }
+      if (monospaceLineHeight !== "Default" && monospaceLineHeight) {
+        node.style.setProperty("line-height", monospaceLineHeight, "important");
+      }
+      if (monospaceColor !== "Default" && monospaceColor) {
+        // Method 1: CSS specificity - target main text elements while preserving special element colors
+        if (node.matches('body, p, div, span, h1, h2, h3, h4, h5, h6') && 
+            !node.closest('a, button, input, textarea, select, option, label, code, pre, kbd, samp, mark, .btn, [class*="button"], [class*="icon"], [role="button"], [data-testid*="button"]')) {
+          node.style.setProperty("color", monospaceColor, "important");
+        }
       }
     }
   }
@@ -232,6 +274,12 @@ const applyFontsWithRetry = (fontData) => {
     fontData.serif_size || "Default",
     fontData.sans_serif_size || "Default",
     fontData.monospace_size || "Default",
+    fontData.serif_line_height || "Default",
+    fontData.sans_serif_line_height || "Default",
+    fontData.monospace_line_height || "Default",
+    fontData.serif_color || "Default",
+    fontData.sans_serif_color || "Default",
+    fontData.monospace_color || "Default",
   );
 };
 
@@ -409,6 +457,12 @@ browser.runtime.sendMessage(message, undefined, (response) => {
       serif_size: response.data.serif_size || "Default",
       sans_serif_size: response.data.sans_serif_size || "Default",
       monospace_size: response.data.monospace_size || "Default",
+      serif_line_height: response.data.serif_line_height || "Default",
+      sans_serif_line_height: response.data.sans_serif_line_height || "Default",
+      monospace_line_height: response.data.monospace_line_height || "Default",
+      serif_color: response.data.serif_color || "Default",
+      sans_serif_color: response.data.sans_serif_color || "Default",
+      monospace_color: response.data.monospace_color || "Default",
     };
 
     // Apply fonts with progressive retries, mutation observer, and DOM ready listeners
@@ -437,6 +491,12 @@ browser.runtime.onConnect.addListener((port) => {
           serif_size: message.data.serif_size || "Default",
           sans_serif_size: message.data.sans_serif_size || "Default",
           monospace_size: message.data.monospace_size || "Default",
+          serif_line_height: message.data.serif_line_height || "Default",
+          sans_serif_line_height: message.data.sans_serif_line_height || "Default",
+          monospace_line_height: message.data.monospace_line_height || "Default",
+          serif_color: message.data.serif_color || "Default",
+          sans_serif_color: message.data.sans_serif_color || "Default",
+          monospace_color: message.data.monospace_color || "Default",
         };
 
         // Use progressive application for popup-triggered changes too
