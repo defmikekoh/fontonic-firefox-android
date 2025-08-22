@@ -654,6 +654,40 @@ const updatePlaceholders = (innerText) => {
     innerText.monospace_color && innerText.monospace_color !== "Default"
       ? innerText.monospace_color
       : "";
+      
+  // Load variable font axes if they exist
+  if (innerText.serif_var_axes) {
+    setVariableFontAxesValues('serif', innerText.serif_var_axes);
+  }
+  if (innerText.sans_serif_var_axes) {
+    setVariableFontAxesValues('sans-serif', innerText.sans_serif_var_axes);
+  }
+  if (innerText.monospace_var_axes) {
+    setVariableFontAxesValues('monospace', innerText.monospace_var_axes);
+  }
+  
+  // Load opsz control settings
+  if (innerText.serif_opsz_control) {
+    const serifOpszControl = document.getElementById('serif_opsz_control');
+    if (serifOpszControl) {
+      serifOpszControl.value = innerText.serif_opsz_control;
+      handleOpszControlChange('serif', innerText.serif_opsz_control);
+    }
+  }
+  if (innerText.sans_serif_opsz_control) {
+    const sansSerifOpszControl = document.getElementById('sans_serif_opsz_control');
+    if (sansSerifOpszControl) {
+      sansSerifOpszControl.value = innerText.sans_serif_opsz_control;
+      handleOpszControlChange('sans-serif', innerText.sans_serif_opsz_control);
+    }
+  }
+  if (innerText.monospace_opsz_control) {
+    const monospaceOpszControl = document.getElementById('monospace_opsz_control');
+    if (monospaceOpszControl) {
+      monospaceOpszControl.value = innerText.monospace_opsz_control;
+      handleOpszControlChange('monospace', innerText.monospace_opsz_control);
+    }
+  }
 };
 getDomain().then((domain) => {
   browser.storage.sync.get([domain]).then((result) => {
@@ -661,6 +695,29 @@ getDomain().then((domain) => {
       const fontData = result[domain];
       updatePlaceholders(fontData);
       formButtons.prepend(restoreButton);
+      
+      // After loading saved data, update variable font controls visibility
+      setTimeout(() => {
+        if (fontData.serif) {
+          const serifSelect = document.getElementById('serif');
+          if (serifSelect) {
+            // Trigger the font change event to show/hide variable font controls
+            serifSelect.dispatchEvent(new Event('change'));
+          }
+        }
+        if (fontData.sans_serif) {
+          const sansSerifSelect = document.getElementById('sans_serif');
+          if (sansSerifSelect) {
+            sansSerifSelect.dispatchEvent(new Event('change'));
+          }
+        }
+        if (fontData.monospace) {
+          const monospaceSelect = document.getElementById('monospace');
+          if (monospaceSelect) {
+            monospaceSelect.dispatchEvent(new Event('change'));
+          }
+        }
+      }, 200);
     }
   });
 });
@@ -680,6 +737,7 @@ const populateFonts = (element) => {
     "TiemposText",
     "TiemposText-Regular",
     "Literata",
+    "Roboto Serif",
     "Roboto Slab",
     "Source Serif 4",
     "Arvo",
@@ -693,6 +751,7 @@ const populateFonts = (element) => {
     "Sora",
     "Poppins",
     "Inter",
+    "Roboto Flex",
     "Atkinson Hyperlegible Next",
     "DM Sans",
     "Atkinson Hyperlegible",
@@ -740,12 +799,23 @@ const populateFonts = (element) => {
     element.appendChild(option);
   });
 };
-const populateWeights = (element) => {
+const populateWeights = (element, isVariableFont = false) => {
+  // Clear existing options
+  element.innerHTML = '';
+  
   // Add Default option as the first selectable option
   const defaultOption = document.createElement("option");
   defaultOption.value = "";
   defaultOption.textContent = "← Reset to Default";
   element.appendChild(defaultOption);
+
+  if (isVariableFont) {
+    // For variable fonts, add a slider option
+    const sliderOption = document.createElement("option");
+    sliderOption.value = "slider";
+    sliderOption.textContent = "Use Slider";
+    element.appendChild(sliderOption);
+  }
 
   [
     "100",
@@ -932,6 +1002,14 @@ fontSelectionForm.addEventListener("submit", (e) => {
           serif_color: serifColorValue.length ? serifColorValue : "Default",
           sans_serif_color: sansSerifColorValue.length ? sansSerifColorValue : "Default",
           monospace_color: monospaceColorValue.length ? monospaceColorValue : "Default",
+          // Variable font axes
+          serif_var_axes: getVariableFontAxesValues('serif'),
+          sans_serif_var_axes: getVariableFontAxesValues('sans-serif'),
+          monospace_var_axes: getVariableFontAxesValues('monospace'),
+          // Optical size control settings
+          serif_opsz_control: document.getElementById('serif_opsz_control')?.value || 'Default',
+          sans_serif_opsz_control: document.getElementById('sans_serif_opsz_control')?.value || 'Default',
+          monospace_opsz_control: document.getElementById('monospace_opsz_control')?.value || 'Default'
         };
         browser.tabs.connect(tabs[0].id).postMessage({
           type: "apply_font",
@@ -1093,6 +1171,14 @@ restoreButton.addEventListener("click", () =>
       serif_color: "Default",
       sans_serif_color: "Default",
       monospace_color: "Default",
+      // Variable font axes - reset to defaults
+      serif_var_axes: {},
+      sans_serif_var_axes: {},
+      monospace_var_axes: {},
+      // Opsz control - reset to defaults
+      serif_opsz_control: 'Default',
+      sans_serif_opsz_control: 'Default',
+      monospace_opsz_control: 'Default'
     });
     document.getElementById("restore_modal").showModal();
     browser.storage.sync.remove(yield getDomain());
@@ -1122,7 +1208,15 @@ applyFavSerifBtn.addEventListener("click", () => __awaiter(this, void 0, void 0,
     monospace_line_height: "Default",
     serif_color: "Default",
     sans_serif_color: "Default",
-    monospace_color: "Default"
+    monospace_color: "Default",
+    // Variable font axes - reset to defaults for fav serif
+    serif_var_axes: {},
+    sans_serif_var_axes: {},
+    monospace_var_axes: {},
+    // Opsz control - reset to defaults
+    serif_opsz_control: 'Default',
+    sans_serif_opsz_control: 'Default',
+    monospace_opsz_control: 'Default'
   };
 
   try {
@@ -1191,7 +1285,15 @@ applyFavSansBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, 
     monospace_line_height: "Default",
     serif_color: "Default",
     sans_serif_color: "Default",
-    monospace_color: "Default"
+    monospace_color: "Default",
+    // Variable font axes - reset to defaults for fav sans
+    serif_var_axes: {},
+    sans_serif_var_axes: {},
+    monospace_var_axes: {},
+    // Opsz control - reset to defaults
+    serif_opsz_control: 'Default',
+    sans_serif_opsz_control: 'Default',
+    monospace_opsz_control: 'Default'
   };
 
   try {
@@ -1260,7 +1362,15 @@ applySerifToSansBtn.addEventListener("click", () => __awaiter(this, void 0, void
     monospace_line_height: "Default",
     serif_color: "Default",
     sans_serif_color: "Default",
-    monospace_color: "Default"
+    monospace_color: "Default",
+    // Variable font axes - reset to defaults for fav serif-to-sans
+    serif_var_axes: {},
+    sans_serif_var_axes: {},
+    monospace_var_axes: {},
+    // Opsz control - reset to defaults
+    serif_opsz_control: 'Default',
+    sans_serif_opsz_control: 'Default',
+    monospace_opsz_control: 'Default'
   };
 
   try {
@@ -1384,5 +1494,261 @@ window.resetTriggers = () => __awaiter(this, void 0, void 0, function* () {
       }, 1500);
     }
   }
+});
+
+// Variable Font Axis Controls
+const initializeVariableFontControls = () => {
+  // Define which fonts support variable axes
+  const variableFonts = {
+    'Roboto Flex': ['wght', 'wdth', 'opsz', 'GRAD', 'slnt', 'XTRA', 'XOPQ', 'YOPQ', 'YTLC', 'YTUC', 'YTAS', 'YTDE', 'YTFI'],
+    'Roboto Serif': ['wght', 'wdth', 'opsz', 'GRAD'],
+    'Merriweather': ['wght', 'wdth', 'opsz']
+  };
+
+  // Function to show/hide variable font controls
+  const toggleVariableFontControls = (fontType, selectedFont) => {
+    const axesContainer = document.getElementById(`${fontType}-var-axes`);
+    const isVariableFont = variableFonts[selectedFont];
+    const hasOpszAxis = isVariableFont && variableFonts[selectedFont].includes('opsz');
+    
+    if (axesContainer) {
+      if (isVariableFont) {
+        axesContainer.style.display = 'block';
+        // Set up sliders for this specific font
+        setupSlidersForFont(fontType, selectedFont, variableFonts[selectedFont]);
+      } else {
+        axesContainer.style.display = 'none';
+      }
+    }
+    
+    // Show/hide opsz control dropdown
+    const opszControl = document.getElementById(`${fontType.replace('-', '_')}_opsz_control`);
+    if (opszControl) {
+      if (hasOpszAxis) {
+        opszControl.style.display = 'block';
+      } else {
+        opszControl.style.display = 'none';
+      }
+    }
+    
+    // Update weight dropdown for variable fonts
+    updateWeightDropdown(fontType, isVariableFont);
+  };
+
+  // Function to update weight dropdown based on font type
+  const updateWeightDropdown = (fontType, isVariableFont) => {
+    let weightSelect;
+    
+    if (fontType === 'serif') {
+      weightSelect = serifWeightSelect;
+    } else if (fontType === 'sans-serif') {
+      weightSelect = sansSerifWeightSelect;
+    } else if (fontType === 'monospace') {
+      weightSelect = monospaceWeightSelect;
+    }
+    
+    if (weightSelect) {
+      // Store current value
+      const currentValue = weightSelect.value;
+      
+      // Repopulate with or without slider option
+      populateWeights(weightSelect, isVariableFont);
+      
+      // Restore previous value if it still exists
+      if (currentValue && Array.from(weightSelect.options).some(opt => opt.value === currentValue)) {
+        weightSelect.value = currentValue;
+      }
+      
+      // Add event listener for "Use Slider" option
+      if (isVariableFont) {
+        weightSelect.addEventListener('change', (e) => {
+          if (e.target.value === 'slider') {
+            // When "Use Slider" is selected, the weight will be controlled by the variable font weight slider
+            console.log(`Using slider for ${fontType} weight`);
+          }
+        });
+      }
+    }
+  };
+
+  // Function to set up sliders for a specific font
+  const setupSlidersForFont = (fontType, _fontName, supportedAxes) => {
+    // Show/hide sliders based on supported axes
+    supportedAxes.forEach(axis => {
+      const sliderRow = document.querySelector(`#${fontType}-${axis}-slider`)?.closest('.flex');
+      if (sliderRow) {
+        sliderRow.style.display = 'flex';
+      }
+    });
+
+    // Hide unsupported axes
+    const allAxes = ['wght', 'wdth', 'opsz', 'GRAD', 'slnt', 'XTRA', 'XOPQ', 'YOPQ', 'YTLC', 'YTUC', 'YTAS', 'YTDE', 'YTFI'];
+    allAxes.forEach(axis => {
+      if (!supportedAxes.includes(axis)) {
+        const sliderRow = document.querySelector(`#${fontType}-${axis}-slider`)?.closest('.flex');
+        if (sliderRow) {
+          sliderRow.style.display = 'none';
+        }
+      }
+    });
+  };
+
+  // Add event listeners to font selects
+  const fontSelects = [
+    { select: serifSelect, type: 'serif' },
+    { select: sansSerifSelect, type: 'sans-serif' },
+    { select: monospaceSelect, type: 'monospace' }
+  ];
+
+  fontSelects.forEach(({ select, type }) => {
+    select.addEventListener('change', (e) => {
+      toggleVariableFontControls(type, e.target.value);
+    });
+  });
+
+  // Add event listeners for opsz control dropdowns
+  const opszControls = [
+    { select: document.getElementById('serif_opsz_control'), type: 'serif' },
+    { select: document.getElementById('sans_serif_opsz_control'), type: 'sans-serif' },
+    { select: document.getElementById('monospace_opsz_control'), type: 'monospace' }
+  ];
+
+  opszControls.forEach(({ select, type }) => {
+    if (select) {
+      select.addEventListener('change', (e) => {
+        handleOpszControlChange(type, e.target.value);
+      });
+    }
+  });
+
+  // Add event listeners to all sliders for real-time value updates
+  const addSliderEventListeners = (fontType) => {
+    const allAxes = ['wght', 'wdth', 'opsz', 'GRAD', 'slnt', 'XTRA', 'XOPQ', 'YOPQ', 'YTLC', 'YTUC', 'YTAS', 'YTDE', 'YTFI'];
+    
+    allAxes.forEach(axis => {
+      const slider = document.getElementById(`${fontType}-${axis}-slider`);
+      const valueDisplay = document.getElementById(`${fontType}-${axis}-value`);
+      
+      if (slider && valueDisplay) {
+        slider.addEventListener('input', (e) => {
+          valueDisplay.textContent = e.target.value;
+          // Update font preview if needed
+          updateFontPreview(fontType);
+        });
+      }
+    });
+  };
+
+  // Function to update font preview with variable axes
+  const updateFontPreview = (fontType) => {
+    // This could be expanded to show live preview of font changes
+    console.log(`Font preview updated for ${fontType}`);
+  };
+
+  // Function to generate font-variation-settings CSS
+  const generateFontVariationSettings = (fontType) => {
+    const selectedFont = fontSelects.find(f => f.type === fontType)?.select.value;
+    if (!variableFonts[selectedFont]) return '';
+
+    const settings = [];
+    const supportedAxes = variableFonts[selectedFont];
+
+    supportedAxes.forEach(axis => {
+      const slider = document.getElementById(`${fontType}-${axis}-slider`);
+      if (slider) {
+        // Special handling for opsz axis
+        if (axis === 'opsz') {
+          const opszControl = document.getElementById(`${fontType.replace('-', '_')}_opsz_control`);
+          if (opszControl && opszControl.value === 'Default') {
+            // Skip opsz when set to Default (automatic)
+            return;
+          }
+        }
+        
+        const value = slider.value;
+        // Only include non-default values
+        const defaultValues = {
+          'wght': 400, 'wdth': 100, 'opsz': 14, 'GRAD': 0, 'slnt': 0,
+          'XTRA': 468, 'XOPQ': 96, 'YOPQ': 79, 'YTLC': 514, 'YTUC': 712,
+          'YTAS': 750, 'YTDE': -203, 'YTFI': 738
+        };
+        
+        if (value != defaultValues[axis]) {
+          settings.push(`"${axis}" ${value}`);
+        }
+      }
+    });
+
+    return settings.length > 0 ? `font-variation-settings: ${settings.join(', ')};` : '';
+  };
+
+  // Initialize slider event listeners for all font types
+  addSliderEventListeners('serif');
+  addSliderEventListeners('sans-serif');
+  addSliderEventListeners('monospace');
+
+  // Function to handle opsz control changes
+  const handleOpszControlChange = (fontType, value) => {
+    const opszSlider = document.getElementById(`${fontType}-opsz-slider`);
+    
+    if (opszSlider) {
+      if (value === 'Default') {
+        // Hide the opsz slider when using automatic
+        const opszSliderRow = opszSlider.closest('.flex');
+        if (opszSliderRow) {
+          opszSliderRow.style.opacity = '0.5';
+          opszSlider.disabled = true;
+        }
+      } else if (value === 'override') {
+        // Show and enable the opsz slider for manual control
+        const opszSliderRow = opszSlider.closest('.flex');
+        if (opszSliderRow) {
+          opszSliderRow.style.opacity = '1';
+          opszSlider.disabled = false;
+        }
+      }
+    }
+  };
+
+  // Store the function globally for use in other parts of the code
+  window.generateFontVariationSettings = generateFontVariationSettings;
+  window.handleOpszControlChange = handleOpszControlChange;
+};
+
+// Function to get current variable font axes values for saving
+const getVariableFontAxesValues = (fontType) => {
+  const axes = {};
+  const allAxes = ['wght', 'wdth', 'opsz', 'GRAD', 'slnt', 'XTRA', 'XOPQ', 'YOPQ', 'YTLC', 'YTUC', 'YTAS', 'YTDE', 'YTFI'];
+  
+  allAxes.forEach(axis => {
+    const slider = document.getElementById(`${fontType}-${axis}-slider`);
+    if (slider) {
+      axes[axis] = slider.value;
+    }
+  });
+  
+  return axes;
+};
+
+// Function to set variable font axes values when loading saved settings
+const setVariableFontAxesValues = (fontType, axesData) => {
+  if (!axesData) return;
+  
+  Object.keys(axesData).forEach(axis => {
+    const slider = document.getElementById(`${fontType}-${axis}-slider`);
+    const valueDisplay = document.getElementById(`${fontType}-${axis}-value`);
+    
+    if (slider && axesData[axis]) {
+      slider.value = axesData[axis];
+      if (valueDisplay) {
+        valueDisplay.textContent = axesData[axis];
+      }
+    }
+  });
+};
+
+// Initialize variable font controls when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(initializeVariableFontControls, 100);
 });
 

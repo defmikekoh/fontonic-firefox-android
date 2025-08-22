@@ -248,8 +248,104 @@
                                 <option id="serif_weight_placeholder" value="">Default</option>
                             </select>
                         </div>
+                        
+                        <!-- Variable Font Axes Controls for Serif -->
+                        <div id="serif-var-axes" class="mt-4" style="display: none;">
+                            <div class="collapse collapse-arrow border border-base-300 rounded-box">
+                                <input type="checkbox" class="collapse-checkbox" />
+                                <div class="collapse-title text-4xl font-medium">
+                                    Variable Font Axes
+                                </div>
+                                <div class="collapse-content">
+                                    <div class="grid gap-4 text-4xl">
+                                        <!-- Weight Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Weight:</label>
+                                            <input type="range" id="serif-wght-slider" min="100" max="1000" value="400" class="flex-1" />
+                                            <span id="serif-wght-value" class="w-16 text-center">400</span>
+                                        </div>
+                                        <!-- Width Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Width:</label>
+                                            <input type="range" id="serif-wdth-slider" min="25" max="151" value="100" class="flex-1" />
+                                            <span id="serif-wdth-value" class="w-16 text-center">100</span>
+                                        </div>
+                                        <!-- Optical Size Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Optical Size:</label>
+                                            <input type="range" id="serif-opsz-slider" min="8" max="144" value="14" class="flex-1" />
+                                            <span id="serif-opsz-value" class="w-16 text-center">14</span>
+                                        </div>
+                                        <!-- Grade Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Grade:</label>
+                                            <input type="range" id="serif-GRAD-slider" min="-200" max="150" value="0" class="flex-1" />
+                                            <span id="serif-GRAD-value" class="w-16 text-center">0</span>
+                                        </div>
+                                        <!-- Slant Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Slant:</label>
+                                            <input type="range" id="serif-slnt-slider" min="-10" max="0" value="0" class="flex-1" />
+                                            <span id="serif-slnt-value" class="w-16 text-center">0</span>
+                                        </div>
+                                        <!-- XTRA Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">X Transparent:</label>
+                                            <input type="range" id="serif-XTRA-slider" min="323" max="603" value="468" class="flex-1" />
+                                            <span id="serif-XTRA-value" class="w-16 text-center">468</span>
+                                        </div>
+                                        <!-- XOPQ Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">X Opaque:</label>
+                                            <input type="range" id="serif-XOPQ-slider" min="27" max="175" value="96" class="flex-1" />
+                                            <span id="serif-XOPQ-value" class="w-16 text-center">96</span>
+                                        </div>
+                                        <!-- YOPQ Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Y Opaque:</label>
+                                            <input type="range" id="serif-YOPQ-slider" min="25" max="135" value="79" class="flex-1" />
+                                            <span id="serif-YOPQ-value" class="w-16 text-center">79</span>
+                                        </div>
+                                        <!-- YTLC Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Lowercase Height:</label>
+                                            <input type="range" id="serif-YTLC-slider" min="416" max="570" value="514" class="flex-1" />
+                                            <span id="serif-YTLC-value" class="w-16 text-center">514</span>
+                                        </div>
+                                        <!-- YTUC Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Uppercase Height:</label>
+                                            <input type="range" id="serif-YTUC-slider" min="528" max="760" value="712" class="flex-1" />
+                                            <span id="serif-YTUC-value" class="w-16 text-center">712</span>
+                                        </div>
+                                        <!-- YTAS Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Ascender Height:</label>
+                                            <input type="range" id="serif-YTAS-slider" min="649" max="854" value="750" class="flex-1" />
+                                            <span id="serif-YTAS-value" class="w-16 text-center">750</span>
+                                        </div>
+                                        <!-- YTDE Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Descender Depth:</label>
+                                            <input type="range" id="serif-YTDE-slider" min="-305" max="-98" value="-203" class="flex-1" />
+                                            <span id="serif-YTDE-value" class="w-16 text-center">-203</span>
+                                        </div>
+                                        <!-- YTFI Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Figure Height:</label>
+                                            <input type="range" id="serif-YTFI-slider" min="560" max="788" value="738" class="flex-1" />
+                                            <span id="serif-YTFI-value" class="w-16 text-center">738</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="grid gap-4 mt-4" style="grid-template-columns: 1fr 160px 160px;">
-                            <div></div>
+                            <select class="text-6xl w-full" id="serif_opsz_control" name="serif_opsz_control" style="display: none;">
+                                <option value="Default">Default (Auto)</option>
+                                <option value="override">Override (Slider)</option>
+                            </select>
                             <select class="text-6xl w-full" id="serif_line_height" name="serif_line_height">
                                 <option value="">Default</option>
                                 <option value="1.4">1.4</option>
@@ -295,8 +391,104 @@
                                 <option id="sans_serif_weight_placeholder" value="">Default</option>
                             </select>
                         </div>
+                        
+                        <!-- Variable Font Axes Controls for Sans-serif -->
+                        <div id="sans-serif-var-axes" class="mt-4" style="display: none;">
+                            <div class="collapse collapse-arrow border border-base-300 rounded-box">
+                                <input type="checkbox" class="collapse-checkbox" />
+                                <div class="collapse-title text-4xl font-medium">
+                                    Variable Font Axes
+                                </div>
+                                <div class="collapse-content">
+                                    <div class="grid gap-4 text-4xl">
+                                        <!-- Weight Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Weight:</label>
+                                            <input type="range" id="sans-serif-wght-slider" min="100" max="1000" value="400" class="flex-1" />
+                                            <span id="sans-serif-wght-value" class="w-16 text-center">400</span>
+                                        </div>
+                                        <!-- Width Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Width:</label>
+                                            <input type="range" id="sans-serif-wdth-slider" min="25" max="151" value="100" class="flex-1" />
+                                            <span id="sans-serif-wdth-value" class="w-16 text-center">100</span>
+                                        </div>
+                                        <!-- Optical Size Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Optical Size:</label>
+                                            <input type="range" id="sans-serif-opsz-slider" min="8" max="144" value="14" class="flex-1" />
+                                            <span id="sans-serif-opsz-value" class="w-16 text-center">14</span>
+                                        </div>
+                                        <!-- Grade Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Grade:</label>
+                                            <input type="range" id="sans-serif-GRAD-slider" min="-200" max="150" value="0" class="flex-1" />
+                                            <span id="sans-serif-GRAD-value" class="w-16 text-center">0</span>
+                                        </div>
+                                        <!-- Slant Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Slant:</label>
+                                            <input type="range" id="sans-serif-slnt-slider" min="-10" max="0" value="0" class="flex-1" />
+                                            <span id="sans-serif-slnt-value" class="w-16 text-center">0</span>
+                                        </div>
+                                        <!-- XTRA Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">X Transparent:</label>
+                                            <input type="range" id="sans-serif-XTRA-slider" min="323" max="603" value="468" class="flex-1" />
+                                            <span id="sans-serif-XTRA-value" class="w-16 text-center">468</span>
+                                        </div>
+                                        <!-- XOPQ Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">X Opaque:</label>
+                                            <input type="range" id="sans-serif-XOPQ-slider" min="27" max="175" value="96" class="flex-1" />
+                                            <span id="sans-serif-XOPQ-value" class="w-16 text-center">96</span>
+                                        </div>
+                                        <!-- YOPQ Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Y Opaque:</label>
+                                            <input type="range" id="sans-serif-YOPQ-slider" min="25" max="135" value="79" class="flex-1" />
+                                            <span id="sans-serif-YOPQ-value" class="w-16 text-center">79</span>
+                                        </div>
+                                        <!-- YTLC Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Lowercase Height:</label>
+                                            <input type="range" id="sans-serif-YTLC-slider" min="416" max="570" value="514" class="flex-1" />
+                                            <span id="sans-serif-YTLC-value" class="w-16 text-center">514</span>
+                                        </div>
+                                        <!-- YTUC Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Uppercase Height:</label>
+                                            <input type="range" id="sans-serif-YTUC-slider" min="528" max="760" value="712" class="flex-1" />
+                                            <span id="sans-serif-YTUC-value" class="w-16 text-center">712</span>
+                                        </div>
+                                        <!-- YTAS Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Ascender Height:</label>
+                                            <input type="range" id="sans-serif-YTAS-slider" min="649" max="854" value="750" class="flex-1" />
+                                            <span id="sans-serif-YTAS-value" class="w-16 text-center">750</span>
+                                        </div>
+                                        <!-- YTDE Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Descender Depth:</label>
+                                            <input type="range" id="sans-serif-YTDE-slider" min="-305" max="-98" value="-203" class="flex-1" />
+                                            <span id="sans-serif-YTDE-value" class="w-16 text-center">-203</span>
+                                        </div>
+                                        <!-- YTFI Slider -->
+                                        <div class="flex items-center gap-4">
+                                            <label class="w-32">Figure Height:</label>
+                                            <input type="range" id="sans-serif-YTFI-slider" min="560" max="788" value="738" class="flex-1" />
+                                            <span id="sans-serif-YTFI-value" class="w-16 text-center">738</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="grid gap-4 mt-4" style="grid-template-columns: 1fr 160px 160px;">
-                            <div></div>
+                            <select class="text-6xl w-full" id="sans_serif_opsz_control" name="sans_serif_opsz_control" style="display: none;">
+                                <option value="Default">Default (Auto)</option>
+                                <option value="override">Override (Slider)</option>
+                            </select>
                             <select class="text-6xl w-full" id="sans_serif_line_height" name="sans_serif_line_height">
                                 <option value="">Default</option>
                                 <option value="1.4">1.4</option>
@@ -343,7 +535,10 @@
                             </select>
                         </div>
                         <div class="grid gap-4 mt-4" style="grid-template-columns: 1fr 160px 160px;">
-                            <div></div>
+                            <select class="text-6xl w-full" id="monospace_opsz_control" name="monospace_opsz_control" style="display: none;">
+                                <option value="Default">Default (Auto)</option>
+                                <option value="override">Override (Slider)</option>
+                            </select>
                             <select class="text-6xl w-full" id="monospace_line_height" name="monospace_line_height">
                                 <option value="">Default</option>
                                 <option value="1.4">1.4</option>
