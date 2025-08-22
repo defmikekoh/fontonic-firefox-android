@@ -65,7 +65,7 @@ const initializeTriggers = () => {
   // Get DOM elements directly and add event listeners
   const saveBtn = document.getElementById("save-triggers-btn");
   const resetBtn = document.getElementById("reset-triggers-btn");
-  
+
   if (saveBtn) {
     // Visual feedback that initialization worked
     saveBtn.textContent = "✓ Ready - Save All Triggers";
@@ -79,7 +79,7 @@ const initializeTriggers = () => {
       }
     });
   }
-  
+
   if (resetBtn) {
     resetBtn.addEventListener("click", () => {
       if (window.resetTriggers) {
@@ -87,14 +87,14 @@ const initializeTriggers = () => {
       }
     });
   }
-  
+
   // Store references for other functions
   sansSerifTriggersTextarea = document.getElementById("sans-serif-triggers");
   serifTriggersTextarea = document.getElementById("serif-triggers");
   monospaceTriggersTextarea = document.getElementById("monospace-triggers");
   saveTriggersBtn = saveBtn;
   resetTriggersBtn = resetBtn;
-  
+
   // Load existing data (wait longer for functions to be defined)
   const attemptLoad = () => {
     if (window.loadTriggers) {
@@ -115,44 +115,44 @@ window.saveTriggers = () => __awaiter(this, void 0, void 0, function* () {
     const serifEl = document.getElementById("serif-triggers");
     const monospaceEl = document.getElementById("monospace-triggers");
     const saveBtn = document.getElementById("save-triggers-btn");
-    
+
     if (!sansSerifEl || !serifEl || !monospaceEl || !saveBtn) {
       if (saveBtn) saveBtn.textContent = "❌ Elements Not Found";
       return;
     }
-    
+
     // Visual feedback that save was called
     saveBtn.textContent = "💾 Saving...";
-    
+
     const sansSerifTriggers = sansSerifEl.value
       .split('\n')
       .map(t => t.trim().toLowerCase())
       .filter(t => t.length > 0);
-    
+
     const serifTriggers = serifEl.value
-      .split('\n') 
+      .split('\n')
       .map(t => t.trim().toLowerCase())
       .filter(t => t.length > 0);
-    
+
     const monospaceTriggers = monospaceEl.value
       .split('\n')
       .map(t => t.trim().toLowerCase())
       .filter(t => t.length > 0);
-    
+
     const triggers = {
       sansSerifTriggers,
       serifTriggers,
       monospaceTriggers
     };
-    
+
     yield browser.storage.sync.set({ fontTriggers: triggers });
-    
+
     // Update button text temporarily
     saveBtn.textContent = "✔ All Triggers Saved";
     setTimeout(() => {
       saveBtn.textContent = "Save All Triggers";
     }, 1500);
-    
+
   } catch (e) {
     const saveBtn = document.getElementById("save-triggers-btn");
     if (saveBtn) {
@@ -169,13 +169,13 @@ window.loadTriggers = () => __awaiter(this, void 0, void 0, function* () {
   try {
     const result = yield browser.storage.sync.get(['fontTriggers']);
     const triggers = result.fontTriggers || DEFAULT_TRIGGERS;
-    
+
     // Set values from storage (either saved data or defaults)
     const setTextareaValues = () => {
       const sansSerifEl = document.getElementById("sans-serif-triggers");
       const serifEl = document.getElementById("serif-triggers");
       const monospaceEl = document.getElementById("monospace-triggers");
-      
+
       if (sansSerifEl) {
         sansSerifEl.value = triggers.sansSerifTriggers.join('\n');
         sansSerifEl.rows = Math.max(3, triggers.sansSerifTriggers.length);
@@ -188,10 +188,10 @@ window.loadTriggers = () => __awaiter(this, void 0, void 0, function* () {
         monospaceEl.value = triggers.monospaceTriggers.join('\n');
         monospaceEl.rows = Math.max(3, triggers.monospaceTriggers.length);
       }
-      
+
       return !!(sansSerifEl && serifEl && monospaceEl);
     };
-    
+
     // Try to set values immediately
     if (!setTextareaValues()) {
       // If elements not ready, wait and try again
@@ -204,12 +204,12 @@ window.loadTriggers = () => __awaiter(this, void 0, void 0, function* () {
         attempts++;
       }
     }
-    
+
     // Store references for other functions
     sansSerifTriggersTextarea = document.getElementById("sans-serif-triggers");
     serifTriggersTextarea = document.getElementById("serif-triggers");
     monospaceTriggersTextarea = document.getElementById("monospace-triggers");
-    
+
   } catch (e) {
     console.error("Error loading font triggers:", e);
   }
@@ -391,7 +391,7 @@ browser.storage.sync.get(["global"]).then((result) =>
 
 advancedButton.addEventListener("click", () => {
   console.log("Advanced button clicked, text content:", advancedButton.textContent);
-  
+
   if (advancedButton.textContent.includes("Adv")) {
     console.log("Showing advanced page");
     advancedButton.textContent = "<- Go back";
@@ -401,7 +401,7 @@ advancedButton.addEventListener("click", () => {
     settingsButton.textContent = "Settings";
     supportButton.textContent = "Support";
     wrapper.appendChild(advancedPage);
-    
+
     console.log("Advanced page appended, initializing triggers in 100ms");
     // Initialize triggers when advanced page is shown
     setTimeout(() => {
@@ -676,6 +676,7 @@ const populateFonts = (element) => {
   [
     // high frequency serif
     "Merriweather",
+    "BBC Reith Serif",
     "TiemposText",
     "TiemposText-Regular",
     "Literata",
@@ -799,20 +800,20 @@ const loadFavFontsConfig = () => __awaiter(this, void 0, void 0, function* () {
   try {
     const result = yield browser.storage.sync.get(['favFontsConfig']);
     const config = result.favFontsConfig || DEFAULT_FAV_FONTS;
-    
+
     // Set values
     favSerifFontSelect.value = config.favSerif.font;
     favSerifSizeSelect.value = config.favSerif.size;
     favSerifWeightSelect.value = config.favSerif.weight;
-    
+
     favSansFontSelect.value = config.favSans.font;
     favSansSizeSelect.value = config.favSans.size;
     favSansWeightSelect.value = config.favSans.weight;
-    
+
     favSerifToSansFontSelect.value = config.favSerifToSans.font;
     favSerifToSansSizeSelect.value = config.favSerifToSans.size;
     favSerifToSansWeightSelect.value = config.favSerifToSans.weight;
-    
+
     console.log("Favorite fonts config loaded:", config);
   } catch (e) {
     console.error("Error loading favorite fonts config:", e);
@@ -825,7 +826,7 @@ saveFavConfigBtn.addEventListener("click", () => __awaiter(this, void 0, void 0,
     const config = {
       favSerif: {
         font: favSerifFontSelect.value || "Merriweather",
-        size: favSerifSizeSelect.value || "16", 
+        size: favSerifSizeSelect.value || "16",
         weight: favSerifWeightSelect.value || ""
       },
       favSans: {
@@ -839,15 +840,15 @@ saveFavConfigBtn.addEventListener("click", () => __awaiter(this, void 0, void 0,
         weight: favSerifToSansWeightSelect.value || ""
       }
     };
-    
+
     yield browser.storage.sync.set({ favFontsConfig: config });
-    
+
     // Update button text temporarily
     saveFavConfigBtn.textContent = "✔ Saved";
     setTimeout(() => {
       saveFavConfigBtn.textContent = "Save Favorite Fonts";
     }, 1500);
-    
+
     console.log("Favorite fonts config saved:", config);
   } catch (e) {
     console.error("Error saving favorite fonts config:", e);
@@ -1105,7 +1106,7 @@ applyFavSerifBtn.addEventListener("click", () => __awaiter(this, void 0, void 0,
   // Get current configuration from storage
   const result = yield browser.storage.sync.get(['favFontsConfig']);
   const config = result.favFontsConfig || DEFAULT_FAV_FONTS;
-  
+
   const fontData = {
     serif: config.favSerif.font,
     serif_weight: config.favSerif.weight || "Default",
@@ -1174,7 +1175,7 @@ applyFavSansBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, 
   // Get current configuration from storage
   const result = yield browser.storage.sync.get(['favFontsConfig']);
   const config = result.favFontsConfig || DEFAULT_FAV_FONTS;
-  
+
   const fontData = {
     serif: "Default",
     serif_weight: "Default",
@@ -1243,7 +1244,7 @@ applySerifToSansBtn.addEventListener("click", () => __awaiter(this, void 0, void
   // Get current configuration from storage
   const result = yield browser.storage.sync.get(['favFontsConfig']);
   const config = result.favFontsConfig || DEFAULT_FAV_FONTS;
-  
+
   const fontData = {
     serif: "Default",
     serif_weight: "Default",
@@ -1347,35 +1348,35 @@ window.resetTriggers = () => __awaiter(this, void 0, void 0, function* () {
       resetTriggersBtn = document.getElementById("reset-triggers-btn");
       attempts++;
     }
-    
+
     if (!sansSerifTriggersTextarea || !serifTriggersTextarea || !monospaceTriggersTextarea || !resetTriggersBtn) {
       console.error("Trigger elements not initialized after retries");
       return;
     }
-    
+
     yield browser.storage.sync.set({ fontTriggers: DEFAULT_TRIGGERS });
-    
+
     // Update textareas with defaults
     sansSerifTriggersTextarea.value = DEFAULT_TRIGGERS.sansSerifTriggers.join('\n');
     serifTriggersTextarea.value = DEFAULT_TRIGGERS.serifTriggers.join('\n');
     monospaceTriggersTextarea.value = DEFAULT_TRIGGERS.monospaceTriggers.join('\n');
-    
+
     // Update textarea heights to match number of default values
     sansSerifTriggersTextarea.rows = Math.max(3, DEFAULT_TRIGGERS.sansSerifTriggers.length);
     serifTriggersTextarea.rows = Math.max(3, DEFAULT_TRIGGERS.serifTriggers.length);
     monospaceTriggersTextarea.rows = Math.max(3, DEFAULT_TRIGGERS.monospaceTriggers.length);
-    
+
     // Update button text temporarily
     resetTriggersBtn.textContent = "✔ All Reset";
     setTimeout(() => {
       resetTriggersBtn.textContent = "Reset All to Defaults";
     }, 1500);
-    
+
     console.log("Fontonic: Font triggers reset to defaults - textareas updated");
-    
+
   } catch (e) {
     console.error("Error resetting font triggers:", e);
-    
+
     if (resetTriggersBtn) {
       resetTriggersBtn.textContent = "❌ Error";
       setTimeout(() => {
