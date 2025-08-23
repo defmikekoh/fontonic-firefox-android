@@ -1416,6 +1416,9 @@ applyFavSerifBtn.addEventListener("click", () => __awaiter(this, void 0, void 0,
 
         // Update UI placeholders
         updatePlaceholders(fontData);
+        if (window.toggleVariableFontControls) {
+          window.toggleVariableFontControls('serif', config.favSerif.font);
+        }
         if (!formButtons.contains(restoreButton)) {
           formButtons.prepend(restoreButton);
         }
@@ -1495,6 +1498,9 @@ applyFavSansBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, 
 
       // Update UI placeholders
       updatePlaceholders(fontData);
+      if (window.toggleVariableFontControls) {
+        window.toggleVariableFontControls('sans-serif', config.favSans.font);
+      }
       if (!formButtons.contains(restoreButton)) {
         formButtons.prepend(restoreButton);
       }
@@ -1573,6 +1579,9 @@ applySerif2Btn.addEventListener("click", () => __awaiter(this, void 0, void 0, f
 
       // Update UI placeholders
       updatePlaceholders(fontData);
+      if (window.toggleVariableFontControls) {
+        window.toggleVariableFontControls('serif', config.favSerif2.font);
+      }
       if (!formButtons.contains(restoreButton)) {
         formButtons.prepend(restoreButton);
       }
@@ -1651,6 +1660,9 @@ applySerif2ToSansBtn.addEventListener("click", () => __awaiter(this, void 0, voi
 
       // Update UI placeholders
       updatePlaceholders(fontData);
+      if (window.toggleVariableFontControls) {
+        window.toggleVariableFontControls('sans-serif', config.favSerif2.font);
+      }
       if (!formButtons.contains(restoreButton)) {
         formButtons.prepend(restoreButton);
       }
@@ -1729,6 +1741,9 @@ applySerifToSansBtn.addEventListener("click", () => __awaiter(this, void 0, void
 
       // Update UI placeholders
       updatePlaceholders(fontData);
+      if (window.toggleVariableFontControls) {
+        window.toggleVariableFontControls('sans-serif', config.favSerif.font);
+      }
       if (!formButtons.contains(restoreButton)) {
         formButtons.prepend(restoreButton);
       }
