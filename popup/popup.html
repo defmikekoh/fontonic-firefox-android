@@ -44,6 +44,7 @@
                 <br>
                 
                 <!-- Configure Favorite Fonts -->
+                <div style="border: 2px solid #ff914c; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
                 <div class="collapse collapse-arrow border border-base-300 rounded-box mb-4">
                     <input type="checkbox" class="collapse-checkbox" /> 
                     <div class="collapse-title text-4xl font-medium">
@@ -73,7 +74,7 @@
                                     <option value="22">22</option>
                                 </select>
                                 <select class="text-4xl w-full" id="fav-serif-weight">
-                                    <option value="">Default</option>
+                                    <option id="fav_serif_weight_placeholder" value="">Default</option>
                                 </select>
                             </div>
                             <div class="grid gap-4 mt-4" style="grid-template-columns: 1fr 120px 120px;">
@@ -97,6 +98,102 @@
                                     <option value="#FFFFF0">Ivory</option>
                                     <option value="white">White</option>
                                 </select>
+                            </div>
+                            
+                            <!-- Variable Font Axes Controls for Fav Serif -->
+                            <div id="fav-serif-var-axes" class="mt-4 ml-8" style="display: none;">
+                                <div class="collapse collapse-arrow border border-base-300 rounded-box">
+                                    <input type="checkbox" class="collapse-checkbox" />
+                                    <div class="collapse-title text-4xl font-medium">
+                                        Variable Font Axes
+                                    </div>
+                                    <div class="collapse-content">
+                                        <div class="grid gap-4 text-4xl">
+                                            <!-- Weight Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">Weight:</label>
+                                                <input type="range" id="fav-serif-wght-slider" min="100" max="1000" value="400" class="flex-1" />
+                                                <span id="fav-serif-wght-value" class="w-16 text-center">400</span>
+                                            </div>
+                                            <!-- Width Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">Width:</label>
+                                                <input type="range" id="fav-serif-wdth-slider" min="25" max="151" value="100" class="flex-1" />
+                                                <span id="fav-serif-wdth-value" class="w-16 text-center">100</span>
+                                            </div>
+                                            <!-- Optical Size Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">Optical Size:</label>
+                                                <select class="text-2xl" id="fav_serif_opsz_control" name="fav_serif_opsz_control">
+                                                    <option value="Default">Auto</option>
+                                                    <option value="override">Override</option>
+                                                </select>
+                                                <input type="range" id="fav-serif-opsz-slider" min="8" max="144" value="14" class="flex-1" />
+                                                <span id="fav-serif-opsz-value" class="w-16 text-center">14</span>
+                                            </div>
+                                            <!-- Grade Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">Grade:</label>
+                                                <input type="range" id="fav-serif-GRAD-slider" min="-200" max="150" value="0" class="flex-1" />
+                                                <span id="fav-serif-GRAD-value" class="w-16 text-center">0</span>
+                                            </div>
+                                            <!-- Slant Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">Slant:</label>
+                                                <input type="range" id="fav-serif-slnt-slider" min="-10" max="0" value="0" class="flex-1" />
+                                                <span id="fav-serif-slnt-value" class="w-16 text-center">0</span>
+                                            </div>
+                                            <!-- XTRA Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">XTRA:</label>
+                                                <input type="range" id="fav-serif-XTRA-slider" min="323" max="603" value="468" class="flex-1" />
+                                                <span id="fav-serif-XTRA-value" class="w-16 text-center">468</span>
+                                            </div>
+                                            <!-- XOPQ Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">XOPQ:</label>
+                                                <input type="range" id="fav-serif-XOPQ-slider" min="27" max="175" value="96" class="flex-1" />
+                                                <span id="fav-serif-XOPQ-value" class="w-16 text-center">96</span>
+                                            </div>
+                                            <!-- YOPQ Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YOPQ:</label>
+                                                <input type="range" id="fav-serif-YOPQ-slider" min="25" max="135" value="79" class="flex-1" />
+                                                <span id="fav-serif-YOPQ-value" class="w-16 text-center">79</span>
+                                            </div>
+                                            <!-- YTLC Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YTLC:</label>
+                                                <input type="range" id="fav-serif-YTLC-slider" min="416" max="570" value="514" class="flex-1" />
+                                                <span id="fav-serif-YTLC-value" class="w-16 text-center">514</span>
+                                            </div>
+                                            <!-- YTUC Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YTUC:</label>
+                                                <input type="range" id="fav-serif-YTUC-slider" min="528" max="760" value="712" class="flex-1" />
+                                                <span id="fav-serif-YTUC-value" class="w-16 text-center">712</span>
+                                            </div>
+                                            <!-- YTAS Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YTAS:</label>
+                                                <input type="range" id="fav-serif-YTAS-slider" min="649" max="854" value="750" class="flex-1" />
+                                                <span id="fav-serif-YTAS-value" class="w-16 text-center">750</span>
+                                            </div>
+                                            <!-- YTDE Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YTDE:</label>
+                                                <input type="range" id="fav-serif-YTDE-slider" min="-305" max="-98" value="-203" class="flex-1" />
+                                                <span id="fav-serif-YTDE-value" class="w-16 text-center">-203</span>
+                                            </div>
+                                            <!-- YTFI Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YTFI:</label>
+                                                <input type="range" id="fav-serif-YTFI-slider" min="560" max="788" value="738" class="flex-1" />
+                                                <span id="fav-serif-YTFI-value" class="w-16 text-center">738</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
@@ -123,7 +220,7 @@
                                     <option value="22">22</option>
                                 </select>
                                 <select class="text-4xl w-full" id="fav-sans-weight">
-                                    <option value="">Default</option>
+                                    <option id="fav_sans_weight_placeholder" value="">Default</option>
                                 </select>
                             </div>
                             <div class="grid gap-4 mt-4" style="grid-template-columns: 1fr 120px 120px;">
@@ -148,16 +245,112 @@
                                     <option value="white">White</option>
                                 </select>
                             </div>
+                            
+                            <!-- Variable Font Axes Controls for Fav Sans -->
+                            <div id="fav-sans-var-axes" class="mt-4 ml-8" style="display: none;">
+                                <div class="collapse collapse-arrow border border-base-300 rounded-box">
+                                    <input type="checkbox" class="collapse-checkbox" />
+                                    <div class="collapse-title text-4xl font-medium">
+                                        Variable Font Axes
+                                    </div>
+                                    <div class="collapse-content">
+                                        <div class="grid gap-4 text-4xl">
+                                            <!-- Weight Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">Weight:</label>
+                                                <input type="range" id="fav-sans-wght-slider" min="100" max="1000" value="400" class="flex-1" />
+                                                <span id="fav-sans-wght-value" class="w-16 text-center">400</span>
+                                            </div>
+                                            <!-- Width Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">Width:</label>
+                                                <input type="range" id="fav-sans-wdth-slider" min="25" max="151" value="100" class="flex-1" />
+                                                <span id="fav-sans-wdth-value" class="w-16 text-center">100</span>
+                                            </div>
+                                            <!-- Optical Size Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">Optical Size:</label>
+                                                <select class="text-2xl" id="fav_sans_opsz_control" name="fav_sans_opsz_control">
+                                                    <option value="Default">Auto</option>
+                                                    <option value="override">Override</option>
+                                                </select>
+                                                <input type="range" id="fav-sans-opsz-slider" min="8" max="144" value="14" class="flex-1" />
+                                                <span id="fav-sans-opsz-value" class="w-16 text-center">14</span>
+                                            </div>
+                                            <!-- Grade Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">Grade:</label>
+                                                <input type="range" id="fav-sans-GRAD-slider" min="-200" max="150" value="0" class="flex-1" />
+                                                <span id="fav-sans-GRAD-value" class="w-16 text-center">0</span>
+                                            </div>
+                                            <!-- Slant Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">Slant:</label>
+                                                <input type="range" id="fav-sans-slnt-slider" min="-10" max="0" value="0" class="flex-1" />
+                                                <span id="fav-sans-slnt-value" class="w-16 text-center">0</span>
+                                            </div>
+                                            <!-- XTRA Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">XTRA:</label>
+                                                <input type="range" id="fav-sans-XTRA-slider" min="323" max="603" value="468" class="flex-1" />
+                                                <span id="fav-sans-XTRA-value" class="w-16 text-center">468</span>
+                                            </div>
+                                            <!-- XOPQ Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">XOPQ:</label>
+                                                <input type="range" id="fav-sans-XOPQ-slider" min="27" max="175" value="96" class="flex-1" />
+                                                <span id="fav-sans-XOPQ-value" class="w-16 text-center">96</span>
+                                            </div>
+                                            <!-- YOPQ Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YOPQ:</label>
+                                                <input type="range" id="fav-sans-YOPQ-slider" min="25" max="135" value="79" class="flex-1" />
+                                                <span id="fav-sans-YOPQ-value" class="w-16 text-center">79</span>
+                                            </div>
+                                            <!-- YTLC Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YTLC:</label>
+                                                <input type="range" id="fav-sans-YTLC-slider" min="416" max="570" value="514" class="flex-1" />
+                                                <span id="fav-sans-YTLC-value" class="w-16 text-center">514</span>
+                                            </div>
+                                            <!-- YTUC Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YTUC:</label>
+                                                <input type="range" id="fav-sans-YTUC-slider" min="528" max="760" value="712" class="flex-1" />
+                                                <span id="fav-sans-YTUC-value" class="w-16 text-center">712</span>
+                                            </div>
+                                            <!-- YTAS Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YTAS:</label>
+                                                <input type="range" id="fav-sans-YTAS-slider" min="649" max="854" value="750" class="flex-1" />
+                                                <span id="fav-sans-YTAS-value" class="w-16 text-center">750</span>
+                                            </div>
+                                            <!-- YTDE Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YTDE:</label>
+                                                <input type="range" id="fav-sans-YTDE-slider" min="-305" max="-98" value="-203" class="flex-1" />
+                                                <span id="fav-sans-YTDE-value" class="w-16 text-center">-203</span>
+                                            </div>
+                                            <!-- YTFI Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YTFI:</label>
+                                                <input type="range" id="fav-sans-YTFI-slider" min="560" max="788" value="738" class="flex-1" />
+                                                <span id="fav-sans-YTFI-value" class="w-16 text-center">738</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
-                        <!-- Fav Serif to Sans Configuration -->
+                        <!-- Fav Serif 2 Configuration -->
                         <div class="mb-6">
-                            <label class="font-bold text-4xl mb-2 block">Fav Serif to Sans:</label>
+                            <label class="font-bold text-4xl mb-2 block">Fav Serif 2:</label>
                             <div class="grid gap-4" style="grid-template-columns: 1fr 120px 120px;">
-                                <select class="text-4xl w-full" id="fav-serif-to-sans-font">
+                                <select class="text-4xl w-full" id="fav-serif-2-font">
                                     <option value="Merriweather">Merriweather</option>
                                 </select>
-                                <select class="text-4xl w-full" id="fav-serif-to-sans-size">
+                                <select class="text-4xl w-full" id="fav-serif-2-size">
                                     <option value="16">16</option>
                                     <option value="16.5">16.5</option>
                                     <option value="17">17</option>
@@ -172,13 +365,13 @@
                                     <option value="21.5">21.5</option>
                                     <option value="22">22</option>
                                 </select>
-                                <select class="text-4xl w-full" id="fav-serif-to-sans-weight">
-                                    <option value="">Default</option>
+                                <select class="text-4xl w-full" id="fav-serif-2-weight">
+                                    <option id="fav_serif_2_weight_placeholder" value="">Default</option>
                                 </select>
                             </div>
                             <div class="grid gap-4 mt-4" style="grid-template-columns: 1fr 120px 120px;">
                                 <div></div>
-                                <select class="text-4xl w-full" id="fav-serif-to-sans-line-height">
+                                <select class="text-4xl w-full" id="fav-serif-2-line-height">
                                     <option value="">Default</option>
                                     <option value="1.4">1.4</option>
                                     <option value="1.5">1.5</option>
@@ -186,7 +379,7 @@
                                     <option value="1.7">1.7</option>
                                     <option value="1.8">1.8</option>
                                 </select>
-                                <select class="text-4xl w-full" id="fav-serif-to-sans-color">
+                                <select class="text-4xl w-full" id="fav-serif-2-color">
                                     <option value="">Default</option>
                                     <option value="black">Black</option>
                                     <option value="#292929">Medium</option>
@@ -198,6 +391,102 @@
                                     <option value="white">White</option>
                                 </select>
                             </div>
+                            
+                            <!-- Variable Font Axes Controls for Fav Serif 2 -->
+                            <div id="fav-serif-2-var-axes" class="mt-4 ml-8" style="display: none;">
+                                <div class="collapse collapse-arrow border border-base-300 rounded-box">
+                                    <input type="checkbox" class="collapse-checkbox" />
+                                    <div class="collapse-title text-4xl font-medium">
+                                        Variable Font Axes
+                                    </div>
+                                    <div class="collapse-content">
+                                        <div class="grid gap-4 text-4xl">
+                                            <!-- Weight Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">Weight:</label>
+                                                <input type="range" id="fav-serif-2-wght-slider" min="100" max="1000" value="400" class="flex-1" />
+                                                <span id="fav-serif-2-wght-value" class="w-16 text-center">400</span>
+                                            </div>
+                                            <!-- Width Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">Width:</label>
+                                                <input type="range" id="fav-serif-2-wdth-slider" min="25" max="151" value="100" class="flex-1" />
+                                                <span id="fav-serif-2-wdth-value" class="w-16 text-center">100</span>
+                                            </div>
+                                            <!-- Optical Size Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">Optical Size:</label>
+                                                <select class="text-2xl" id="fav_serif_2_opsz_control" name="fav_serif_2_opsz_control">
+                                                    <option value="Default">Auto</option>
+                                                    <option value="override">Override</option>
+                                                </select>
+                                                <input type="range" id="fav-serif-2-opsz-slider" min="8" max="144" value="14" class="flex-1" />
+                                                <span id="fav-serif-2-opsz-value" class="w-16 text-center">14</span>
+                                            </div>
+                                            <!-- Grade Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">Grade:</label>
+                                                <input type="range" id="fav-serif-2-GRAD-slider" min="-200" max="150" value="0" class="flex-1" />
+                                                <span id="fav-serif-2-GRAD-value" class="w-16 text-center">0</span>
+                                            </div>
+                                            <!-- Slant Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">Slant:</label>
+                                                <input type="range" id="fav-serif-2-slnt-slider" min="-10" max="0" value="0" class="flex-1" />
+                                                <span id="fav-serif-2-slnt-value" class="w-16 text-center">0</span>
+                                            </div>
+                                            <!-- XTRA Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">XTRA:</label>
+                                                <input type="range" id="fav-serif-2-XTRA-slider" min="323" max="603" value="468" class="flex-1" />
+                                                <span id="fav-serif-2-XTRA-value" class="w-16 text-center">468</span>
+                                            </div>
+                                            <!-- XOPQ Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">XOPQ:</label>
+                                                <input type="range" id="fav-serif-2-XOPQ-slider" min="27" max="175" value="96" class="flex-1" />
+                                                <span id="fav-serif-2-XOPQ-value" class="w-16 text-center">96</span>
+                                            </div>
+                                            <!-- YOPQ Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YOPQ:</label>
+                                                <input type="range" id="fav-serif-2-YOPQ-slider" min="25" max="135" value="79" class="flex-1" />
+                                                <span id="fav-serif-2-YOPQ-value" class="w-16 text-center">79</span>
+                                            </div>
+                                            <!-- YTLC Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YTLC:</label>
+                                                <input type="range" id="fav-serif-2-YTLC-slider" min="416" max="570" value="514" class="flex-1" />
+                                                <span id="fav-serif-2-YTLC-value" class="w-16 text-center">514</span>
+                                            </div>
+                                            <!-- YTUC Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YTUC:</label>
+                                                <input type="range" id="fav-serif-2-YTUC-slider" min="528" max="760" value="712" class="flex-1" />
+                                                <span id="fav-serif-2-YTUC-value" class="w-16 text-center">712</span>
+                                            </div>
+                                            <!-- YTAS Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YTAS:</label>
+                                                <input type="range" id="fav-serif-2-YTAS-slider" min="649" max="854" value="750" class="flex-1" />
+                                                <span id="fav-serif-2-YTAS-value" class="w-16 text-center">750</span>
+                                            </div>
+                                            <!-- YTDE Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YTDE:</label>
+                                                <input type="range" id="fav-serif-2-YTDE-slider" min="-305" max="-98" value="-203" class="flex-1" />
+                                                <span id="fav-serif-2-YTDE-value" class="w-16 text-center">-203</span>
+                                            </div>
+                                            <!-- YTFI Slider -->
+                                            <div class="flex items-center gap-4">
+                                                <label class="w-32">YTFI:</label>
+                                                <input type="range" id="fav-serif-2-YTFI-slider" min="560" max="788" value="738" class="flex-1" />
+                                                <span id="fav-serif-2-YTFI-value" class="w-16 text-center">738</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
                         <button id="save-fav-config-btn" type="button" 
@@ -208,13 +497,20 @@
                     <button id="apply-fav-serif-btn" type="button"
                         style="background-color: #ff914c; height: 7rem;"
                         class="btn flex-1 text-4xl text-white">Fav Serif</button>
+                    <button id="apply-serif-2-btn" type="button"
+                        style="background-color: #ff914c; height: 7rem;"
+                        class="btn flex-1 text-3xl text-white">Fav Serif 2</button>
                     <button id="apply-fav-sans-btn" type="button"
                         style="background-color: #ff914c; height: 7rem;"
                         class="btn flex-1 text-4xl text-white">Fav Sans</button>
                     <button id="apply-serif-to-sans-btn" type="button"
                         style="background-color: #ff914c; height: 7rem;"
                         class="btn flex-1 text-3xl text-white">Fav Serif to Sans</button>
+                    <button id="apply-serif-2-to-sans-btn" type="button"
+                        style="background-color: #ff914c; height: 7rem;"
+                        class="btn flex-1 text-3xl text-white">Fav Serif 2 to Sans</button>
                 </div>
+            </div>
             </div>
             <br>
             <br><br>
@@ -223,12 +519,14 @@
             <div>
                 <form name="fonts">
                                         <div class="flex flex-col gap-4">
-                        <label class="text-6xl font-serif" for="serif">Serif</label>
-                                                <div class="grid gap-4" style="grid-template-columns: 1fr 160px 160px;">
-                            <select class="text-6xl w-full" id="serif" name="serif">
+                        <!-- Serif Section -->
+                        <div style="border: 1px solid #ADD8E6; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                        <label class="font-bold text-4xl mb-2 block" for="serif">Serif</label>
+                                                <div class="grid gap-4" style="grid-template-columns: 1fr 120px 120px;">
+                            <select class="text-4xl w-full" id="serif" name="serif">
                                 <option id="serif_placeholder" value="">Default</option>
                             </select>
-                            <select class="text-6xl w-full" id="serif_size" name="serif_size">
+                            <select class="text-4xl w-full" id="serif_size" name="serif_size">
                                 <option value="">Default</option>
                                 <option value="16">16</option>
                                 <option value="16.5">16.5</option>
@@ -244,13 +542,37 @@
                                 <option value="21.5">21.5</option>
                                 <option value="22">22</option>
                             </select>
-                            <select class="text-6xl w-full" id="serif_weight" name="serif_weight">
+                            <select class="text-4xl w-full" id="serif_weight" name="serif_weight">
                                 <option id="serif_weight_placeholder" value="">Default</option>
                             </select>
                         </div>
                         
+                        <!-- Line Height and Color Controls for Serif -->
+                        <div class="grid gap-4 mt-4" style="grid-template-columns: 1fr 120px 120px;">
+                            <div></div>
+                            <select class="text-4xl w-full" id="serif_line_height" name="serif_line_height">
+                                <option value="">Default</option>
+                                <option value="1.4">1.4</option>
+                                <option value="1.5">1.5</option>
+                                <option value="1.6">1.6</option>
+                                <option value="1.7">1.7</option>
+                                <option value="1.8">1.8</option>
+                            </select>
+                            <select class="text-4xl w-full" id="serif_color" name="serif_color">
+                                <option value="">Default</option>
+                                <option value="black">Black</option>
+                                <option value="#292929">Medium</option>
+                                <option value="#1d1d1f">Apple</option>
+                                <option value="#212121">Google</option>
+                                <option value="#363737">Substack</option>
+                                <option value="#FFF5EE">Seashell</option>
+                                <option value="#FFFFF0">Ivory</option>
+                                <option value="white">White</option>
+                            </select>
+                        </div>
+                        
                         <!-- Variable Font Axes Controls for Serif -->
-                        <div id="serif-var-axes" class="mt-4" style="display: none;">
+                        <div id="serif-var-axes" class="mt-4 ml-8" style="display: none;">
                             <div class="collapse collapse-arrow border border-base-300 rounded-box">
                                 <input type="checkbox" class="collapse-checkbox" />
                                 <div class="collapse-title text-4xl font-medium">
@@ -273,6 +595,10 @@
                                         <!-- Optical Size Slider -->
                                         <div class="flex items-center gap-4">
                                             <label class="w-32">Optical Size:</label>
+                                            <select class="text-2xl" id="serif_opsz_control" name="serif_opsz_control" style="visibility: hidden;">
+                                                <option value="Default">Auto</option>
+                                                <option value="override">Override</option>
+                                            </select>
                                             <input type="range" id="serif-opsz-slider" min="8" max="144" value="14" class="flex-1" />
                                             <span id="serif-opsz-value" class="w-16 text-center">14</span>
                                         </div>
@@ -340,38 +666,20 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="grid gap-4 mt-4" style="grid-template-columns: 1fr 160px 160px;">
-                            <select class="text-6xl w-full" id="serif_opsz_control" name="serif_opsz_control" style="display: none;">
-                                <option value="Default">Default (Auto)</option>
-                                <option value="override">Override (Slider)</option>
-                            </select>
-                            <select class="text-6xl w-full" id="serif_line_height" name="serif_line_height">
-                                <option value="">Default</option>
-                                <option value="1.4">1.4</option>
-                                <option value="1.5">1.5</option>
-                                <option value="1.6">1.6</option>
-                                <option value="1.7">1.7</option>
-                                <option value="1.8">1.8</option>
-                            </select>
-                            <select class="text-6xl w-full" id="serif_color" name="serif_color">
-                                <option value="">Default</option>
-                                <option value="black">Black</option>
-                                <option value="#292929">Medium</option>
-                                <option value="#1d1d1f">Apple</option>
-                                <option value="#212121">Google</option>
-                                <option value="#363737">Substack</option>
-                                <option value="#FFF5EE">Seashell</option>
-                                <option value="#FFFFF0">Ivory</option>
-                                <option value="white">White</option>
-                            </select>
                         </div>
-                        <label class="text-6xl font-sans" for="sans_serif">Sans-serif</label>
-                                                <div class="grid gap-4" style="grid-template-columns: 1fr 160px 160px;">
-                            <select class="text-6xl w-full" id="sans_serif" name="sans_serif">
+                        
+                        
+                        <!-- Spacer between Serif and Sans-serif sections -->
+                        <hr style="border: 1px solid #ff914c; margin: 16px 0;" />
+                        
+                        <!-- Sans-serif Section -->
+                        <div style="border: 1px solid #ADD8E6; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                        <label class="font-bold text-4xl mb-2 block" for="sans_serif">Sans-serif</label>
+                                                <div class="grid gap-4" style="grid-template-columns: 1fr 120px 120px;">
+                            <select class="text-4xl w-full" id="sans_serif" name="sans_serif">
                                 <option id="sans_serif_placeholder" value="">Default</option>
                             </select>
-                            <select class="text-6xl w-full" id="sans_serif_size" name="sans_serif_size">
+                            <select class="text-4xl w-full" id="sans_serif_size" name="sans_serif_size">
                                 <option value="">Default</option>
                                 <option value="16">16</option>
                                 <option value="16.5">16.5</option>
@@ -387,13 +695,37 @@
                                 <option value="21.5">21.5</option>
                                 <option value="22">22</option>
                             </select>
-                            <select class="text-6xl w-full" id="sans_serif_weight" name="sans_serif_weight">
+                            <select class="text-4xl w-full" id="sans_serif_weight" name="sans_serif_weight">
                                 <option id="sans_serif_weight_placeholder" value="">Default</option>
                             </select>
                         </div>
                         
+                        <!-- Line Height and Color Controls for Sans-serif -->
+                        <div class="grid gap-4 mt-4" style="grid-template-columns: 1fr 120px 120px;">
+                            <div></div>
+                            <select class="text-4xl w-full" id="sans_serif_line_height" name="sans_serif_line_height">
+                                <option value="">Default</option>
+                                <option value="1.4">1.4</option>
+                                <option value="1.5">1.5</option>
+                                <option value="1.6">1.6</option>
+                                <option value="1.7">1.7</option>
+                                <option value="1.8">1.8</option>
+                            </select>
+                            <select class="text-4xl w-full" id="sans_serif_color" name="sans_serif_color">
+                                <option value="">Default</option>
+                                <option value="black">Black</option>
+                                <option value="#292929">Medium</option>
+                                <option value="#1d1d1f">Apple</option>
+                                <option value="#212121">Google</option>
+                                <option value="#363737">Substack</option>
+                                <option value="#FFF5EE">Seashell</option>
+                                <option value="#FFFFF0">Ivory</option>
+                                <option value="white">White</option>
+                            </select>
+                        </div>
+                        
                         <!-- Variable Font Axes Controls for Sans-serif -->
-                        <div id="sans-serif-var-axes" class="mt-4" style="display: none;">
+                        <div id="sans-serif-var-axes" class="mt-4 ml-8" style="display: none;">
                             <div class="collapse collapse-arrow border border-base-300 rounded-box">
                                 <input type="checkbox" class="collapse-checkbox" />
                                 <div class="collapse-title text-4xl font-medium">
@@ -416,6 +748,10 @@
                                         <!-- Optical Size Slider -->
                                         <div class="flex items-center gap-4">
                                             <label class="w-32">Optical Size:</label>
+                                            <select class="text-2xl" id="sans_serif_opsz_control" name="sans_serif_opsz_control" style="visibility: hidden;">
+                                                <option value="Default">Auto</option>
+                                                <option value="override">Override</option>
+                                            </select>
                                             <input type="range" id="sans-serif-opsz-slider" min="8" max="144" value="14" class="flex-1" />
                                             <span id="sans-serif-opsz-value" class="w-16 text-center">14</span>
                                         </div>
@@ -483,81 +819,6 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="grid gap-4 mt-4" style="grid-template-columns: 1fr 160px 160px;">
-                            <select class="text-6xl w-full" id="sans_serif_opsz_control" name="sans_serif_opsz_control" style="display: none;">
-                                <option value="Default">Default (Auto)</option>
-                                <option value="override">Override (Slider)</option>
-                            </select>
-                            <select class="text-6xl w-full" id="sans_serif_line_height" name="sans_serif_line_height">
-                                <option value="">Default</option>
-                                <option value="1.4">1.4</option>
-                                <option value="1.5">1.5</option>
-                                <option value="1.6">1.6</option>
-                                <option value="1.7">1.7</option>
-                                <option value="1.8">1.8</option>
-                            </select>
-                            <select class="text-6xl w-full" id="sans_serif_color" name="sans_serif_color">
-                                <option value="">Default</option>
-                                <option value="black">Black</option>
-                                <option value="#292929">Medium</option>
-                                <option value="#1d1d1f">Apple</option>
-                                <option value="#212121">Google</option>
-                                <option value="#363737">Substack</option>
-                                <option value="#FFF5EE">Seashell</option>
-                                <option value="#FFFFF0">Ivory</option>
-                                <option value="white">White</option>
-                            </select>
-                        </div>
-                        <label class="text-6xl font-mono" for="monospace">Monospace</label>
-                                                <div class="grid gap-4" style="grid-template-columns: 1fr 160px 160px;">
-                            <select class="text-6xl w-full" id="monospace" name="monospace">
-                                <option id="monospace_placeholder" value="">Default</option>
-                            </select>
-                            <select class="text-6xl w-full" id="monospace_size" name="monospace_size">
-                                <option value="">Default</option>
-                                <option value="16">16</option>
-                                <option value="16.5">16.5</option>
-                                <option value="17">17</option>
-                                <option value="17.5">17.5</option>
-                                <option value="18">18</option>
-                                <option value="18.5">18.5</option>
-                                <option value="19">19</option>
-                                <option value="19.5">19.5</option>
-                                <option value="20">20</option>
-                                <option value="20.5">20.5</option>
-                                <option value="21">21</option>
-                                <option value="21.5">21.5</option>
-                                <option value="22">22</option>
-                            </select>
-                            <select class="text-6xl w-full" id="monospace_weight" name="monospace_weight">
-                                <option id="monospace_weight_placeholder" value="">Default</option>
-                            </select>
-                        </div>
-                        <div class="grid gap-4 mt-4" style="grid-template-columns: 1fr 160px 160px;">
-                            <select class="text-6xl w-full" id="monospace_opsz_control" name="monospace_opsz_control" style="display: none;">
-                                <option value="Default">Default (Auto)</option>
-                                <option value="override">Override (Slider)</option>
-                            </select>
-                            <select class="text-6xl w-full" id="monospace_line_height" name="monospace_line_height">
-                                <option value="">Default</option>
-                                <option value="1.4">1.4</option>
-                                <option value="1.5">1.5</option>
-                                <option value="1.6">1.6</option>
-                                <option value="1.7">1.7</option>
-                                <option value="1.8">1.8</option>
-                            </select>
-                            <select class="text-6xl w-full" id="monospace_color" name="monospace_color">
-                                <option value="">Default</option>
-                                <option value="black">Black</option>
-                                <option value="#292929">Medium</option>
-                                <option value="#1d1d1f">Apple</option>
-                                <option value="#212121">Google</option>
-                                <option value="#363737">Substack</option>
-                                <option value="#FFF5EE">Seashell</option>
-                                <option value="#FFFFF0">Ivory</option>
-                                <option value="white">White</option>
-                            </select>
                         </div>
                     <br><br><br>
                     <div id="form-btns" class="flex w-full gap-2">
@@ -567,6 +828,66 @@
                             class="btn btn-primary flex-1 text-5xl">Apply
                             Selection</button>
 
+                    </div>
+                    
+                    <!-- Spacer between buttons and monospace settings -->
+                    <hr style="border: 1px solid #ff914c; margin: 16px 0;" />
+                    
+                    <!-- Monospace settings moved below buttons -->
+                    <!-- Monospace Section -->
+                    <div style="border: 1px solid #ADD8E6; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                    <label class="font-bold text-4xl mb-2 block" for="monospace">Monospace</label>
+                    <div class="grid gap-4" style="grid-template-columns: 1fr 120px 120px;">
+                        <select class="text-4xl w-full" id="monospace" name="monospace">
+                            <option id="monospace_placeholder" value="">Default</option>
+                        </select>
+                        <select class="text-4xl w-full" id="monospace_size" name="monospace_size">
+                            <option value="">Default</option>
+                            <option value="16">16</option>
+                            <option value="16.5">16.5</option>
+                            <option value="17">17</option>
+                            <option value="17.5">17.5</option>
+                            <option value="18">18</option>
+                            <option value="18.5">18.5</option>
+                            <option value="19">19</option>
+                            <option value="19.5">19.5</option>
+                            <option value="20">20</option>
+                            <option value="20.5">20.5</option>
+                            <option value="21">21</option>
+                            <option value="21.5">21.5</option>
+                            <option value="22">22</option>
+                        </select>
+                        <select class="text-4xl w-full" id="monospace_weight" name="monospace_weight">
+                            <option id="monospace_weight_placeholder" value="">Default</option>
+                        </select>
+                    </div>
+                    <div class="grid gap-4 mt-4" style="grid-template-columns: 1fr 120px 120px;">
+                        <select class="text-4xl w-full" id="monospace_opsz_control" name="monospace_opsz_control" style="visibility: hidden;">
+                            <option value="Default">Default (Auto)</option>
+                            <option value="override">Override (Slider)</option>
+                        </select>
+                        <select class="text-4xl w-full" id="monospace_line_height" name="monospace_line_height">
+                            <option value="">Default</option>
+                            <option value="1.4">1.4</option>
+                            <option value="1.5">1.5</option>
+                            <option value="1.6">1.6</option>
+                            <option value="1.7">1.7</option>
+                            <option value="1.8">1.8</option>
+                        </select>
+                        <select class="text-4xl w-full" id="monospace_color" name="monospace_color">
+                            <option value="">Default</option>
+                            <option value="black">Black</option>
+                            <option value="#333">Dark Grey</option>
+                            <option value="#666">Medium Grey</option>
+                            <option value="#292929">Medium</option>
+                            <option value="#1d1d1f">Apple</option>
+                            <option value="#212121">Google</option>
+                            <option value="#363737">Substack</option>
+                            <option value="#FFF5EE">Seashell</option>
+                            <option value="#FFFFF0">Ivory</option>
+                            <option value="white">White</option>
+                        </select>
+                    </div>
                     </div>
                 </form>
             </div>
@@ -825,6 +1146,13 @@ courier new</textarea>
             
             <br>
             <div class="divider"></div>
+            
+            <div class="flex justify-between items-center text-5xl">
+                <p>Reset current domain settings</p>
+                <button id="reset-domain-settings-btn" type="button"
+                    class="btn btn-warning text-4xl" style="background-color: #ff6b35; color: white; border-color: #ff6b35;">Reset Domain</button>
+            </div>
+            <br>
             
             <div class="flex justify-between items-center text-5xl">
                 <p>Reset performance test</p>

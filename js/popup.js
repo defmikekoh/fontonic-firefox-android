@@ -62,6 +62,9 @@ const DEFAULT_TRIGGERS = {
 
 // Initialize trigger elements and load data
 const initializeTriggers = () => {
+  // Initialize reset domain button when Advanced page is loaded
+  initializeResetDomainButton();
+  
   // Get DOM elements directly and add event listeners
   const saveBtn = document.getElementById("save-triggers-btn");
   const resetBtn = document.getElementById("reset-triggers-btn");
@@ -227,9 +230,9 @@ const favSerifWeightSelect = document.getElementById("fav-serif-weight");
 const favSansFontSelect = document.getElementById("fav-sans-font");
 const favSansSizeSelect = document.getElementById("fav-sans-size");
 const favSansWeightSelect = document.getElementById("fav-sans-weight");
-const favSerifToSansFontSelect = document.getElementById("fav-serif-to-sans-font");
-const favSerifToSansSizeSelect = document.getElementById("fav-serif-to-sans-size");
-const favSerifToSansWeightSelect = document.getElementById("fav-serif-to-sans-weight");
+const favSerif2FontSelect = document.getElementById("fav-serif-2-font");
+const favSerif2SizeSelect = document.getElementById("fav-serif-2-size");
+const favSerif2WeightSelect = document.getElementById("fav-serif-2-weight");
 const saveFavConfigBtn = document.getElementById("save-fav-config-btn");
 // Check buttons
 const globalCheck = document.getElementById("global_check");
@@ -291,6 +294,15 @@ const globalSansSerifWeightPlaceholder = document.querySelector(
 );
 const globalMonospaceWeightPlaceholder = document.querySelector(
   "#global_monospace_weight_placeholder",
+);
+const favSerifWeightPlaceholder = document.querySelector(
+  "#fav_serif_weight_placeholder",
+);
+const favSansWeightPlaceholder = document.querySelector(
+  "#fav_sans_weight_placeholder",
+);
+const favSerif2WeightPlaceholder = document.querySelector(
+  "#fav_serif_2_weight_placeholder",
 );
 tipWhenOverrideOn.remove();
 tipWhenOverrideOff.remove();
@@ -654,7 +666,7 @@ const updatePlaceholders = (innerText) => {
     innerText.monospace_color && innerText.monospace_color !== "Default"
       ? innerText.monospace_color
       : "";
-      
+
   // Load variable font axes if they exist
   if (innerText.serif_var_axes) {
     setVariableFontAxesValues('serif', innerText.serif_var_axes);
@@ -665,29 +677,13 @@ const updatePlaceholders = (innerText) => {
   if (innerText.monospace_var_axes) {
     setVariableFontAxesValues('monospace', innerText.monospace_var_axes);
   }
-  
-  // Load opsz control settings
-  if (innerText.serif_opsz_control) {
-    const serifOpszControl = document.getElementById('serif_opsz_control');
-    if (serifOpszControl) {
-      serifOpszControl.value = innerText.serif_opsz_control;
-      handleOpszControlChange('serif', innerText.serif_opsz_control);
-    }
-  }
-  if (innerText.sans_serif_opsz_control) {
-    const sansSerifOpszControl = document.getElementById('sans_serif_opsz_control');
-    if (sansSerifOpszControl) {
-      sansSerifOpszControl.value = innerText.sans_serif_opsz_control;
-      handleOpszControlChange('sans-serif', innerText.sans_serif_opsz_control);
-    }
-  }
-  if (innerText.monospace_opsz_control) {
-    const monospaceOpszControl = document.getElementById('monospace_opsz_control');
-    if (monospaceOpszControl) {
-      monospaceOpszControl.value = innerText.monospace_opsz_control;
-      handleOpszControlChange('monospace', innerText.monospace_opsz_control);
-    }
-  }
+
+  // Store opsz control settings for later restoration (after controls are initialized)
+  window.pendingOpszControlSettings = {
+    serif: innerText.serif_opsz_control,
+    sans_serif: innerText.sans_serif_opsz_control,
+    monospace: innerText.monospace_opsz_control
+  };
 };
 getDomain().then((domain) => {
   browser.storage.sync.get([domain]).then((result) => {
@@ -695,42 +691,88 @@ getDomain().then((domain) => {
       const fontData = result[domain];
       updatePlaceholders(fontData);
       formButtons.prepend(restoreButton);
-      
+
       // After loading saved data, update variable font controls visibility
       setTimeout(() => {
-        if (fontData.serif) {
-          const serifSelect = document.getElementById('serif');
-          if (serifSelect) {
-            // Trigger the font change event to show/hide variable font controls
-            serifSelect.dispatchEvent(new Event('change'));
-          }
+        // Ensure variable font controls are initialized first
+        if (typeof window.initializeVariableFontControls === 'function') {
+          window.initializeVariableFontControls();
         }
-        if (fontData.sans_serif) {
-          const sansSerifSelect = document.getElementById('sans_serif');
-          if (sansSerifSelect) {
-            sansSerifSelect.dispatchEvent(new Event('change'));
+
+        // Then trigger font changes to show appropriate controls
+        setTimeout(() => {
+          if (fontData.serif && fontData.serif !== "Default") {
+            const serifSelect = document.getElementById('serif');
+            if (serifSelect && window.toggleVariableFontControls) {
+              window.toggleVariableFontControls('serif', fontData.serif);
+            }
           }
-        }
-        if (fontData.monospace) {
-          const monospaceSelect = document.getElementById('monospace');
-          if (monospaceSelect) {
-            monospaceSelect.dispatchEvent(new Event('change'));
+          if (fontData.sans_serif && fontData.sans_serif !== "Default") {
+            const sansSerifSelect = document.getElementById('sans_serif');
+            if (sansSerifSelect && window.toggleVariableFontControls) {
+              window.toggleVariableFontControls('sans-serif', fontData.sans_serif);
+            }
           }
-        }
-      }, 200);
+          if (fontData.monospace && fontData.monospace !== "Default") {
+            const monospaceSelect = document.getElementById('monospace');
+            if (monospaceSelect && window.toggleVariableFontControls) {
+              window.toggleVariableFontControls('monospace', fontData.monospace);
+            }
+          }
+
+          // Restore opsz control settings after controls are visible
+          if (window.pendingOpszControlSettings && window.handleOpszControlChange) {
+            setTimeout(() => {
+              const settings = window.pendingOpszControlSettings;
+
+              if (settings.serif) {
+                const serifOpszControl = document.getElementById('serif_opsz_control');
+                if (serifOpszControl) {
+                  serifOpszControl.value = settings.serif;
+                  window.handleOpszControlChange('serif', settings.serif);
+                }
+              }
+              if (settings.sans_serif) {
+                const sansSerifOpszControl = document.getElementById('sans_serif_opsz_control');
+                if (sansSerifOpszControl) {
+                  sansSerifOpszControl.value = settings.sans_serif;
+                  window.handleOpszControlChange('sans-serif', settings.sans_serif);
+                }
+              }
+              if (settings.monospace) {
+                const monospaceOpszControl = document.getElementById('monospace_opsz_control');
+                if (monospaceOpszControl) {
+                  monospaceOpszControl.value = settings.monospace;
+                  window.handleOpszControlChange('monospace', settings.monospace);
+                }
+              }
+
+              // Clean up
+              delete window.pendingOpszControlSettings;
+            }, 50);
+          }
+        }, 100);
+      }, 300);
     }
   });
 });
 // load locally installed fonts
 // Load fonts into the  dropdowns
 const populateFonts = (element) => {
-  // Add Default option as the first selectable option
+  // Add Reset option as the first selectable option
   const defaultOption = document.createElement("option");
   defaultOption.value = "";
   defaultOption.textContent = "← Reset to Default";
   element.appendChild(defaultOption);
 
   [
+    // high frequency
+    "Merriweather",
+    "BBC Reith Serif",
+    "Rubik",
+    "ABC Ginto Normal Unlicensed Trial",
+    "Roboto Serif",
+    "Roboto Flex",
     // high frequency serif
     "Merriweather",
     "BBC Reith Serif",
@@ -751,7 +793,6 @@ const populateFonts = (element) => {
     "Sora",
     "Poppins",
     "Inter",
-    "Roboto Flex",
     "Atkinson Hyperlegible Next",
     "DM Sans",
     "Atkinson Hyperlegible",
@@ -800,10 +841,17 @@ const populateFonts = (element) => {
   });
 };
 const populateWeights = (element, isVariableFont = false) => {
-  // Clear existing options
-  element.innerHTML = '';
-  
-  // Add Default option as the first selectable option
+  // Keep the existing placeholder option, only add new options after it
+
+  // Remove all options except the placeholder
+  const allOptions = element.querySelectorAll('option');
+  allOptions.forEach(option => {
+    if (!option.id || !option.id.includes('_placeholder')) {
+      option.remove();
+    }
+  });
+
+  // Add Reset option as the first selectable option
   const defaultOption = document.createElement("option");
   defaultOption.value = "";
   defaultOption.textContent = "← Reset to Default";
@@ -836,6 +884,44 @@ const populateWeights = (element, isVariableFont = false) => {
     element.appendChild(option);
   });
 };
+
+const populateGlobalWeights = (element) => {
+  // Keep the existing placeholder option, only add new options after it
+
+  // Remove all options except the placeholder
+  const allOptions = element.querySelectorAll('option');
+  allOptions.forEach(option => {
+    if (!option.id || !option.id.includes('_placeholder')) {
+      option.remove();
+    }
+  });
+
+  // For global settings, we want "← Reset to Default" only when the user clicks the dropdown
+  // The placeholder will show "Default" when the current value is default
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "← Reset to Default";
+  element.appendChild(defaultOption);
+
+  [
+    "100",
+    "200",
+    "300",
+    "400",
+    "500",
+    "550",
+    "600",
+    "700",
+    "800",
+    "900",
+    "1000",
+  ].forEach((weight) => {
+    const option = document.createElement("option");
+    option.value = weight;
+    option.textContent = weight;
+    element.appendChild(option);
+  });
+};
 populateFonts(serifSelect);
 populateFonts(sansSerifSelect);
 populateFonts(monospaceSelect);
@@ -846,23 +932,41 @@ populateWeights(monospaceWeightSelect);
 populateFonts(globalSerifSelect);
 populateFonts(globalSansSerifSelect);
 populateFonts(globalMonospaceSelect);
-populateWeights(globalSerifWeightSelect);
-populateWeights(globalSansSerifWeightSelect);
-populateWeights(globalMonospaceWeightSelect);
+populateGlobalWeights(globalSerifWeightSelect);
+populateGlobalWeights(globalSansSerifWeightSelect);
+populateGlobalWeights(globalMonospaceWeightSelect);
 
 // Populate favorite fonts selectors
 populateFonts(favSerifFontSelect);
 populateFonts(favSansFontSelect);
-populateFonts(favSerifToSansFontSelect);
-populateWeights(favSerifWeightSelect);
-populateWeights(favSansWeightSelect);
-populateWeights(favSerifToSansWeightSelect);
+populateFonts(favSerif2FontSelect);
+populateGlobalWeights(favSerifWeightSelect);
+populateGlobalWeights(favSansWeightSelect);
+populateGlobalWeights(favSerif2WeightSelect);
 
 // Default favorite fonts configuration
 const DEFAULT_FAV_FONTS = {
-  favSerif: { font: "Merriweather", size: "16", weight: "" },
-  favSans: { font: "Rubik", size: "17", weight: "" },
-  favSerifToSans: { font: "Merriweather", size: "16", weight: "" }
+  favSerif: {
+    font: "Merriweather",
+    size: "16",
+    weight: "",
+    var_axes: {},
+    opsz_control: 'Default'
+  },
+  favSans: {
+    font: "Rubik",
+    size: "17",
+    weight: "",
+    var_axes: {},
+    opsz_control: 'Default'
+  },
+  favSerif2: {
+    font: "Merriweather",
+    size: "16",
+    weight: "",
+    var_axes: {},
+    opsz_control: 'Default'
+  }
 };
 
 // Load and apply favorite fonts configuration
@@ -880,9 +984,68 @@ const loadFavFontsConfig = () => __awaiter(this, void 0, void 0, function* () {
     favSansSizeSelect.value = config.favSans.size;
     favSansWeightSelect.value = config.favSans.weight;
 
-    favSerifToSansFontSelect.value = config.favSerifToSans.font;
-    favSerifToSansSizeSelect.value = config.favSerifToSans.size;
-    favSerifToSansWeightSelect.value = config.favSerifToSans.weight;
+    favSerif2FontSelect.value = config.favSerif2.font;
+    favSerif2SizeSelect.value = config.favSerif2.size;
+    favSerif2WeightSelect.value = config.favSerif2.weight;
+
+    // Update weight placeholders to show "Default" when value is default
+    favSerifWeightPlaceholder.textContent = config.favSerif.weight === "" || config.favSerif.weight === "Default" ? "Default" : (config.favSerif.weight || "Default");
+    favSansWeightPlaceholder.textContent = config.favSans.weight === "" || config.favSans.weight === "Default" ? "Default" : (config.favSans.weight || "Default");
+    favSerif2WeightPlaceholder.textContent = config.favSerif2.weight === "" || config.favSerif2.weight === "Default" ? "Default" : (config.favSerif2.weight || "Default");
+
+    // Make placeholders unselectable
+    favSerifWeightPlaceholder.disabled = true;
+    favSansWeightPlaceholder.disabled = true;
+    favSerif2WeightPlaceholder.disabled = true;
+
+    // Load variable font axes if they exist
+    if (config.favSerif.var_axes) {
+      setVariableFontAxesValues('fav-serif', config.favSerif.var_axes);
+    }
+    if (config.favSans.var_axes) {
+      setVariableFontAxesValues('fav-sans', config.favSans.var_axes);
+    }
+    if (config.favSerif2.var_axes) {
+      setVariableFontAxesValues('fav-serif-2', config.favSerif2.var_axes);
+    }
+
+    // Load opsz control settings
+    const favSerifOpszControl = document.getElementById('fav_serif_opsz_control');
+    const favSansOpszControl = document.getElementById('fav_sans_opsz_control');
+    const favSerif2OpszControl = document.getElementById('fav_serif_2_opsz_control');
+
+    if (favSerifOpszControl && config.favSerif.opsz_control) {
+      favSerifOpszControl.value = config.favSerif.opsz_control;
+    }
+    if (favSansOpszControl && config.favSans.opsz_control) {
+      favSansOpszControl.value = config.favSans.opsz_control;
+    }
+    if (favSerif2OpszControl && config.favSerif2.opsz_control) {
+      favSerif2OpszControl.value = config.favSerif2.opsz_control;
+    }
+
+    // Trigger variable font controls visibility for current font selections
+    // Use setTimeout to ensure variable font controls are fully initialized
+    setTimeout(() => {
+      if (window.toggleVariableFontControls) {
+        window.toggleVariableFontControls('fav-serif', config.favSerif.font);
+        window.toggleVariableFontControls('fav-sans', config.favSans.font);
+        window.toggleVariableFontControls('fav-serif-2', config.favSerif2.font);
+      }
+      
+      // Re-apply variable font axes values after controls are visible
+      setTimeout(() => {
+        if (config.favSerif.var_axes) {
+          setVariableFontAxesValues('fav-serif', config.favSerif.var_axes);
+        }
+        if (config.favSans.var_axes) {
+          setVariableFontAxesValues('fav-sans', config.favSans.var_axes);
+        }
+        if (config.favSerif2.var_axes) {
+          setVariableFontAxesValues('fav-serif-2', config.favSerif2.var_axes);
+        }
+      }, 100);
+    }, 200);
 
     console.log("Favorite fonts config loaded:", config);
   } catch (e) {
@@ -897,17 +1060,23 @@ saveFavConfigBtn.addEventListener("click", () => __awaiter(this, void 0, void 0,
       favSerif: {
         font: favSerifFontSelect.value || "Merriweather",
         size: favSerifSizeSelect.value || "16",
-        weight: favSerifWeightSelect.value || ""
+        weight: favSerifWeightSelect.value || "",
+        var_axes: getVariableFontAxesValues('fav-serif'),
+        opsz_control: document.getElementById('fav_serif_opsz_control')?.value || 'Default'
       },
       favSans: {
         font: favSansFontSelect.value || "Rubik",
         size: favSansSizeSelect.value || "17",
-        weight: favSansWeightSelect.value || ""
+        weight: favSansWeightSelect.value || "",
+        var_axes: getVariableFontAxesValues('fav-sans'),
+        opsz_control: document.getElementById('fav_sans_opsz_control')?.value || 'Default'
       },
-      favSerifToSans: {
-        font: favSerifToSansFontSelect.value || "Merriweather",
-        size: favSerifToSansSizeSelect.value || "16",
-        weight: favSerifToSansWeightSelect.value || ""
+      favSerif2: {
+        font: favSerif2FontSelect.value || "Merriweather",
+        size: favSerif2SizeSelect.value || "16",
+        weight: favSerif2WeightSelect.value || "",
+        var_axes: getVariableFontAxesValues('fav-serif-2'),
+        opsz_control: document.getElementById('fav_serif_2_opsz_control')?.value || 'Default'
       }
     };
 
@@ -1002,11 +1171,11 @@ fontSelectionForm.addEventListener("submit", (e) => {
           serif_color: serifColorValue.length ? serifColorValue : "Default",
           sans_serif_color: sansSerifColorValue.length ? sansSerifColorValue : "Default",
           monospace_color: monospaceColorValue.length ? monospaceColorValue : "Default",
-          // Variable font axes
-          serif_var_axes: getVariableFontAxesValues('serif'),
-          sans_serif_var_axes: getVariableFontAxesValues('sans-serif'),
-          monospace_var_axes: getVariableFontAxesValues('monospace'),
-          // Optical size control settings
+          // Variable font axes (safely get values)
+          serif_var_axes: (() => { try { return (typeof getVariableFontAxesValues === 'function') ? getVariableFontAxesValues('serif') : {}; } catch(e) { console.warn('Error getting serif axes:', e); return {}; } })(),
+          sans_serif_var_axes: (() => { try { return (typeof getVariableFontAxesValues === 'function') ? getVariableFontAxesValues('sans-serif') : {}; } catch(e) { console.warn('Error getting sans-serif axes:', e); return {}; } })(),
+          monospace_var_axes: (() => { try { return (typeof getVariableFontAxesValues === 'function') ? getVariableFontAxesValues('monospace') : {}; } catch(e) { console.warn('Error getting monospace axes:', e); return {}; } })(),
+          // Optical size control settings (safely get values)
           serif_opsz_control: document.getElementById('serif_opsz_control')?.value || 'Default',
           sans_serif_opsz_control: document.getElementById('sans_serif_opsz_control')?.value || 'Default',
           monospace_opsz_control: document.getElementById('monospace_opsz_control')?.value || 'Default'
@@ -1209,47 +1378,49 @@ applyFavSerifBtn.addEventListener("click", () => __awaiter(this, void 0, void 0,
     serif_color: "Default",
     sans_serif_color: "Default",
     monospace_color: "Default",
-    // Variable font axes - reset to defaults for fav serif
-    serif_var_axes: {},
+    // Variable font axes - use favorite serif axes
+    serif_var_axes: config.favSerif.var_axes || {},
     sans_serif_var_axes: {},
     monospace_var_axes: {},
-    // Opsz control - reset to defaults
-    serif_opsz_control: 'Default',
+    // Opsz control - use favorite serif opsz control
+    serif_opsz_control: config.favSerif.opsz_control || 'Default',
     sans_serif_opsz_control: 'Default',
     monospace_opsz_control: 'Default'
   };
 
   try {
-    browser.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => __awaiter(this, void 0, void 0, function* () {
-      // Apply the font
-      browser.tabs.connect(tabs[0].id).postMessage({
-        type: "apply_font",
-        data: fontData,
-      });
+    browser.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) =>
+      __awaiter(this, void 0, void 0, function* () {
+        // Apply the font
+        browser.tabs.connect(tabs[0].id).postMessage({
+          type: "apply_font",
+          data: fontData,
+        });
 
-      // Save to storage
-      const domain = new URL(tabs[0].url).hostname;
-      yield browser.storage.sync.set({
-        [domain]: fontData,
-      });
+        // Save to storage
+        const domain = new URL(tabs[0].url).hostname;
+        yield browser.storage.sync.set({
+          [domain]: fontData,
+        });
 
-      // Update global fonts if global is enabled and site not exempted
-      const exempts_list = yield browser.storage.sync.get(["exempts"]);
-      if (!("exempts" in exempts_list && exempts_list["exempts"].includes(domain))) {
-        const result = yield browser.storage.sync.get(["global"]);
-        if ("global" in result && result["global"]) {
-          yield browser.storage.sync.set({
-            global_fonts: fontData,
-          });
+        // Update global fonts if global is enabled and site not exempted
+        const exempts_list = yield browser.storage.sync.get(["exempts"]);
+        if (!("exempts" in exempts_list && exempts_list["exempts"].includes(domain))) {
+          const result = yield browser.storage.sync.get(["global"]);
+          if ("global" in result && result["global"]) {
+            yield browser.storage.sync.set({
+              global_fonts: fontData,
+            });
+          }
         }
-      }
 
-      // Update UI placeholders
-      updatePlaceholders(fontData);
-      if (!formButtons.contains(restoreButton)) {
-        formButtons.prepend(restoreButton);
-      }
-    }));
+        // Update UI placeholders
+        updatePlaceholders(fontData);
+        if (!formButtons.contains(restoreButton)) {
+          formButtons.prepend(restoreButton);
+        }
+      }),
+    );
 
     // Update button text temporarily
     applyFavSerifBtn.textContent = "✔ Applied";
@@ -1286,18 +1457,19 @@ applyFavSansBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, 
     serif_color: "Default",
     sans_serif_color: "Default",
     monospace_color: "Default",
-    // Variable font axes - reset to defaults for fav sans
+    // Variable font axes - use favorite sans axes
     serif_var_axes: {},
-    sans_serif_var_axes: {},
+    sans_serif_var_axes: config.favSans.var_axes || {},
     monospace_var_axes: {},
-    // Opsz control - reset to defaults
+    // Opsz control - use favorite sans opsz control
     serif_opsz_control: 'Default',
-    sans_serif_opsz_control: 'Default',
+    sans_serif_opsz_control: config.favSans.opsz_control || 'Default',
     monospace_opsz_control: 'Default'
   };
 
   try {
-    browser.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => __awaiter(this, void 0, void 0, function* () {
+    browser.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) =>
+      __awaiter(this, void 0, void 0, function* () {
       // Apply the font
       browser.tabs.connect(tabs[0].id).postMessage({
         type: "apply_font",
@@ -1340,6 +1512,162 @@ applyFavSansBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, 
   }
 }));
 
+// Apply Fav Serif 2 button functionality
+const applySerif2Btn = document.getElementById("apply-serif-2-btn");
+applySerif2Btn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
+  // Get current configuration from storage
+  const result = yield browser.storage.sync.get(['favFontsConfig']);
+  const config = result.favFontsConfig || DEFAULT_FAV_FONTS;
+
+  const fontData = {
+    serif: config.favSerif2.font,
+    serif_weight: config.favSerif2.weight || "Default",
+    serif_size: config.favSerif2.size,
+    sans_serif: "Default",
+    sans_serif_weight: "Default",
+    sans_serif_size: "Default",
+    monospace: "Default",
+    monospace_weight: "Default",
+    monospace_size: "Default",
+    serif_line_height: "Default",
+    sans_serif_line_height: "Default",
+    monospace_line_height: "Default",
+    serif_color: "Default",
+    sans_serif_color: "Default",
+    monospace_color: "Default",
+    // Variable font axes - use favorite serif 2 axes
+    serif_var_axes: config.favSerif2.var_axes || {},
+    sans_serif_var_axes: {},
+    monospace_var_axes: {},
+    // Opsz control - use favorite serif 2 opsz control
+    serif_opsz_control: config.favSerif2.opsz_control || 'Default',
+    sans_serif_opsz_control: 'Default',
+    monospace_opsz_control: 'Default'
+  };
+
+  try {
+    browser.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) =>
+      __awaiter(this, void 0, void 0, function* () {
+      // Apply the font
+      browser.tabs.connect(tabs[0].id).postMessage({
+        type: "apply_font",
+        data: fontData,
+      });
+
+      // Save to storage
+      const domain = new URL(tabs[0].url).hostname;
+      yield browser.storage.sync.set({
+        [domain]: fontData,
+      });
+
+      // Update global fonts if global is enabled and site not exempted
+      const exempts_list = yield browser.storage.sync.get(["exempts"]);
+      if (!("exempts" in exempts_list && exempts_list["exempts"].includes(domain))) {
+        const result = yield browser.storage.sync.get(["global"]);
+        if ("global" in result && result["global"]) {
+          yield browser.storage.sync.set({
+            global_fonts: fontData,
+          });
+        }
+      }
+
+      // Update UI placeholders
+      updatePlaceholders(fontData);
+      if (!formButtons.contains(restoreButton)) {
+        formButtons.prepend(restoreButton);
+      }
+    }));
+
+    // Update button text temporarily
+    applySerif2Btn.textContent = "✔ Applied";
+    setTimeout(() => {
+      applySerif2Btn.textContent = "Fav Serif 2";
+    }, 1500);
+
+  } catch (e) {
+    console.error("Error applying Fav Serif 2 font.");
+    console.error(e);
+  }
+}));
+
+// Apply Fav Serif 2 to Sans button functionality
+const applySerif2ToSansBtn = document.getElementById("apply-serif-2-to-sans-btn");
+applySerif2ToSansBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
+  // Get current configuration from storage
+  const result = yield browser.storage.sync.get(['favFontsConfig']);
+  const config = result.favFontsConfig || DEFAULT_FAV_FONTS;
+
+  const fontData = {
+    serif: "Default",
+    serif_weight: "Default",
+    serif_size: "Default",
+    sans_serif: config.favSerif2.font,
+    sans_serif_weight: config.favSerif2.weight || "Default",
+    sans_serif_size: config.favSerif2.size,
+    monospace: "Default",
+    monospace_weight: "Default",
+    monospace_size: "Default",
+    serif_line_height: "Default",
+    sans_serif_line_height: "Default",
+    monospace_line_height: "Default",
+    serif_color: "Default",
+    sans_serif_color: "Default",
+    monospace_color: "Default",
+    // Variable font axes - use favorite serif 2 axes for sans-serif
+    serif_var_axes: {},
+    sans_serif_var_axes: config.favSerif2.var_axes || {},
+    monospace_var_axes: {},
+    // Opsz control - use favorite serif 2 opsz control for sans-serif
+    serif_opsz_control: 'Default',
+    sans_serif_opsz_control: config.favSerif2.opsz_control || 'Default',
+    monospace_opsz_control: 'Default'
+  };
+
+  try {
+    browser.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) =>
+      __awaiter(this, void 0, void 0, function* () {
+      // Apply the font
+      browser.tabs.connect(tabs[0].id).postMessage({
+        type: "apply_font",
+        data: fontData,
+      });
+
+      // Save to storage
+      const domain = new URL(tabs[0].url).hostname;
+      yield browser.storage.sync.set({
+        [domain]: fontData,
+      });
+
+      // Update global fonts if global is enabled and site not exempted
+      const exempts_list = yield browser.storage.sync.get(["exempts"]);
+      if (!("exempts" in exempts_list && exempts_list["exempts"].includes(domain))) {
+        const result = yield browser.storage.sync.get(["global"]);
+        if ("global" in result && result["global"]) {
+          yield browser.storage.sync.set({
+            global_fonts: fontData,
+          });
+        }
+      }
+
+      // Update UI placeholders
+      updatePlaceholders(fontData);
+      if (!formButtons.contains(restoreButton)) {
+        formButtons.prepend(restoreButton);
+      }
+    }));
+
+    // Update button text temporarily
+    applySerif2ToSansBtn.textContent = "✔ Applied";
+    setTimeout(() => {
+      applySerif2ToSansBtn.textContent = "Fav Serif 2 to Sans";
+    }, 1500);
+
+  } catch (e) {
+    console.error("Error applying Fav Serif 2 to Sans font.");
+    console.error(e);
+  }
+}));
+
 // Apply Fav Serif to Sans button functionality
 const applySerifToSansBtn = document.getElementById("apply-serif-to-sans-btn");
 applySerifToSansBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
@@ -1351,9 +1679,9 @@ applySerifToSansBtn.addEventListener("click", () => __awaiter(this, void 0, void
     serif: "Default",
     serif_weight: "Default",
     serif_size: "Default",
-    sans_serif: config.favSerifToSans.font,
-    sans_serif_weight: config.favSerifToSans.weight || "Default",
-    sans_serif_size: config.favSerifToSans.size,
+    sans_serif: config.favSerif.font,
+    sans_serif_weight: config.favSerif.weight || "Default",
+    sans_serif_size: config.favSerif.size,
     monospace: "Default",
     monospace_weight: "Default",
     monospace_size: "Default",
@@ -1363,18 +1691,19 @@ applySerifToSansBtn.addEventListener("click", () => __awaiter(this, void 0, void
     serif_color: "Default",
     sans_serif_color: "Default",
     monospace_color: "Default",
-    // Variable font axes - reset to defaults for fav serif-to-sans
+    // Variable font axes - use favorite serif axes for sans-serif
     serif_var_axes: {},
-    sans_serif_var_axes: {},
+    sans_serif_var_axes: config.favSerif.var_axes || {},
     monospace_var_axes: {},
-    // Opsz control - reset to defaults
+    // Opsz control - use favorite serif opsz control for sans-serif
     serif_opsz_control: 'Default',
-    sans_serif_opsz_control: 'Default',
+    sans_serif_opsz_control: config.favSerif.opsz_control || 'Default',
     monospace_opsz_control: 'Default'
   };
 
   try {
-    browser.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => __awaiter(this, void 0, void 0, function* () {
+    browser.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) =>
+      __awaiter(this, void 0, void 0, function* () {
       // Apply the font
       browser.tabs.connect(tabs[0].id).postMessage({
         type: "apply_font",
@@ -1412,10 +1741,114 @@ applySerifToSansBtn.addEventListener("click", () => __awaiter(this, void 0, void
     }, 1500);
 
   } catch (e) {
-    console.error("Error applying serif to sans-serif font.");
+    console.error("Error applying Fav Serif to Sans font.");
     console.error(e);
   }
 }));
+
+// Reset Domain Settings button functionality  
+const initializeResetDomainButton = () => {
+  console.log("Setting up reset domain button...");
+  const resetDomainSettingsBtn = document.getElementById("reset-domain-settings-btn");
+  console.log("Reset domain button element:", resetDomainSettingsBtn);
+
+  if (resetDomainSettingsBtn) {
+  console.log("Adding click event listener to reset domain button...");
+  resetDomainSettingsBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
+    console.log("RESET DOMAIN BUTTON CLICKED!");
+    
+    // Immediate visual feedback to show button was clicked
+    resetDomainSettingsBtn.textContent = "Processing...";
+    resetDomainSettingsBtn.style.backgroundColor = "#f59e0b";
+    resetDomainSettingsBtn.style.borderColor = "#f59e0b";
+    
+    try {
+      console.log("Reset Domain: Starting reset process...");
+      
+      // Get current domain
+      const tabs = yield browser.tabs.query({ active: true, currentWindow: true });
+      console.log("Reset Domain: Got tabs:", tabs.length);
+      
+      if (tabs.length === 0) {
+        throw new Error("No active tab found");
+      }
+      
+      const domain = new URL(tabs[0].url).hostname;
+      console.log("Reset Domain: Domain:", domain);
+      
+      // Remove domain-specific settings from storage
+      console.log("Reset Domain: Removing storage for domain...");
+      yield browser.storage.sync.remove([domain]);
+      console.log("Reset Domain: Storage removed successfully");
+      
+      // Clear UI placeholders to show defaults
+      const defaultFontData = {
+        serif: "Default",
+        serif_weight: "Default",
+        serif_size: "Default",
+        sans_serif: "Default",
+        sans_serif_weight: "Default",
+        sans_serif_size: "Default",
+        monospace: "Default",
+        monospace_weight: "Default",
+        monospace_size: "Default",
+        serif_line_height: "Default",
+        sans_serif_line_height: "Default",
+        monospace_line_height: "Default",
+        serif_color: "Default",
+        sans_serif_color: "Default",
+        monospace_color: "Default",
+        serif_var_axes: {},
+        sans_serif_var_axes: {},
+        monospace_var_axes: {},
+        serif_opsz_control: 'Default',
+        sans_serif_opsz_control: 'Default',
+        monospace_opsz_control: 'Default'
+      };
+      
+      updatePlaceholders(defaultFontData);
+      
+      // Remove restore button if it exists
+      if (formButtons.contains(restoreButton)) {
+        formButtons.removeChild(restoreButton);
+      }
+      
+      // Send reset message to content script
+      console.log("Reset Domain: Sending reset message to content script...");
+      browser.tabs.connect(tabs[0].id).postMessage({
+        type: "apply_font",
+        data: defaultFontData,
+      });
+      console.log("Reset Domain: Message sent successfully");
+      
+      // Update button text temporarily with enhanced visibility
+      console.log("Reset Domain: Updating button to success state...");
+      resetDomainSettingsBtn.textContent = "✔ Reset Complete";
+      resetDomainSettingsBtn.style.backgroundColor = "#10b981";
+      resetDomainSettingsBtn.style.borderColor = "#10b981";
+      setTimeout(() => {
+        resetDomainSettingsBtn.textContent = "Reset Domain";
+        resetDomainSettingsBtn.style.backgroundColor = "#ff6b35";
+        resetDomainSettingsBtn.style.borderColor = "#ff6b35";
+      }, 1500);
+      
+      console.log(`Fontonic: Domain settings reset for ${domain}`);
+    } catch (e) {
+      console.error("Error resetting domain settings:", e);
+      resetDomainSettingsBtn.textContent = "❌ Error";
+      resetDomainSettingsBtn.style.backgroundColor = "#dc2626";
+      resetDomainSettingsBtn.style.borderColor = "#dc2626";
+      setTimeout(() => {
+        resetDomainSettingsBtn.textContent = "Reset Domain";
+        resetDomainSettingsBtn.style.backgroundColor = "#ff6b35";
+        resetDomainSettingsBtn.style.borderColor = "#ff6b35";
+      }, 1500);
+    }
+  }));
+  } else {
+    console.error("Reset domain button not found!");
+  }
+};
 
 // Reset Timing Test button functionality
 const resetTimingTestBtn = document.getElementById("reset-timing-test-btn");
@@ -1510,7 +1943,7 @@ const initializeVariableFontControls = () => {
     const axesContainer = document.getElementById(`${fontType}-var-axes`);
     const isVariableFont = variableFonts[selectedFont];
     const hasOpszAxis = isVariableFont && variableFonts[selectedFont].includes('opsz');
-    
+
     if (axesContainer) {
       if (isVariableFont) {
         axesContainer.style.display = 'block';
@@ -1520,45 +1953,54 @@ const initializeVariableFontControls = () => {
         axesContainer.style.display = 'none';
       }
     }
-    
+
     // Show/hide opsz control dropdown
     const opszControl = document.getElementById(`${fontType.replace('-', '_')}_opsz_control`);
     if (opszControl) {
       if (hasOpszAxis) {
-        opszControl.style.display = 'block';
+        opszControl.style.visibility = 'visible';
       } else {
-        opszControl.style.display = 'none';
+        opszControl.style.visibility = 'hidden';
       }
     }
-    
-    // Update weight dropdown for variable fonts
+
+    // Update weight dropdown for variable fonts (all font types)
     updateWeightDropdown(fontType, isVariableFont);
   };
+
+  // Make toggleVariableFontControls globally available
+  window.toggleVariableFontControls = toggleVariableFontControls;
 
   // Function to update weight dropdown based on font type
   const updateWeightDropdown = (fontType, isVariableFont) => {
     let weightSelect;
-    
+
     if (fontType === 'serif') {
       weightSelect = serifWeightSelect;
     } else if (fontType === 'sans-serif') {
       weightSelect = sansSerifWeightSelect;
     } else if (fontType === 'monospace') {
       weightSelect = monospaceWeightSelect;
+    } else if (fontType === 'fav-serif') {
+      weightSelect = favSerifWeightSelect;
+    } else if (fontType === 'fav-sans') {
+      weightSelect = favSansWeightSelect;
+    } else if (fontType === 'fav-serif-2') {
+      weightSelect = favSerif2WeightSelect;
     }
-    
+
     if (weightSelect) {
       // Store current value
       const currentValue = weightSelect.value;
-      
+
       // Repopulate with or without slider option
       populateWeights(weightSelect, isVariableFont);
-      
+
       // Restore previous value if it still exists
       if (currentValue && Array.from(weightSelect.options).some(opt => opt.value === currentValue)) {
         weightSelect.value = currentValue;
       }
-      
+
       // Add event listener for "Use Slider" option
       if (isVariableFont) {
         weightSelect.addEventListener('change', (e) => {
@@ -1602,7 +2044,20 @@ const initializeVariableFontControls = () => {
 
   fontSelects.forEach(({ select, type }) => {
     select.addEventListener('change', (e) => {
-      toggleVariableFontControls(type, e.target.value);
+      window.toggleVariableFontControls(type, e.target.value);
+    });
+  });
+
+  // Add event listeners to favorite font selects
+  const favFontSelects = [
+    { select: favSerifFontSelect, type: 'fav-serif' },
+    { select: favSansFontSelect, type: 'fav-sans' },
+    { select: favSerif2FontSelect, type: 'fav-serif-2' }
+  ];
+
+  favFontSelects.forEach(({ select, type }) => {
+    select.addEventListener('change', (e) => {
+      window.toggleVariableFontControls(type, e.target.value);
     });
   });
 
@@ -1610,7 +2065,10 @@ const initializeVariableFontControls = () => {
   const opszControls = [
     { select: document.getElementById('serif_opsz_control'), type: 'serif' },
     { select: document.getElementById('sans_serif_opsz_control'), type: 'sans-serif' },
-    { select: document.getElementById('monospace_opsz_control'), type: 'monospace' }
+    { select: document.getElementById('monospace_opsz_control'), type: 'monospace' },
+    { select: document.getElementById('fav_serif_opsz_control'), type: 'fav-serif' },
+    { select: document.getElementById('fav_sans_opsz_control'), type: 'fav-sans' },
+    { select: document.getElementById('fav_serif_2_opsz_control'), type: 'fav-serif-2' }
   ];
 
   opszControls.forEach(({ select, type }) => {
@@ -1624,11 +2082,11 @@ const initializeVariableFontControls = () => {
   // Add event listeners to all sliders for real-time value updates
   const addSliderEventListeners = (fontType) => {
     const allAxes = ['wght', 'wdth', 'opsz', 'GRAD', 'slnt', 'XTRA', 'XOPQ', 'YOPQ', 'YTLC', 'YTUC', 'YTAS', 'YTDE', 'YTFI'];
-    
+
     allAxes.forEach(axis => {
       const slider = document.getElementById(`${fontType}-${axis}-slider`);
       const valueDisplay = document.getElementById(`${fontType}-${axis}-value`);
-      
+
       if (slider && valueDisplay) {
         slider.addEventListener('input', (e) => {
           valueDisplay.textContent = e.target.value;
@@ -1664,7 +2122,7 @@ const initializeVariableFontControls = () => {
             return;
           }
         }
-        
+
         const value = slider.value;
         // Only include non-default values
         const defaultValues = {
@@ -1672,7 +2130,7 @@ const initializeVariableFontControls = () => {
           'XTRA': 468, 'XOPQ': 96, 'YOPQ': 79, 'YTLC': 514, 'YTUC': 712,
           'YTAS': 750, 'YTDE': -203, 'YTFI': 738
         };
-        
+
         if (value != defaultValues[axis]) {
           settings.push(`"${axis}" ${value}`);
         }
@@ -1686,11 +2144,14 @@ const initializeVariableFontControls = () => {
   addSliderEventListeners('serif');
   addSliderEventListeners('sans-serif');
   addSliderEventListeners('monospace');
+  addSliderEventListeners('fav-serif');
+  addSliderEventListeners('fav-sans');
+  addSliderEventListeners('fav-serif-2');
 
   // Function to handle opsz control changes
   const handleOpszControlChange = (fontType, value) => {
     const opszSlider = document.getElementById(`${fontType}-opsz-slider`);
-    
+
     if (opszSlider) {
       if (value === 'Default') {
         // Hide the opsz slider when using automatic
@@ -1713,31 +2174,35 @@ const initializeVariableFontControls = () => {
   // Store the function globally for use in other parts of the code
   window.generateFontVariationSettings = generateFontVariationSettings;
   window.handleOpszControlChange = handleOpszControlChange;
+  window.toggleVariableFontControls = toggleVariableFontControls;
 };
+
+// Store the initialization function globally so it can be called from the data loading section
+window.initializeVariableFontControls = initializeVariableFontControls;
 
 // Function to get current variable font axes values for saving
 const getVariableFontAxesValues = (fontType) => {
   const axes = {};
   const allAxes = ['wght', 'wdth', 'opsz', 'GRAD', 'slnt', 'XTRA', 'XOPQ', 'YOPQ', 'YTLC', 'YTUC', 'YTAS', 'YTDE', 'YTFI'];
-  
+
   allAxes.forEach(axis => {
     const slider = document.getElementById(`${fontType}-${axis}-slider`);
     if (slider) {
       axes[axis] = slider.value;
     }
   });
-  
+
   return axes;
 };
 
 // Function to set variable font axes values when loading saved settings
 const setVariableFontAxesValues = (fontType, axesData) => {
   if (!axesData) return;
-  
+
   Object.keys(axesData).forEach(axis => {
     const slider = document.getElementById(`${fontType}-${axis}-slider`);
     const valueDisplay = document.getElementById(`${fontType}-${axis}-value`);
-    
+
     if (slider && axesData[axis]) {
       slider.value = axesData[axis];
       if (valueDisplay) {

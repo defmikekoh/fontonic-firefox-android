@@ -31,6 +31,40 @@ const DEFAULT_TRIGGERS = {
   monospaceTriggers: ["monospace", "courier", "courier new"]
 };
 
+// Helper function to generate font-variation-settings CSS
+const generateFontVariationSettings = (fontType, fontData) => {
+  if (!fontData) return '';
+  
+  const varAxes = fontData[`${fontType}_var_axes`];
+  const opszControl = fontData[`${fontType}_opsz_control`];
+  
+  if (!varAxes || Object.keys(varAxes).length === 0) return '';
+  
+  const settings = [];
+  
+  Object.keys(varAxes).forEach(axis => {
+    const value = varAxes[axis];
+    
+    // Skip opsz if it's set to Default (automatic)
+    if (axis === 'opsz' && opszControl === 'Default') {
+      return;
+    }
+    
+    // Only include non-default values
+    const defaultValues = {
+      'wght': 400, 'wdth': 100, 'opsz': 14, 'GRAD': 0, 'slnt': 0,
+      'XTRA': 468, 'XOPQ': 96, 'YOPQ': 79, 'YTLC': 514, 'YTUC': 712,
+      'YTAS': 750, 'YTDE': -203, 'YTFI': 738
+    };
+    
+    if (value != defaultValues[axis]) {
+      settings.push(`"${axis}" ${value}`);
+    }
+  });
+  
+  return settings.length > 0 ? settings.join(', ') : '';
+};
+
 // Load triggers from storage
 const loadTriggers = async () => {
   try {
@@ -60,6 +94,7 @@ const changeFontFamily = (
   serifColor,
   sansSerifColor,
   monospaceColor,
+  fontData = null
 ) => {
   if (node.nodeType === 1) {
     if (
@@ -121,12 +156,23 @@ const changeFontFamily = (
         serifColor,
         sansSerifColor,
         monospaceColor,
+        fontData
       );
     }
 
     if (fontType === "sans-serif") {
       if (sansSerif !== "Default") {
         node.style.fontFamily = `'${sansSerif}'`;
+        
+        // Apply variable font axes if available
+        try {
+          const variationSettings = generateFontVariationSettings('sans_serif', fontData);
+          if (variationSettings) {
+            node.style.fontVariationSettings = variationSettings;
+          }
+        } catch (e) {
+          console.warn('Error applying sans-serif variable font settings:', e);
+        }
       }
       if (sansSerifWeight !== "Default") {
         node.style.fontWeight = sansSerifWeight;
@@ -147,6 +193,16 @@ const changeFontFamily = (
     } else if (fontType === "serif") {
       if (serif !== "Default") {
         node.style.fontFamily = `'${serif}'`;
+        
+        // Apply variable font axes if available
+        try {
+          const variationSettings = generateFontVariationSettings('serif', fontData);
+          if (variationSettings) {
+            node.style.fontVariationSettings = variationSettings;
+          }
+        } catch (e) {
+          console.warn('Error applying serif variable font settings:', e);
+        }
       }
       if (serifWeight !== "Default") {
         node.style.fontWeight = serifWeight;
@@ -167,6 +223,16 @@ const changeFontFamily = (
     } else if (fontType === "monospace") {
       if (monospace !== "Default") {
         node.style.fontFamily = `'${monospace}'`;
+        
+        // Apply variable font axes if available
+        try {
+          const variationSettings = generateFontVariationSettings('monospace', fontData);
+          if (variationSettings) {
+            node.style.fontVariationSettings = variationSettings;
+          }
+        } catch (e) {
+          console.warn('Error applying monospace variable font settings:', e);
+        }
       }
       if (monospaceWeight !== "Default") {
         node.style.fontWeight = monospaceWeight;
@@ -280,6 +346,7 @@ const applyFontsWithRetry = (fontData) => {
     fontData.serif_color || "Default",
     fontData.sans_serif_color || "Default",
     fontData.monospace_color || "Default",
+    fontData
   );
 };
 
@@ -463,6 +530,14 @@ browser.runtime.sendMessage(message, undefined, (response) => {
       serif_color: response.data.serif_color || "Default",
       sans_serif_color: response.data.sans_serif_color || "Default",
       monospace_color: response.data.monospace_color || "Default",
+      // Variable font axes
+      serif_var_axes: response.data.serif_var_axes || {},
+      sans_serif_var_axes: response.data.sans_serif_var_axes || {},
+      monospace_var_axes: response.data.monospace_var_axes || {},
+      // Optical size control settings
+      serif_opsz_control: response.data.serif_opsz_control || 'Default',
+      sans_serif_opsz_control: response.data.sans_serif_opsz_control || 'Default',
+      monospace_opsz_control: response.data.monospace_opsz_control || 'Default'
     };
 
     // Apply fonts with progressive retries, mutation observer, and DOM ready listeners
@@ -479,7 +554,7 @@ browser.runtime.onConnect.addListener((port) => {
   port.onMessage.addListener((message) => {
     {
       if (message.type === "apply_font") {
-        console.log("Request received from popup for applying fonts");
+        console.log("Request received from popup for applying fonts", message.data);
 
         const fontData = {
           serif: message.data.serif,
@@ -497,6 +572,14 @@ browser.runtime.onConnect.addListener((port) => {
           serif_color: message.data.serif_color || "Default",
           sans_serif_color: message.data.sans_serif_color || "Default",
           monospace_color: message.data.monospace_color || "Default",
+          // Variable font axes
+          serif_var_axes: message.data.serif_var_axes || {},
+          sans_serif_var_axes: message.data.sans_serif_var_axes || {},
+          monospace_var_axes: message.data.monospace_var_axes || {},
+          // Optical size control settings
+          serif_opsz_control: message.data.serif_opsz_control || 'Default',
+          sans_serif_opsz_control: message.data.sans_serif_opsz_control || 'Default',
+          monospace_opsz_control: message.data.monospace_opsz_control || 'Default'
         };
 
         // Use progressive application for popup-triggered changes too
