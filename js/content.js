@@ -175,7 +175,16 @@ const changeFontFamily = (
         }
       }
       if (sansSerifWeight !== "Default") {
-        node.style.fontWeight = sansSerifWeight;
+        // Preserve bold elements - only apply weight to non-bold elements
+        const currentWeight = computedStyle.getPropertyValue("font-weight");
+        const isBold = currentWeight >= 600 || 
+                      node.matches('strong, b, [style*="font-weight: bold"], [style*="font-weight: 700"], [style*="font-weight: 800"], [style*="font-weight: 900"], [style*="font-weight:bold"], [style*="font-weight:700"], [style*="font-weight:800"], [style*="font-weight:900"]') ||
+                      node.tagName === 'STRONG' || 
+                      node.tagName === 'B';
+        
+        if (!isBold) {
+          node.style.fontWeight = sansSerifWeight;
+        }
       }
       if (sansSerifSize !== "Default" && sansSerifSize) {
         node.style.setProperty("font-size", `${sansSerifSize}px`, "important");
@@ -205,7 +214,16 @@ const changeFontFamily = (
         }
       }
       if (serifWeight !== "Default") {
-        node.style.fontWeight = serifWeight;
+        // Preserve bold elements - only apply weight to non-bold elements
+        const currentWeight = computedStyle.getPropertyValue("font-weight");
+        const isBold = currentWeight >= 600 || 
+                      node.matches('strong, b, [style*="font-weight: bold"], [style*="font-weight: 700"], [style*="font-weight: 800"], [style*="font-weight: 900"], [style*="font-weight:bold"], [style*="font-weight:700"], [style*="font-weight:800"], [style*="font-weight:900"]') ||
+                      node.tagName === 'STRONG' || 
+                      node.tagName === 'B';
+        
+        if (!isBold) {
+          node.style.fontWeight = serifWeight;
+        }
       }
       if (serifSize !== "Default" && serifSize) {
         node.style.setProperty("font-size", `${serifSize}px`, "important");
@@ -235,7 +253,16 @@ const changeFontFamily = (
         }
       }
       if (monospaceWeight !== "Default") {
-        node.style.fontWeight = monospaceWeight;
+        // Preserve bold elements - only apply weight to non-bold elements
+        const currentWeight = computedStyle.getPropertyValue("font-weight");
+        const isBold = currentWeight >= 600 || 
+                      node.matches('strong, b, [style*="font-weight: bold"], [style*="font-weight: 700"], [style*="font-weight: 800"], [style*="font-weight: 900"], [style*="font-weight:bold"], [style*="font-weight:700"], [style*="font-weight:800"], [style*="font-weight:900"]') ||
+                      node.tagName === 'STRONG' || 
+                      node.tagName === 'B';
+        
+        if (!isBold) {
+          node.style.fontWeight = monospaceWeight;
+        }
       }
       if (monospaceSize !== "Default" && monospaceSize) {
         node.style.setProperty("font-size", `${monospaceSize}px`, "important");
