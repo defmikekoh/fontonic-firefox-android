@@ -49,5 +49,8 @@
                 "./fonts.css"
             ]
         }
+    ],
+    "web_accessible_resources": [
+        "fonts/*.woff2"
     ]
 }

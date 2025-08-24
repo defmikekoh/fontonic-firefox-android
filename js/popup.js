@@ -234,6 +234,143 @@ const favSerif2FontSelect = document.getElementById("fav-serif-2-font");
 const favSerif2SizeSelect = document.getElementById("fav-serif-2-size");
 const favSerif2WeightSelect = document.getElementById("fav-serif-2-weight");
 const saveFavConfigBtn = document.getElementById("save-fav-config-btn");
+
+// Font size validation function
+function validateFontSize(input) {
+    const value = input.value.trim();
+    if (value === '') return true; // Empty means default
+    const num = parseFloat(value);
+    if (isNaN(num) || num <= 0) {
+        input.style.borderColor = '#ff4444';
+        return false;
+    } else {
+        input.style.borderColor = '';
+        return true;
+    }
+}
+
+// Add validation to all font size inputs
+const fontSizeInputs = [
+    favSerifSizeSelect,
+    favSansSizeSelect,
+    favSerif2SizeSelect,
+    document.getElementById("serif_size"),
+    document.getElementById("sans_serif_size"),
+    document.getElementById("monospace_size"),
+    document.getElementById("global_serif_size"),
+    document.getElementById("global_sans_serif_size"),
+    document.getElementById("global_monospace_size")
+];
+
+// Font size preset values
+const fontSizePresets = ['16', '16.25', '16.5', '16.75', '17', '17.25', '17.5', '17.75', '18', '18.5', '19', '19.5', '20', '20.5', '21', '21.5', '22'];
+
+// Create custom dropdown functionality for font size inputs
+function createFontSizeDropdown(input) {
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'relative';
+    wrapper.style.display = 'inline-block';
+    wrapper.style.width = '100%';
+    
+    // Insert wrapper before input and move input inside
+    input.parentNode.insertBefore(wrapper, input);
+    wrapper.appendChild(input);
+    
+    // Create dropdown button overlay
+    const dropdownBtn = document.createElement('div');
+    dropdownBtn.style.position = 'absolute';
+    dropdownBtn.style.right = '8px';
+    dropdownBtn.style.top = '50%';
+    dropdownBtn.style.transform = 'translateY(-50%)';
+    dropdownBtn.style.width = '24px';
+    dropdownBtn.style.height = '24px';
+    dropdownBtn.style.cursor = 'pointer';
+    dropdownBtn.style.zIndex = '10';
+    wrapper.appendChild(dropdownBtn);
+    
+    // Create dropdown menu
+    const dropdown = document.createElement('div');
+    dropdown.style.position = 'absolute';
+    dropdown.style.top = '100%';
+    dropdown.style.left = '0';
+    dropdown.style.right = '0';
+    dropdown.style.backgroundColor = '#374151';
+    dropdown.style.border = '1px solid #4b5563';
+    dropdown.style.borderRadius = '4px';
+    dropdown.style.maxHeight = '200px';
+    dropdown.style.overflowY = 'auto';
+    dropdown.style.zIndex = '1000';
+    dropdown.style.display = 'none';
+    dropdown.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+    dropdown.style.color = '#e5e7eb';
+    
+    // Add preset options
+    fontSizePresets.forEach(preset => {
+        const option = document.createElement('div');
+        option.textContent = preset;
+        option.style.padding = '8px 12px';
+        option.style.cursor = 'pointer';
+        option.style.fontSize = '16px';
+        
+        option.addEventListener('mouseenter', () => {
+            option.style.backgroundColor = '#4b5563';
+        });
+        option.addEventListener('mouseleave', () => {
+            option.style.backgroundColor = 'transparent';
+        });
+        option.addEventListener('click', () => {
+            input.value = preset;
+            dropdown.style.display = 'none';
+            validateFontSize(input);
+        });
+        
+        dropdown.appendChild(option);
+    });
+    
+    wrapper.appendChild(dropdown);
+    
+    // Toggle dropdown on button click
+    dropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isVisible = dropdown.style.display === 'block';
+        
+        // Hide all other dropdowns
+        document.querySelectorAll('[data-font-size-dropdown]').forEach(dd => {
+            dd.style.display = 'none';
+        });
+        
+        dropdown.style.display = isVisible ? 'none' : 'block';
+    });
+    
+    // Mark dropdown for cleanup
+    dropdown.setAttribute('data-font-size-dropdown', 'true');
+    
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', () => {
+        dropdown.style.display = 'none';
+    });
+    
+    // Prevent dropdown from closing when clicking inside
+    dropdown.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+}
+
+fontSizeInputs.forEach(input => {
+    if (input) {
+        input.addEventListener('blur', () => validateFontSize(input));
+        input.addEventListener('input', () => {
+            // Remove error styling while typing
+            if (input.style.borderColor === '#ff4444') {
+                input.style.borderColor = '';
+            }
+        });
+        
+        // Create custom dropdown for this input
+        createFontSizeDropdown(input);
+    }
+});
+
 // Check buttons
 const globalCheck = document.getElementById("global_check");
 const overrideCheck = document.getElementById("override_check");
@@ -768,13 +905,16 @@ const populateFonts = (element) => {
   [
     // high frequency
     "Merriweather",
+    "MerriweatherL",
     "BBC Reith Serif",
     "Rubik",
+    "RubikL",
     "ABC Ginto Normal Unlicensed Trial",
     "Roboto Serif",
     "Roboto Flex",
     // high frequency serif
     "Merriweather",
+    "MerriweatherL",
     "BBC Reith Serif",
     "TiemposText",
     "TiemposText-Regular",
@@ -799,6 +939,7 @@ const populateFonts = (element) => {
     "Manrope",
     "Neue Plak Text",
     "Rubik",
+    "RubikL",
     "ABC Ginto Normal Unlicensed Trial",
     "Merriweather Sans",
     "Roboto",

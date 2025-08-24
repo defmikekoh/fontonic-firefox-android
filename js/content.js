@@ -31,6 +31,88 @@ const DEFAULT_TRIGGERS = {
   monospaceTriggers: ["monospace", "courier", "courier new"]
 };
 
+// Font cache for CSP-resistant font loading using FontFace API
+let loadedFonts = new Set();
+
+// Font URLs for direct download
+const FONT_FILES = {
+  'MerriweatherL': {
+    file: 'merriweather.woff2',
+    weight: '300 900'
+  },
+  'RubikL': {
+    file: 'rubik.woff2',
+    weight: '300 900'
+  }
+};
+
+// Load font using FontFace API (memory efficient, CSP-safe)
+const loadFontCSPSafe = async (fontName) => {
+  const fontKey = fontName;
+  
+  if (loadedFonts.has(fontKey)) {
+    console.log(`Fontonic: ${fontName} already loaded, skipping`);
+    return true; // Already loaded
+  }
+
+  // Mark as loading immediately to prevent duplicate calls
+  loadedFonts.add(fontKey);
+
+  if (!FONT_FILES[fontName]) {
+    console.warn(`Fontonic: Font ${fontName} not available for CSP bypass`);
+    loadedFonts.delete(fontKey); // Remove from cache on failure
+    return false;
+  }
+
+  try {
+    console.log(`Fontonic: Loading ${fontName} from extension (CSP-safe)...`);
+    
+    const { file, weight } = FONT_FILES[fontName];
+    
+    // Get extension URL for the font file  
+    const fontUrl = browser.runtime.getURL(`fonts/${file}`);
+    console.log(`Fontonic: Font URL: ${fontUrl}`);
+    
+    // Add timeout to fetch
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
+    // Fetch font data from extension
+    const response = await fetch(fontUrl, { signal: controller.signal });
+    clearTimeout(timeoutId);
+    
+    console.log(`Fontonic: Fetch response status: ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.status}`);
+    }
+    
+    const arrayBuffer = await response.arrayBuffer();
+    console.log(`Fontonic: Font data size: ${arrayBuffer.byteLength} bytes`);
+    
+    // Create FontFace object with variable weight range
+    const fontFace = new FontFace(fontName, arrayBuffer, {
+      weight: weight,
+      display: 'swap'
+    });
+    console.log(`Fontonic: Created FontFace object for ${fontName}`);
+    
+    // Load the font
+    await fontFace.load();
+    console.log(`Fontonic: FontFace.load() completed for ${fontName}`);
+    
+    // Add to document fonts
+    document.fonts.add(fontFace);
+    console.log(`Fontonic: Added ${fontName} to document.fonts`);
+    
+    console.log(`Fontonic: Successfully loaded ${fontName} (${weight}) from extension`);
+    return true;
+  } catch (e) {
+    console.error(`Fontonic: Error loading ${fontName}:`, e);
+    loadedFonts.delete(fontKey); // Remove from cache on failure so it can be retried
+    return false;
+  }
+};
+
 // Helper function to generate font-variation-settings CSS
 const generateFontVariationSettings = (fontType, fontData) => {
   if (!fontData) return '';
@@ -162,6 +244,15 @@ const changeFontFamily = (
 
     if (fontType === "sans-serif") {
       if (sansSerif !== "Default") {
+        // Try CSP-safe font loading first
+        loadFontCSPSafe(sansSerif).then((loaded) => {
+          if (loaded) {
+            console.log(`Fontonic: Applied CSP-safe ${sansSerif} to element`);
+          }
+        }).catch((e) => {
+          console.warn(`Fontonic: CSP-safe loading failed for ${sansSerif}, falling back to normal:`, e);
+        });
+        
         node.style.fontFamily = `'${sansSerif}'`;
         
         // Apply variable font axes if available
@@ -201,6 +292,15 @@ const changeFontFamily = (
       }
     } else if (fontType === "serif") {
       if (serif !== "Default") {
+        // Try CSP-safe font loading first
+        loadFontCSPSafe(serif).then((loaded) => {
+          if (loaded) {
+            console.log(`Fontonic: Applied CSP-safe ${serif} to element`);
+          }
+        }).catch((e) => {
+          console.warn(`Fontonic: CSP-safe loading failed for ${serif}, falling back to normal:`, e);
+        });
+        
         node.style.fontFamily = `'${serif}'`;
         
         // Apply variable font axes if available
@@ -240,6 +340,15 @@ const changeFontFamily = (
       }
     } else if (fontType === "monospace") {
       if (monospace !== "Default") {
+        // Try CSP-safe font loading first
+        loadFontCSPSafe(monospace).then((loaded) => {
+          if (loaded) {
+            console.log(`Fontonic: Applied CSP-safe ${monospace} to element`);
+          }
+        }).catch((e) => {
+          console.warn(`Fontonic: CSP-safe loading failed for ${monospace}, falling back to normal:`, e);
+        });
+        
         node.style.fontFamily = `'${monospace}'`;
         
         // Apply variable font axes if available
