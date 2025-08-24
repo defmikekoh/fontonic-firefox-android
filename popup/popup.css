@@ -12,6 +12,19 @@ input[list="font-size-presets"]:focus {
   outline: 2px solid #3b82f6;
 }
 
+/* Add more internal padding to accommodate arrows and longer text without increasing overall width */
+select.text-4xl.w-full,
+input.text-4xl.w-full {
+  padding-left: 12px;
+  padding-right: 48px; /* Extra space for dropdown arrows */
+}
+
+select.text-6xl.w-full,
+input.text-6xl.w-full {
+  padding-left: 16px;
+  padding-right: 52px; /* Extra space for dropdown arrows */
+}
+
 *, ::before, ::after {
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;

@@ -267,6 +267,15 @@ const fontSizePresets = ['16', '16.25', '16.5', '16.75', '17', '17.25', '17.5', 
 
 // Create custom dropdown functionality for font size inputs
 function createFontSizeDropdown(input) {
+    // Check if dropdown already exists for this input
+    if (input.hasAttribute('data-dropdown-initialized')) {
+        console.log('Dropdown already exists for input:', input.id);
+        return;
+    }
+    
+    // Mark as initialized
+    input.setAttribute('data-dropdown-initialized', 'true');
+    
     const wrapper = document.createElement('div');
     wrapper.style.position = 'relative';
     wrapper.style.display = 'inline-block';
@@ -310,7 +319,7 @@ function createFontSizeDropdown(input) {
         option.textContent = preset;
         option.style.padding = '8px 12px';
         option.style.cursor = 'pointer';
-        option.style.fontSize = '16px';
+        option.style.fontSize = '2.25rem';
         
         option.addEventListener('mouseenter', () => {
             option.style.backgroundColor = '#4b5563';
@@ -345,10 +354,14 @@ function createFontSizeDropdown(input) {
     // Mark dropdown for cleanup
     dropdown.setAttribute('data-font-size-dropdown', 'true');
     
-    // Hide dropdown when clicking outside
-    document.addEventListener('click', () => {
+    // Hide dropdown when clicking outside (with cleanup)
+    const outsideClickHandler = () => {
         dropdown.style.display = 'none';
-    });
+    };
+    document.addEventListener('click', outsideClickHandler);
+    
+    // Store handler for potential cleanup
+    dropdown._outsideClickHandler = outsideClickHandler;
     
     // Prevent dropdown from closing when clicking inside
     dropdown.addEventListener('click', (e) => {
@@ -356,20 +369,51 @@ function createFontSizeDropdown(input) {
     });
 }
 
-fontSizeInputs.forEach(input => {
-    if (input) {
-        input.addEventListener('blur', () => validateFontSize(input));
-        input.addEventListener('input', () => {
-            // Remove error styling while typing
-            if (input.style.borderColor === '#ff4444') {
-                input.style.borderColor = '';
-            }
-        });
-        
-        // Create custom dropdown for this input
-        createFontSizeDropdown(input);
-    }
-});
+// Clean up any existing dropdowns
+function cleanupExistingDropdowns() {
+    // Remove all existing dropdown elements
+    document.querySelectorAll('[data-font-size-dropdown]').forEach(dropdown => {
+        // Clean up event listeners
+        if (dropdown._outsideClickHandler) {
+            document.removeEventListener('click', dropdown._outsideClickHandler);
+        }
+        dropdown.remove();
+    });
+    
+    // Reset all input initialization flags
+    document.querySelectorAll('input[data-dropdown-initialized]').forEach(input => {
+        input.removeAttribute('data-dropdown-initialized');
+    });
+}
+
+// Initialize font size inputs when DOM is ready
+function initializeFontSizeInputs() {
+    // Clean up any existing dropdowns first
+    cleanupExistingDropdowns();
+    
+    fontSizeInputs.forEach(input => {
+        if (input) {
+            input.addEventListener('blur', () => validateFontSize(input));
+            input.addEventListener('input', () => {
+                // Remove error styling while typing
+                if (input.style.borderColor === '#ff4444') {
+                    input.style.borderColor = '';
+                }
+            });
+            
+            // Create custom dropdown for this input
+            createFontSizeDropdown(input);
+        }
+    });
+}
+
+// Ensure DOM is fully loaded before initializing
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeFontSizeInputs);
+} else {
+    // DOM is already loaded
+    initializeFontSizeInputs();
+}
 
 // Check buttons
 const globalCheck = document.getElementById("global_check");
@@ -912,6 +956,7 @@ const populateFonts = (element) => {
     "ABC Ginto Normal Unlicensed Trial",
     "Roboto Serif",
     "Roboto Flex",
+    "Roboto FlexL",
     // high frequency serif
     "Merriweather",
     "MerriweatherL",
@@ -940,6 +985,8 @@ const populateFonts = (element) => {
     "Neue Plak Text",
     "Rubik",
     "RubikL",
+    "Roboto Flex",
+    "Roboto FlexL",
     "ABC Ginto Normal Unlicensed Trial",
     "Merriweather Sans",
     "Roboto",
@@ -2090,8 +2137,12 @@ const initializeVariableFontControls = () => {
   // Define which fonts support variable axes
   const variableFonts = {
     'Roboto Flex': ['wght', 'wdth', 'opsz', 'GRAD', 'slnt', 'XTRA', 'XOPQ', 'YOPQ', 'YTLC', 'YTUC', 'YTAS', 'YTDE', 'YTFI'],
+    'Roboto FlexL': ['wght', 'wdth', 'opsz', 'GRAD', 'slnt', 'XTRA', 'XOPQ', 'YOPQ', 'YTLC', 'YTUC', 'YTAS', 'YTDE', 'YTFI'],
     'Roboto Serif': ['wght', 'wdth', 'opsz', 'GRAD'],
-    'Merriweather': ['wght', 'wdth', 'opsz']
+    'Merriweather': ['wght', 'wdth', 'opsz'],
+    'MerriweatherL': ['wght', 'wdth', 'opsz'],
+    'Rubik': ['wght'],
+    'RubikL': ['wght']
   };
 
   // Function to show/hide variable font controls

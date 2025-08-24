@@ -43,6 +43,12 @@ const FONT_FILES = {
   'RubikL': {
     file: 'rubik.woff2',
     weight: '300 900'
+  },
+  'Roboto FlexL': {
+    file: 'robotoflex.woff2',
+    weight: '100 1000',
+    stretch: '25% 151%',
+    style: 'oblique 0deg 10deg'
   }
 };
 
@@ -67,7 +73,7 @@ const loadFontCSPSafe = async (fontName) => {
   try {
     console.log(`Fontonic: Loading ${fontName} from extension (CSP-safe)...`);
     
-    const { file, weight } = FONT_FILES[fontName];
+    const { file, weight, stretch, style } = FONT_FILES[fontName];
     
     // Get extension URL for the font file  
     const fontUrl = browser.runtime.getURL(`fonts/${file}`);
@@ -89,11 +95,17 @@ const loadFontCSPSafe = async (fontName) => {
     const arrayBuffer = await response.arrayBuffer();
     console.log(`Fontonic: Font data size: ${arrayBuffer.byteLength} bytes`);
     
-    // Create FontFace object with variable weight range
-    const fontFace = new FontFace(fontName, arrayBuffer, {
+    // Create FontFace object with variable font properties
+    const fontFaceOptions = {
       weight: weight,
       display: 'swap'
-    });
+    };
+    
+    // Add optional properties if they exist
+    if (stretch) fontFaceOptions.stretch = stretch;
+    if (style) fontFaceOptions.style = style;
+    
+    const fontFace = new FontFace(fontName, arrayBuffer, fontFaceOptions);
     console.log(`Fontonic: Created FontFace object for ${fontName}`);
     
     // Load the font
