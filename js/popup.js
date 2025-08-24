@@ -64,7 +64,7 @@ const DEFAULT_TRIGGERS = {
 const initializeTriggers = () => {
   // Initialize reset domain button when Advanced page is loaded
   initializeResetDomainButton();
-  
+
   // Get DOM elements directly and add event listeners
   const saveBtn = document.getElementById("save-triggers-btn");
   const resetBtn = document.getElementById("reset-triggers-btn");
@@ -230,6 +230,9 @@ const favSerifWeightSelect = document.getElementById("fav-serif-weight");
 const favSansFontSelect = document.getElementById("fav-sans-font");
 const favSansSizeSelect = document.getElementById("fav-sans-size");
 const favSansWeightSelect = document.getElementById("fav-sans-weight");
+const favSans2FontSelect = document.getElementById("fav-sans-2-font");
+const favSans2SizeSelect = document.getElementById("fav-sans-2-size");
+const favSans2WeightSelect = document.getElementById("fav-sans-2-weight");
 const favSerif2FontSelect = document.getElementById("fav-serif-2-font");
 const favSerif2SizeSelect = document.getElementById("fav-serif-2-size");
 const favSerif2WeightSelect = document.getElementById("fav-serif-2-weight");
@@ -253,6 +256,7 @@ function validateFontSize(input) {
 const fontSizeInputs = [
     favSerifSizeSelect,
     favSansSizeSelect,
+    favSans2SizeSelect,
     favSerif2SizeSelect,
     document.getElementById("serif_size"),
     document.getElementById("sans_serif_size"),
@@ -272,19 +276,19 @@ function createFontSizeDropdown(input) {
         console.log('Dropdown already exists for input:', input.id);
         return;
     }
-    
+
     // Mark as initialized
     input.setAttribute('data-dropdown-initialized', 'true');
-    
+
     const wrapper = document.createElement('div');
     wrapper.style.position = 'relative';
     wrapper.style.display = 'inline-block';
     wrapper.style.width = '100%';
-    
+
     // Insert wrapper before input and move input inside
     input.parentNode.insertBefore(wrapper, input);
     wrapper.appendChild(input);
-    
+
     // Create dropdown button overlay
     const dropdownBtn = document.createElement('div');
     dropdownBtn.style.position = 'absolute';
@@ -296,7 +300,7 @@ function createFontSizeDropdown(input) {
     dropdownBtn.style.cursor = 'pointer';
     dropdownBtn.style.zIndex = '10';
     wrapper.appendChild(dropdownBtn);
-    
+
     // Create dropdown menu
     const dropdown = document.createElement('div');
     dropdown.style.position = 'absolute';
@@ -312,7 +316,7 @@ function createFontSizeDropdown(input) {
     dropdown.style.display = 'none';
     dropdown.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
     dropdown.style.color = '#e5e7eb';
-    
+
     // Add preset options
     fontSizePresets.forEach(preset => {
         const option = document.createElement('div');
@@ -320,7 +324,7 @@ function createFontSizeDropdown(input) {
         option.style.padding = '8px 12px';
         option.style.cursor = 'pointer';
         option.style.fontSize = '2.25rem';
-        
+
         option.addEventListener('mouseenter', () => {
             option.style.backgroundColor = '#4b5563';
         });
@@ -332,37 +336,37 @@ function createFontSizeDropdown(input) {
             dropdown.style.display = 'none';
             validateFontSize(input);
         });
-        
+
         dropdown.appendChild(option);
     });
-    
+
     wrapper.appendChild(dropdown);
-    
+
     // Toggle dropdown on button click
     dropdownBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         const isVisible = dropdown.style.display === 'block';
-        
+
         // Hide all other dropdowns
         document.querySelectorAll('[data-font-size-dropdown]').forEach(dd => {
             dd.style.display = 'none';
         });
-        
+
         dropdown.style.display = isVisible ? 'none' : 'block';
     });
-    
+
     // Mark dropdown for cleanup
     dropdown.setAttribute('data-font-size-dropdown', 'true');
-    
+
     // Hide dropdown when clicking outside (with cleanup)
     const outsideClickHandler = () => {
         dropdown.style.display = 'none';
     };
     document.addEventListener('click', outsideClickHandler);
-    
+
     // Store handler for potential cleanup
     dropdown._outsideClickHandler = outsideClickHandler;
-    
+
     // Prevent dropdown from closing when clicking inside
     dropdown.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -379,7 +383,7 @@ function cleanupExistingDropdowns() {
         }
         dropdown.remove();
     });
-    
+
     // Reset all input initialization flags
     document.querySelectorAll('input[data-dropdown-initialized]').forEach(input => {
         input.removeAttribute('data-dropdown-initialized');
@@ -390,7 +394,7 @@ function cleanupExistingDropdowns() {
 function initializeFontSizeInputs() {
     // Clean up any existing dropdowns first
     cleanupExistingDropdowns();
-    
+
     fontSizeInputs.forEach(input => {
         if (input) {
             input.addEventListener('blur', () => validateFontSize(input));
@@ -400,7 +404,7 @@ function initializeFontSizeInputs() {
                     input.style.borderColor = '';
                 }
             });
-            
+
             // Create custom dropdown for this input
             createFontSizeDropdown(input);
         }
@@ -1127,32 +1131,43 @@ populateGlobalWeights(globalMonospaceWeightSelect);
 // Populate favorite fonts selectors
 populateFonts(favSerifFontSelect);
 populateFonts(favSansFontSelect);
+populateFonts(favSans2FontSelect);
 populateFonts(favSerif2FontSelect);
 populateGlobalWeights(favSerifWeightSelect);
 populateGlobalWeights(favSansWeightSelect);
+populateGlobalWeights(favSans2WeightSelect);
 populateGlobalWeights(favSerif2WeightSelect);
 
 // Default favorite fonts configuration
 const DEFAULT_FAV_FONTS = {
   favSerif: {
-    font: "Merriweather",
+    font: "BBC Reith Serif",
+    size: "16.5",
+    weight: "",
+    var_axes: {},
+    opsz_control: 'Default'
+  },
+  favSerif2: {
+    font: "MerriweatherL",
     size: "16",
     weight: "",
     var_axes: {},
     opsz_control: 'Default'
   },
   favSans: {
-    font: "Rubik",
+    font: "RubikL",
     size: "17",
     weight: "",
     var_axes: {},
     opsz_control: 'Default'
   },
-  favSerif2: {
-    font: "Merriweather",
-    size: "16",
+  favSans2: {
+    font: "Roboto FlexL",
+    size: "17",
     weight: "",
-    var_axes: {},
+    var_axes: {
+      'GRAD': 75
+    },
     opsz_control: 'Default'
   }
 };
@@ -1171,6 +1186,10 @@ const loadFavFontsConfig = () => __awaiter(this, void 0, void 0, function* () {
     favSansFontSelect.value = config.favSans.font;
     favSansSizeSelect.value = config.favSans.size;
     favSansWeightSelect.value = config.favSans.weight;
+
+    favSans2FontSelect.value = config.favSans2.font;
+    favSans2SizeSelect.value = config.favSans2.size;
+    favSans2WeightSelect.value = config.favSans2.weight;
 
     favSerif2FontSelect.value = config.favSerif2.font;
     favSerif2SizeSelect.value = config.favSerif2.size;
@@ -1192,6 +1211,9 @@ const loadFavFontsConfig = () => __awaiter(this, void 0, void 0, function* () {
     }
     if (config.favSans.var_axes) {
       setVariableFontAxesValues('fav-sans', config.favSans.var_axes);
+    }
+    if (config.favSans2.var_axes) {
+      setVariableFontAxesValues('fav-sans-2', config.favSans2.var_axes);
     }
     if (config.favSerif2.var_axes) {
       setVariableFontAxesValues('fav-serif-2', config.favSerif2.var_axes);
@@ -1220,7 +1242,7 @@ const loadFavFontsConfig = () => __awaiter(this, void 0, void 0, function* () {
         window.toggleVariableFontControls('fav-sans', config.favSans.font);
         window.toggleVariableFontControls('fav-serif-2', config.favSerif2.font);
       }
-      
+
       // Re-apply variable font axes values after controls are visible
       setTimeout(() => {
         if (config.favSerif.var_axes) {
@@ -1258,6 +1280,13 @@ saveFavConfigBtn.addEventListener("click", () => __awaiter(this, void 0, void 0,
         weight: favSansWeightSelect.value || "",
         var_axes: getVariableFontAxesValues('fav-sans'),
         opsz_control: document.getElementById('fav_sans_opsz_control')?.value || 'Default'
+      },
+      favSans2: {
+        font: favSans2FontSelect.value || "Roboto FlexL",
+        size: favSans2SizeSelect.value || "17",
+        weight: favSans2WeightSelect.value || "",
+        var_axes: getVariableFontAxesValues('fav-sans-2'),
+        opsz_control: document.getElementById('fav_sans_2_opsz_control')?.value || 'Default'
       },
       favSerif2: {
         font: favSerif2FontSelect.value || "Merriweather",
@@ -1706,6 +1735,69 @@ applyFavSansBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, 
   }
 }));
 
+// Apply Fav Sans 2 button functionality
+const applyFavSans2Btn = document.getElementById("apply-fav-sans-2-btn");
+applyFavSans2Btn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
+  // Get current configuration from storage
+  const result = yield browser.storage.sync.get(['favFontsConfig']);
+  const config = result.favFontsConfig || DEFAULT_FAV_FONTS;
+
+  const fontData = {
+    serif: "Default",
+    serif_weight: "Default",
+    serif_size: "Default",
+    sans_serif: config.favSans2.font,
+    sans_serif_weight: config.favSans2.weight || "Default",
+    sans_serif_size: config.favSans2.size,
+    monospace: "Default",
+    monospace_weight: "Default",
+    monospace_size: "Default",
+    serif_line_height: "Default",
+    sans_serif_line_height: config.favSans2.lineHeight || "Default",
+    monospace_line_height: "Default",
+    serif_color: "Default",
+    sans_serif_color: config.favSans2.color || "Default",
+    monospace_color: "Default",
+    // Variable font axes - use favorite sans 2 axes
+    serif_var_axes: {},
+    sans_serif_var_axes: config.favSans2.var_axes || {},
+    monospace_var_axes: {},
+    // Opsz control - use favorite sans 2 opsz control
+    serif_opsz_control: 'Default',
+    sans_serif_opsz_control: config.favSans2.opsz_control || 'Default',
+    monospace_opsz_control: 'Default'
+  };
+
+  try {
+    browser.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) =>
+      __awaiter(this, void 0, void 0, function* () {
+      // Apply the font
+      browser.tabs.connect(tabs[0].id).postMessage({
+        type: "apply_font",
+        data: fontData,
+      });
+
+      // Save to storage
+      const domain = new URL(tabs[0].url).hostname;
+      yield browser.storage.sync.set({
+        [domain]: fontData,
+      });
+
+      console.log("Favorite sans-serif 2 font applied:", fontData);
+
+      // Update button text temporarily to show feedback
+      applyFavSans2Btn.textContent = "Applied!";
+      setTimeout(() => {
+        applyFavSans2Btn.textContent = "Fav Sans 2";
+      }, 1500);
+    }));
+
+  } catch (e) {
+    console.error("Error applying favorite sans-serif 2 font.");
+    console.error(e);
+  }
+}));
+
 // Apply Fav Serif 2 button functionality
 const applySerif2Btn = document.getElementById("apply-serif-2-btn");
 applySerif2Btn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
@@ -1949,7 +2041,7 @@ applySerifToSansBtn.addEventListener("click", () => __awaiter(this, void 0, void
   }
 }));
 
-// Reset Domain Settings button functionality  
+// Reset Domain Settings button functionality
 const initializeResetDomainButton = () => {
   console.log("Setting up reset domain button...");
   const resetDomainSettingsBtn = document.getElementById("reset-domain-settings-btn");
@@ -1959,31 +2051,31 @@ const initializeResetDomainButton = () => {
   console.log("Adding click event listener to reset domain button...");
   resetDomainSettingsBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
     console.log("RESET DOMAIN BUTTON CLICKED!");
-    
+
     // Immediate visual feedback to show button was clicked
     resetDomainSettingsBtn.textContent = "Processing...";
     resetDomainSettingsBtn.style.backgroundColor = "#f59e0b";
     resetDomainSettingsBtn.style.borderColor = "#f59e0b";
-    
+
     try {
       console.log("Reset Domain: Starting reset process...");
-      
+
       // Get current domain
       const tabs = yield browser.tabs.query({ active: true, currentWindow: true });
       console.log("Reset Domain: Got tabs:", tabs.length);
-      
+
       if (tabs.length === 0) {
         throw new Error("No active tab found");
       }
-      
+
       const domain = new URL(tabs[0].url).hostname;
       console.log("Reset Domain: Domain:", domain);
-      
+
       // Remove domain-specific settings from storage
       console.log("Reset Domain: Removing storage for domain...");
       yield browser.storage.sync.remove([domain]);
       console.log("Reset Domain: Storage removed successfully");
-      
+
       // Clear UI placeholders to show defaults
       const defaultFontData = {
         serif: "Default",
@@ -2008,14 +2100,14 @@ const initializeResetDomainButton = () => {
         sans_serif_opsz_control: 'Default',
         monospace_opsz_control: 'Default'
       };
-      
+
       updatePlaceholders(defaultFontData);
-      
+
       // Remove restore button if it exists
       if (formButtons.contains(restoreButton)) {
         formButtons.removeChild(restoreButton);
       }
-      
+
       // Send reset message to content script
       console.log("Reset Domain: Sending reset message to content script...");
       browser.tabs.connect(tabs[0].id).postMessage({
@@ -2023,7 +2115,7 @@ const initializeResetDomainButton = () => {
         data: defaultFontData,
       });
       console.log("Reset Domain: Message sent successfully");
-      
+
       // Update button text temporarily with enhanced visibility
       console.log("Reset Domain: Updating button to success state...");
       resetDomainSettingsBtn.textContent = "✔ Reset Complete";
@@ -2034,7 +2126,7 @@ const initializeResetDomainButton = () => {
         resetDomainSettingsBtn.style.backgroundColor = "#ff6b35";
         resetDomainSettingsBtn.style.borderColor = "#ff6b35";
       }, 1500);
-      
+
       console.log(`Fontonic: Domain settings reset for ${domain}`);
     } catch (e) {
       console.error("Error resetting domain settings:", e);
@@ -2259,6 +2351,7 @@ const initializeVariableFontControls = () => {
   const favFontSelects = [
     { select: favSerifFontSelect, type: 'fav-serif' },
     { select: favSansFontSelect, type: 'fav-sans' },
+    { select: favSans2FontSelect, type: 'fav-sans-2' },
     { select: favSerif2FontSelect, type: 'fav-serif-2' }
   ];
 

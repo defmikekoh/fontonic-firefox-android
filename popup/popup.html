@@ -336,6 +336,57 @@
                             </div>
                         </div>
                         
+                        <!-- Fav Sans 2 Configuration -->
+                        <div class="mb-6">
+                            <label class="font-bold text-4xl mb-2 block">Fav Sans 2:</label>
+                            <div class="grid gap-4" style="grid-template-columns: 1fr 150px 150px;">
+                                <select class="text-4xl w-full" id="fav-sans-2-font">
+                                    <option value="Roboto FlexL">Roboto FlexL</option>
+                                </select>
+                                <input type="text" class="text-4xl w-full" id="fav-sans-2-size" list="font-size-presets" placeholder="Default">
+                                <select class="text-4xl w-full" id="fav-sans-2-weight">
+                                    <option id="fav_sans_2_weight_placeholder" value="">Default</option>
+                                </select>
+                            </div>
+                            <div class="grid gap-4 mt-4" style="grid-template-columns: 1fr 150px 150px;">
+                                <div></div>
+                                <select class="text-4xl w-full" id="fav-sans-2-line-height">
+                                    <option value="">Default</option>
+                                    <option value="1.4">1.4</option>
+                                    <option value="1.5">1.5</option>
+                                    <option value="1.6">1.6</option>
+                                    <option value="1.7">1.7</option>
+                                    <option value="1.8">1.8</option>
+                                    <option value="1.9">1.9</option>
+                                    <option value="2.0">2.0</option>
+                                </select>
+                                <select class="text-4xl w-full" id="fav-sans-2-color">
+                                    <option value="">Default</option>
+                                    <option value="black">Black</option>
+                                    <option value="#292929">Medium</option>
+                                    <option value="#1d1d1f">Apple</option>
+                                    <option value="#212121">Google</option>
+                                    <option value="#363737">Substack</option>
+                                    <option value="#FFF5EE">Seashell</option>
+                                    <option value="#FFFFF0">Ivory</option>
+                                    <option value="white">White</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Variable Font Axes Controls for Fav Sans 2 -->
+                            <div id="fav-sans-2-var-axes" class="mt-4 ml-8" style="display: none;">
+                                <div class="collapse collapse-arrow border border-base-300 rounded-box">
+                                    <input type="checkbox" class="collapse-checkbox" />
+                                    <div class="collapse-title text-4xl font-medium">
+                                        Variable Font Axes
+                                    </div>
+                                    <div class="collapse-content">
+                                        <!-- Variable font axes controls will be dynamically populated here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <!-- Fav Serif 2 Configuration -->
                         <div class="mb-6">
                             <label class="font-bold text-4xl mb-2 block">Fav Serif 2:</label>
@@ -482,6 +533,9 @@
                     <button id="apply-fav-sans-btn" type="button"
                         style="background-color: #ff914c; height: 7rem;"
                         class="btn flex-1 text-4xl text-white">Fav Sans</button>
+                    <button id="apply-fav-sans-2-btn" type="button"
+                        style="background-color: #ff914c; height: 7rem;"
+                        class="btn flex-1 text-3xl text-white">Fav Sans 2</button>
                     <button id="apply-serif-to-sans-btn" type="button"
                         style="background-color: #ff914c; height: 7rem;"
                         class="btn flex-1 text-3xl text-white">Fav Serif to Sans</button>
