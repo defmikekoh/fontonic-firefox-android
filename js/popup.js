@@ -909,6 +909,19 @@ getDomain().then((domain) => {
             }
           }
 
+          // Load variable font axes values for main settings
+          setTimeout(() => {
+            if (fontData.serif_var_axes && fontData.serif !== "Default") {
+              setVariableFontAxesValues('serif', fontData.serif_var_axes);
+            }
+            if (fontData.sans_serif_var_axes && fontData.sans_serif !== "Default") {
+              setVariableFontAxesValues('sans-serif', fontData.sans_serif_var_axes);
+            }
+            if (fontData.monospace_var_axes && fontData.monospace !== "Default") {
+              setVariableFontAxesValues('monospace', fontData.monospace_var_axes);
+            }
+          }, 100);
+
           // Restore opsz control settings after controls are visible
           if (window.pendingOpszControlSettings && window.handleOpszControlChange) {
             setTimeout(() => {
