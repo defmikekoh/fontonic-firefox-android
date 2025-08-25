@@ -218,7 +218,7 @@
 @font-face {
   font-family: "BBC Reith Serif";
   src: url("https://static.files.bbci.co.uk/fonts/reith/2.512/BBCReithSerif_W_LtIt.woff2");
-  font-style: normal;
+  font-style: italic;
   font-weight: 300;
   font-display: swap;
 }
