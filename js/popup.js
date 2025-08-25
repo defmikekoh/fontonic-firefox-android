@@ -230,9 +230,13 @@ const favSerifWeightSelect = document.getElementById("fav-serif-weight");
 const favSansFontSelect = document.getElementById("fav-sans-font");
 const favSansSizeSelect = document.getElementById("fav-sans-size");
 const favSansWeightSelect = document.getElementById("fav-sans-weight");
+const favSansLineHeightSelect = document.getElementById("fav-sans-line-height");
+const favSansColorSelect = document.getElementById("fav-sans-color");
 const favSans2FontSelect = document.getElementById("fav-sans-2-font");
 const favSans2SizeSelect = document.getElementById("fav-sans-2-size");
 const favSans2WeightSelect = document.getElementById("fav-sans-2-weight");
+const favSans2LineHeightSelect = document.getElementById("fav-sans-2-line-height");
+const favSans2ColorSelect = document.getElementById("fav-sans-2-color");
 const favSerif2FontSelect = document.getElementById("fav-serif-2-font");
 const favSerif2SizeSelect = document.getElementById("fav-serif-2-size");
 const favSerif2WeightSelect = document.getElementById("fav-serif-2-weight");
@@ -1021,6 +1025,8 @@ const populateFonts = (element) => {
     "Fantasque Sans Mono",
     "Cutive Mono",
     "Droid Sans Mono",
+    "Roboto Mono",
+    "Recursive",
     "Coming Soon",
     "Dancing Script",
     "Carrois Gothic SC",
@@ -1158,6 +1164,8 @@ const DEFAULT_FAV_FONTS = {
     font: "RubikL",
     size: "17",
     weight: "",
+    line_height: "",
+    color: "",
     var_axes: {},
     opsz_control: 'Default'
   },
@@ -1165,6 +1173,8 @@ const DEFAULT_FAV_FONTS = {
     font: "Roboto FlexL",
     size: "17",
     weight: "",
+    line_height: "",
+    color: "",
     var_axes: {
       'GRAD': 75
     },
@@ -1186,10 +1196,14 @@ const loadFavFontsConfig = () => __awaiter(this, void 0, void 0, function* () {
     favSansFontSelect.value = config.favSans.font;
     favSansSizeSelect.value = config.favSans.size;
     favSansWeightSelect.value = config.favSans.weight;
+    favSansLineHeightSelect.value = config.favSans.line_height || "";
+    favSansColorSelect.value = config.favSans.color || "";
 
     favSans2FontSelect.value = config.favSans2.font;
     favSans2SizeSelect.value = config.favSans2.size;
     favSans2WeightSelect.value = config.favSans2.weight;
+    favSans2LineHeightSelect.value = config.favSans2.line_height || "";
+    favSans2ColorSelect.value = config.favSans2.color || "";
 
     favSerif2FontSelect.value = config.favSerif2.font;
     favSerif2SizeSelect.value = config.favSerif2.size;
@@ -1241,6 +1255,7 @@ const loadFavFontsConfig = () => __awaiter(this, void 0, void 0, function* () {
         window.toggleVariableFontControls('fav-serif', config.favSerif.font);
         window.toggleVariableFontControls('fav-sans', config.favSans.font);
         window.toggleVariableFontControls('fav-serif-2', config.favSerif2.font);
+        window.toggleVariableFontControls('fav-sans-2', config.favSans2.font);
       }
 
       // Re-apply variable font axes values after controls are visible
@@ -1254,7 +1269,10 @@ const loadFavFontsConfig = () => __awaiter(this, void 0, void 0, function* () {
         if (config.favSerif2.var_axes) {
           setVariableFontAxesValues('fav-serif-2', config.favSerif2.var_axes);
         }
-      }, 100);
+        if (config.favSans2.var_axes) {
+          setVariableFontAxesValues('fav-sans-2', config.favSans2.var_axes);
+        }
+      }, 300);
     }, 200);
 
     console.log("Favorite fonts config loaded:", config);
@@ -1275,9 +1293,11 @@ saveFavConfigBtn.addEventListener("click", () => __awaiter(this, void 0, void 0,
         opsz_control: document.getElementById('fav_serif_opsz_control')?.value || 'Default'
       },
       favSans: {
-        font: favSansFontSelect.value || "Rubik",
+        font: favSansFontSelect.value || "RubikL",
         size: favSansSizeSelect.value || "17",
         weight: favSansWeightSelect.value || "",
+        line_height: favSansLineHeightSelect.value || "",
+        color: favSansColorSelect.value || "",
         var_axes: getVariableFontAxesValues('fav-sans'),
         opsz_control: document.getElementById('fav_sans_opsz_control')?.value || 'Default'
       },
@@ -1285,6 +1305,8 @@ saveFavConfigBtn.addEventListener("click", () => __awaiter(this, void 0, void 0,
         font: favSans2FontSelect.value || "Roboto FlexL",
         size: favSans2SizeSelect.value || "17",
         weight: favSans2WeightSelect.value || "",
+        line_height: favSans2LineHeightSelect.value || "",
+        color: favSans2ColorSelect.value || "",
         var_axes: getVariableFontAxesValues('fav-sans-2'),
         opsz_control: document.getElementById('fav_sans_2_opsz_control')?.value || 'Default'
       },
@@ -1753,7 +1775,7 @@ applyFavSans2Btn.addEventListener("click", () => __awaiter(this, void 0, void 0,
     monospace_weight: "Default",
     monospace_size: "Default",
     serif_line_height: "Default",
-    sans_serif_line_height: config.favSans2.lineHeight || "Default",
+    sans_serif_line_height: config.favSans2.line_height || "Default",
     monospace_line_height: "Default",
     serif_color: "Default",
     sans_serif_color: config.favSans2.color || "Default",
@@ -1785,8 +1807,17 @@ applyFavSans2Btn.addEventListener("click", () => __awaiter(this, void 0, void 0,
 
       console.log("Favorite sans-serif 2 font applied:", fontData);
 
+      // Update UI placeholders
+      updatePlaceholders(fontData);
+      if (window.toggleVariableFontControls) {
+        window.toggleVariableFontControls('sans-serif', config.favSans2.font);
+      }
+      if (!formButtons.contains(restoreButton)) {
+        formButtons.prepend(restoreButton);
+      }
+
       // Update button text temporarily to show feedback
-      applyFavSans2Btn.textContent = "Applied!";
+      applyFavSans2Btn.textContent = "✔ Applied";
       setTimeout(() => {
         applyFavSans2Btn.textContent = "Fav Sans 2";
       }, 1500);
@@ -2224,6 +2255,51 @@ window.resetTriggers = () => __awaiter(this, void 0, void 0, function* () {
   }
 });
 
+// Configuration for each axis
+const getAxisConfig = (axis) => {
+  const configs = {
+    'wght': { label: 'Weight', min: 100, max: 1000, default: 400 },
+    'wdth': { label: 'Width', min: 25, max: 151, default: 100 },
+    'opsz': { label: 'Optical Size', min: 8, max: 144, default: 14 },
+    'GRAD': { label: 'Grade', min: -200, max: 150, default: 0 },
+    'slnt': { label: 'Slant', min: -15, max: 0, default: 0 },
+    'XTRA': { label: 'XTRA', min: 323, max: 603, default: 468 },
+    'XOPQ': { label: 'XOPQ', min: 27, max: 175, default: 96 },
+    'YOPQ': { label: 'YOPQ', min: 25, max: 135, default: 79 },
+    'YTLC': { label: 'YTLC', min: 416, max: 570, default: 514 },
+    'YTUC': { label: 'YTUC', min: 497, max: 1000, default: 712 },
+    'YTAS': { label: 'YTAS', min: 649, max: 854, default: 750 },
+    'YTDE': { label: 'YTDE', min: -305, max: -98, default: -203 },
+    'YTFI': { label: 'YTFI', min: 560, max: 788, default: 738 },
+    'CASL': { label: 'Casual', min: 0, max: 1, default: 0 },
+    'MONO': { label: 'Monospace', min: 0, max: 1, default: 0 },
+    'CRSV': { label: 'Cursive', min: 0, max: 1, default: 0 }
+  };
+  return configs[axis] || { label: axis, min: 0, max: 100, default: 50 };
+};
+
+// DRY function to handle axis control state changes
+const handleAxisControlChange = (fontType, axis, value, slider, valueSpan) => {
+  const axisConfig = getAxisConfig(axis);
+  
+  if (value === 'Default') {
+    // Gray out and disable slider, show actual default value
+    slider.disabled = true;
+    slider.style.opacity = '0.5';
+    valueSpan.style.opacity = '0.5';
+    valueSpan.textContent = axisConfig.default;
+    // Reset slider to default value visually
+    slider.value = axisConfig.default;
+  } else {
+    // Enable slider, restore normal appearance
+    slider.disabled = false;
+    slider.style.opacity = '1';
+    valueSpan.style.opacity = '1';
+    valueSpan.textContent = slider.value;
+  }
+  // Parameters fontType and axis kept for potential future use
+};
+
 // Variable Font Axis Controls
 const initializeVariableFontControls = () => {
   // Define which fonts support variable axes
@@ -2234,7 +2310,9 @@ const initializeVariableFontControls = () => {
     'Merriweather': ['wght', 'wdth', 'opsz'],
     'MerriweatherL': ['wght', 'wdth', 'opsz'],
     'Rubik': ['wght'],
-    'RubikL': ['wght']
+    'RubikL': ['wght'],
+    'Roboto Mono': ['wght'],
+    'Recursive': ['wght', 'slnt', 'CASL', 'MONO', 'CRSV']
   };
 
   // Function to show/hide variable font controls
@@ -2314,25 +2392,64 @@ const initializeVariableFontControls = () => {
 
   // Function to set up sliders for a specific font
   const setupSlidersForFont = (fontType, _fontName, supportedAxes) => {
-    // Show/hide sliders based on supported axes
+    const axesContainer = document.getElementById(`${fontType}-var-axes`);
+    const collapseContent = axesContainer?.querySelector('.collapse-content');
+    
+    if (!collapseContent) {
+      console.warn(`No collapse content found for ${fontType}`);
+      return;
+    }
+    
+    // Always use dynamic approach - clear and recreate sliders
+    collapseContent.innerHTML = '<div class="grid gap-4 text-4xl"></div>';
+    const container = collapseContent.querySelector('.grid');
+    
+    // Create sliders for each supported axis
     supportedAxes.forEach(axis => {
-      const sliderRow = document.querySelector(`#${fontType}-${axis}-slider`)?.closest('.flex');
-      if (sliderRow) {
-        sliderRow.style.display = 'flex';
-      }
-    });
-
-    // Hide unsupported axes
-    const allAxes = ['wght', 'wdth', 'opsz', 'GRAD', 'slnt', 'XTRA', 'XOPQ', 'YOPQ', 'YTLC', 'YTUC', 'YTAS', 'YTDE', 'YTFI'];
-    allAxes.forEach(axis => {
-      if (!supportedAxes.includes(axis)) {
-        const sliderRow = document.querySelector(`#${fontType}-${axis}-slider`)?.closest('.flex');
-        if (sliderRow) {
-          sliderRow.style.display = 'none';
-        }
-      }
+      createSliderForAxis(container, fontType, axis);
     });
   };
+
+  // Helper function to create a slider for a specific axis
+  const createSliderForAxis = (container, fontType, axis) => {
+    const axisConfig = getAxisConfig(axis);
+    
+    const sliderRow = document.createElement('div');
+    sliderRow.className = 'flex items-center gap-4';
+    
+    // All axes now have Default/Override dropdown pattern
+    const controlId = `${fontType.replace('-', '_')}_${axis}_control`;
+    sliderRow.innerHTML = `
+      <label class="w-32">${axisConfig.label}:</label>
+      <select class="text-2xl" id="${controlId}" name="${controlId}">
+        <option value="Default">Default</option>
+        <option value="Override">Override</option>
+      </select>
+      <input type="range" id="${fontType}-${axis}-slider" min="${axisConfig.min}" max="${axisConfig.max}" value="${axisConfig.default}" class="flex-1" />
+      <span id="${fontType}-${axis}-value" class="w-16 text-center">${axisConfig.default}</span>
+    `;
+    
+    container.appendChild(sliderRow);
+    
+    // Add event listeners
+    const slider = sliderRow.querySelector('input[type="range"]');
+    const valueSpan = sliderRow.querySelector('span');
+    const dropdown = sliderRow.querySelector('select');
+    
+    // Update value display when slider changes
+    slider.addEventListener('input', (e) => {
+      valueSpan.textContent = e.target.value;
+    });
+    
+    // Handle Default/Override dropdown changes
+    dropdown.addEventListener('change', (e) => {
+      handleAxisControlChange(fontType, axis, e.target.value, slider, valueSpan);
+    });
+    
+    // Initialize with Default state (grayed out and disabled)
+    handleAxisControlChange(fontType, axis, 'Default', slider, valueSpan);
+  };
+
 
   // Add event listeners to font selects
   const fontSelects = [
@@ -2413,27 +2530,17 @@ const initializeVariableFontControls = () => {
 
     supportedAxes.forEach(axis => {
       const slider = document.getElementById(`${fontType}-${axis}-slider`);
-      if (slider) {
-        // Special handling for opsz axis
-        if (axis === 'opsz') {
-          const opszControl = document.getElementById(`${fontType.replace('-', '_')}_opsz_control`);
-          if (opszControl && opszControl.value === 'Default') {
-            // Skip opsz when set to Default (automatic)
-            return;
-          }
+      const control = document.getElementById(`${fontType.replace('-', '_')}_${axis}_control`);
+      
+      if (slider && control) {
+        // Skip axes that are set to "Default" - applies to all axes now
+        if (control.value === 'Default') {
+          return;
         }
 
+        // Only include axes set to "Override"
         const value = slider.value;
-        // Only include non-default values
-        const defaultValues = {
-          'wght': 400, 'wdth': 100, 'opsz': 14, 'GRAD': 0, 'slnt': 0,
-          'XTRA': 468, 'XOPQ': 96, 'YOPQ': 79, 'YTLC': 514, 'YTUC': 712,
-          'YTAS': 750, 'YTDE': -203, 'YTFI': 738
-        };
-
-        if (value != defaultValues[axis]) {
-          settings.push(`"${axis}" ${value}`);
-        }
+        settings.push(`"${axis}" ${value}`);
       }
     });
 
@@ -2483,11 +2590,14 @@ window.initializeVariableFontControls = initializeVariableFontControls;
 // Function to get current variable font axes values for saving
 const getVariableFontAxesValues = (fontType) => {
   const axes = {};
-  const allAxes = ['wght', 'wdth', 'opsz', 'GRAD', 'slnt', 'XTRA', 'XOPQ', 'YOPQ', 'YTLC', 'YTUC', 'YTAS', 'YTDE', 'YTFI'];
+  const allAxes = ['wght', 'wdth', 'opsz', 'GRAD', 'slnt', 'XTRA', 'XOPQ', 'YOPQ', 'YTLC', 'YTUC', 'YTAS', 'YTDE', 'YTFI', 'CASL', 'MONO', 'CRSV'];
 
   allAxes.forEach(axis => {
     const slider = document.getElementById(`${fontType}-${axis}-slider`);
-    if (slider) {
+    const control = document.getElementById(`${fontType.replace('-', '_')}_${axis}_control`);
+    
+    // Only include axes that are set to "Override" (not "Default")
+    if (slider && control && control.value === 'Override') {
       axes[axis] = slider.value;
     }
   });
@@ -2499,14 +2609,23 @@ const getVariableFontAxesValues = (fontType) => {
 const setVariableFontAxesValues = (fontType, axesData) => {
   if (!axesData) return;
 
-  Object.keys(axesData).forEach(axis => {
+  const allAxes = ['wght', 'wdth', 'opsz', 'GRAD', 'slnt', 'XTRA', 'XOPQ', 'YOPQ', 'YTLC', 'YTUC', 'YTAS', 'YTDE', 'YTFI', 'CASL', 'MONO', 'CRSV'];
+  
+  allAxes.forEach(axis => {
     const slider = document.getElementById(`${fontType}-${axis}-slider`);
+    const control = document.getElementById(`${fontType.replace('-', '_')}_${axis}_control`);
     const valueDisplay = document.getElementById(`${fontType}-${axis}-value`);
 
-    if (slider && axesData[axis]) {
-      slider.value = axesData[axis];
-      if (valueDisplay) {
-        valueDisplay.textContent = axesData[axis];
+    if (slider && control && valueDisplay) {
+      if (axesData[axis] !== undefined) {
+        // Axis has a saved value - set to Override and restore value
+        control.value = 'Override';
+        slider.value = axesData[axis];
+        handleAxisControlChange(fontType, axis, 'Override', slider, valueDisplay);
+      } else {
+        // Axis doesn't have a saved value - set to Default
+        control.value = 'Default';
+        handleAxisControlChange(fontType, axis, 'Default', slider, valueDisplay);
       }
     }
   });

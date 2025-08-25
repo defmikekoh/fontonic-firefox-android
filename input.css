@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom styles for font size dropdown arrows */
+input[list="font-size-presets"] {
+  background-image: linear-gradient(45deg, transparent 35%, #e5e7eb 35%, #e5e7eb 65%, transparent 65%), 
+                    linear-gradient(-45deg, transparent 35%, #e5e7eb 35%, #e5e7eb 65%, transparent 65%);
+  background-position: right 20px center, right 14px center;
+  background-size: 8px 8px, 8px 8px;
+  background-repeat: no-repeat;
+  padding-right: 35px;
+}
+
+/* Dark theme version */
+[data-theme="dark"] input[list="font-size-presets"] {
+  background-image: linear-gradient(45deg, transparent 35%, #6b7280 35%, #6b7280 65%, transparent 65%), 
+                    linear-gradient(-45deg, transparent 35%, #6b7280 35%, #6b7280 65%, transparent 65%);
+}
