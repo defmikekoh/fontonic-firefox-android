@@ -5,7 +5,7 @@ const exclusionSelectors = {
 const currentDomain = window.location.hostname;
 
 const SKIP_SELECTOR =
-  'i,[class*="icon"],[class*="fa-"],svg,code,pre,kbd,samp,h1,h2,h3,h4,h5,h6,button';
+  'nav,header,footer,aside,figure,figcaption,table,th,td,blockquote,i,[class*="icon"],[class*="fa-"],svg,code,pre,kbd,samp,h1,h2,h3,h4,h5,h6,button';
 function shouldSkip(el) {
   if (el.closest(".app-banner")) return true;
   if (el.closest(".byline-wrapper")) return true;
