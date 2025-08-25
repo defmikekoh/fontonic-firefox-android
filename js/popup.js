@@ -1658,6 +1658,12 @@ applyFavSerifBtn.addEventListener("click", () => __awaiter(this, void 0, void 0,
         if (window.toggleVariableFontControls) {
           window.toggleVariableFontControls('serif', config.favSerif.font);
         }
+        // Apply variable font axes values to the main serif UI
+        setTimeout(() => {
+          if (config.favSerif.var_axes) {
+            setVariableFontAxesValues('serif', config.favSerif.var_axes);
+          }
+        }, 100);
         if (!formButtons.contains(restoreButton)) {
           formButtons.prepend(restoreButton);
         }
@@ -1740,6 +1746,12 @@ applyFavSansBtn.addEventListener("click", () => __awaiter(this, void 0, void 0, 
       if (window.toggleVariableFontControls) {
         window.toggleVariableFontControls('sans-serif', config.favSans.font);
       }
+      // Apply variable font axes values to the main sans-serif UI
+      setTimeout(() => {
+        if (config.favSans.var_axes) {
+          setVariableFontAxesValues('sans-serif', config.favSans.var_axes);
+        }
+      }, 100);
       if (!formButtons.contains(restoreButton)) {
         formButtons.prepend(restoreButton);
       }
@@ -1812,6 +1824,12 @@ applyFavSans2Btn.addEventListener("click", () => __awaiter(this, void 0, void 0,
       if (window.toggleVariableFontControls) {
         window.toggleVariableFontControls('sans-serif', config.favSans2.font);
       }
+      // Apply variable font axes values to the main sans-serif UI
+      setTimeout(() => {
+        if (config.favSans2.var_axes) {
+          setVariableFontAxesValues('sans-serif', config.favSans2.var_axes);
+        }
+      }, 100);
       if (!formButtons.contains(restoreButton)) {
         formButtons.prepend(restoreButton);
       }
@@ -1893,6 +1911,12 @@ applySerif2Btn.addEventListener("click", () => __awaiter(this, void 0, void 0, f
       if (window.toggleVariableFontControls) {
         window.toggleVariableFontControls('serif', config.favSerif2.font);
       }
+      // Apply variable font axes values to the main serif UI
+      setTimeout(() => {
+        if (config.favSerif2.var_axes) {
+          setVariableFontAxesValues('serif', config.favSerif2.var_axes);
+        }
+      }, 100);
       if (!formButtons.contains(restoreButton)) {
         formButtons.prepend(restoreButton);
       }
@@ -1974,6 +1998,12 @@ applySerif2ToSansBtn.addEventListener("click", () => __awaiter(this, void 0, voi
       if (window.toggleVariableFontControls) {
         window.toggleVariableFontControls('sans-serif', config.favSerif2.font);
       }
+      // Apply variable font axes values to the main sans-serif UI
+      setTimeout(() => {
+        if (config.favSerif2.var_axes) {
+          setVariableFontAxesValues('sans-serif', config.favSerif2.var_axes);
+        }
+      }, 100);
       if (!formButtons.contains(restoreButton)) {
         formButtons.prepend(restoreButton);
       }
@@ -2055,6 +2085,12 @@ applySerifToSansBtn.addEventListener("click", () => __awaiter(this, void 0, void
       if (window.toggleVariableFontControls) {
         window.toggleVariableFontControls('sans-serif', config.favSerif.font);
       }
+      // Apply variable font axes values to the main sans-serif UI
+      setTimeout(() => {
+        if (config.favSerif.var_axes) {
+          setVariableFontAxesValues('sans-serif', config.favSerif.var_axes);
+        }
+      }, 100);
       if (!formButtons.contains(restoreButton)) {
         formButtons.prepend(restoreButton);
       }
